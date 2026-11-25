@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phoenix HQ Defense — Custom Environments & Worlds</title>
+    <title>Phoenix HQ Defense — Open-Plan Office Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
@@ -67,9 +67,9 @@
                     </div>
                     <div>
                         <h1 class="text-sm sm:text-lg font-black tracking-wider text-white">
-                            PHOENIX HQ DEFENSE <span class="text-phx-orange">//</span> <span class="text-gray-300 text-xs sm:text-sm font-bold">WORLDS EDITION</span>
+                            PHOENIX HQ DEFENSE <span class="text-phx-orange">//</span> <span class="text-gray-300 text-xs sm:text-sm font-bold">OPEN-PLAN OFFICE</span>
                         </h1>
-                        <p class="text-[11px] font-mono text-gray-400">Volcanic Citadel • Cyber Neon Grid • Orbital Station • Role Perks • Bosses</p>
+                        <p class="text-[11px] font-mono text-gray-400">Unified Phoenix HQ Office • Role Perks • Bosses • Upgrade Cards • Ascend</p>
                     </div>
                 </div>
 
@@ -91,13 +91,8 @@
                     </div>
                 </div>
 
-                <!-- Environment Switcher & Controls -->
+                <!-- Speed, Sound, Cards & Hire -->
                 <div class="flex flex-wrap items-center gap-1.5">
-                    <select id="envSelect" onchange="changeEnvironment(this.value)" class="px-2.5 py-2 rounded-xl bg-phx-input border border-phx-orange/40 text-xs font-mono font-bold text-amber-300 focus:outline-none cursor-pointer">
-                        <option value="volcanic">🌋 Volcanic Citadel</option>
-                        <option value="cyber">🌃 Cyber Neon Grid</option>
-                        <option value="orbital">🛸 Orbital Station</option>
-                    </select>
                     <button id="speedBtn" onclick="toggleSpeed()" class="px-2.5 py-2 rounded-xl bg-phx-input hover:bg-white/10 border border-white/10 text-xs font-mono font-bold text-white cursor-pointer">
                         1x Speed
                     </button>
@@ -132,7 +127,7 @@
                         OVERDRIVE ACTIVE!
                     </span>
                 </div>
-                <span id="gameStatusBanner" class="text-phx-orange truncate">Wave 1 Active — Defend Phoenix Core!</span>
+                <span id="gameStatusBanner" class="text-phx-orange truncate">Wave 1 Active — Defend the Phoenix HQ Office!</span>
             </div>
         </div>
     </header>
@@ -140,19 +135,19 @@
     <!-- MAIN ARENA & SIDEBAR -->
     <main class="flex-grow max-w-[1660px] w-full mx-auto px-4 sm:px-6 py-4 grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch">
 
-        <!-- LEFT 8 COLS: 2D FLOORPLAN ARENA -->
+        <!-- LEFT 8 COLS: UNIFIED OPEN-PLAN OFFICE -->
         <section class="xl:col-span-8 glass-panel rounded-2xl p-3 flex flex-col min-h-[560px] lg:min-h-[650px] relative">
             <div class="flex flex-wrap items-center justify-between gap-2 px-2 pb-2 text-[11px] font-mono text-gray-400">
-                <span id="arenaTitleLabel" class="text-white font-bold">🌋 VOLCANIC PHOENIX CITADEL</span>
+                <span class="text-white font-bold">🏢 PHOENIX FORCE OPEN-PLAN OFFICE</span>
                 <div class="flex items-center gap-3">
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-phx-orange"></span> Ignis (+Room DMG)</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-phx-orange"></span> Ignis (+Desk DMG)</span>
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-400"></span> Tempest (Chain)</span>
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-fuchsia-400"></span> Aether (+XP/Cr)</span>
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Shadow (Slow)</span>
                 </div>
             </div>
 
-            <div id="canvasContainer" class="relative flex-grow w-full rounded-xl overflow-hidden border border-white/10 bg-[#090a0f]">
+            <div id="canvasContainer" class="relative flex-grow w-full rounded-xl overflow-hidden border border-white/10 bg-[#131722]">
                 <canvas id="officeCanvas"></canvas>
             </div>
         </section>
@@ -176,7 +171,7 @@
                         </div>
                         <p id="inspRole" class="text-[11px] font-mono text-gray-400 truncate">Starter Commander • Lv.1</p>
                         <div class="mt-1 flex items-center gap-1.5">
-                            <span class="text-[10px] font-mono text-gray-400">ROOM:</span>
+                            <span class="text-[10px] font-mono text-gray-400">DESK:</span>
                             <select id="inspRoomSelect" onchange="reassignSelectedAgentRoom()" class="flex-grow px-2 py-1 rounded-lg bg-phx-input border border-white/15 text-[11px] font-mono text-phx-orange focus:border-phx-orange focus:outline-none"></select>
                         </div>
                     </div>
@@ -193,7 +188,7 @@
                     </div>
                     <div class="flex items-center justify-between">
                         <span class="text-gray-400">ROLE PERK:</span>
-                        <span id="inspRolePerk" class="font-bold text-emerald-300">+12% Room DMG Buff</span>
+                        <span id="inspRolePerk" class="font-bold text-emerald-300">+12% Desk DMG Buff</span>
                     </div>
                 </div>
 
@@ -269,15 +264,15 @@
                     <label class="block text-gray-400 font-mono mb-1">Quick PHX Roster Preset:</label>
                     <select id="rosterPresetSelect" onchange="applyRosterPreset()" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
                         <option value="">-- Custom Agent --</option>
-                        <option value="Kill3rGuy94|👑 Leader & Founder|🔥|0|command">Kill3rGuy94 (Zone 1 • Ignis Sword)</option>
-                        <option value="YipYipMan_|⭐ Streamers Manager|⚡|4|command">YipYipMan_ (Zone 5 • Ignis Sword)</option>
-                        <option value="catgamer_tv|🎮 Creator & Media|🐱|5|creator">catgamer_tv (Zone 6 • Aether Staff)</option>
-                        <option value="CreepyPuppet_Tv|🎭 Creator & Bot Ops|🎭|2|tech">CreepyPuppet_Tv (Zone 3 • Shadow Blade)</option>
-                        <option value="FenChris|🐺 Esports & AION2|🐺|3|esports">FenChris (Zone 4 • Tempest Lance)</option>
-                        <option value="Ghost_R4in|👻 Creator & QA|👻|7|tech">Ghost_R4in (Zone 8 • Shadow Blade)</option>
-                        <option value="demon_gekkouga|🥷 Esports Striker|🥷|4|esports">demon_gekkouga (Zone 5 • Tempest Lance)</option>
-                        <option value="YioGki|🎯 Creator & Growth|🎯|6|creator">YioGki (Zone 7 • Aether Staff)</option>
-                        <option value="VanessaMermaid|🧜‍♀️ Creator & Web UI|🧜‍♀️|1|creator">VanessaMermaid (Zone 2 • Aether Staff)</option>
+                        <option value="Kill3rGuy94|👑 Leader & Founder|🔥|0|command">Kill3rGuy94 (Command Desk • Ignis Sword)</option>
+                        <option value="YipYipMan_|⭐ Streamers Manager|⚡|4|command">YipYipMan_ (Esports Desk • Ignis Sword)</option>
+                        <option value="catgamer_tv|🎮 Creator & Media|🐱|5|creator">catgamer_tv (Media Desk • Aether Staff)</option>
+                        <option value="CreepyPuppet_Tv|🎭 Creator & Bot Ops|🎭|2|tech">CreepyPuppet_Tv (Bot Station • Shadow Blade)</option>
+                        <option value="FenChris|🐺 Esports & AION2|🐺|3|esports">FenChris (IT & DevOps Desk • Tempest Lance)</option>
+                        <option value="Ghost_R4in|👻 Creator & QA|👻|7|tech">Ghost_R4in (QA & Deploy Desk • Shadow Blade)</option>
+                        <option value="demon_gekkouga|🥷 Esports Striker|🥷|4|esports">demon_gekkouga (Esports Desk • Tempest Lance)</option>
+                        <option value="YioGki|🎯 Creator & Growth|🎯|6|creator">YioGki (Growth Desk • Aether Staff)</option>
+                        <option value="VanessaMermaid|🧜‍♀️ Creator & Web UI|🧜‍♀️|1|creator">VanessaMermaid (Web & UI Desk • Aether Staff)</option>
                     </select>
                 </div>
                 <div>
@@ -291,14 +286,14 @@
                 <div>
                     <label class="block text-gray-400 font-mono mb-1">Role Evolution Path & Weapon:</label>
                     <select id="hirePathSelect" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
-                        <option value="command">🔥 Ignis Sovereign (Ignis Greatsword • +Room DMG)</option>
+                        <option value="command">🔥 Ignis Sovereign (Ignis Greatsword • +Desk DMG)</option>
                         <option value="esports">⚡ Tempest Striker (Tempest Lance • Chain Lightning)</option>
-                        <option value="creator">✨ Aether Prism (Aether Prism Staff • +Room XP & +Cr)</option>
+                        <option value="creator">✨ Aether Prism (Aether Prism Staff • +Desk XP & +Cr)</option>
                         <option value="tech">🌑 Shadow Core (Shadow Twin-Blade • Enemy Slow)</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-gray-400 font-mono mb-1">Zone:</label>
+                    <label class="block text-gray-400 font-mono mb-1">Office Desk Station:</label>
                     <select id="hireRoomSelect" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none"></select>
                 </div>
                 <div>
@@ -328,7 +323,7 @@
             <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <div>
                     <h3 id="cardsModalTitle" class="text-base font-black text-white">🃏 WAVE UPGRADE CARDS</h3>
-                    <p id="cardsModalSub" class="text-[11px] font-mono text-purple-300">Pick 1 tactical upgrade for your run</p>
+                    <p id="cardsModalSub" class="text-[11px] font-mono text-purple-300">Pick 1 tactical upgrade for your Phoenix HQ</p>
                 </div>
                 <button onclick="closeUpgradeCardsModal()" class="text-gray-400 hover:text-white font-bold text-lg cursor-pointer">✕</button>
             </div>
@@ -339,74 +334,25 @@
     <div id="toast" class="fixed bottom-4 right-4 z-50 hidden px-4 py-2.5 rounded-xl bg-phx-panel border border-phx-orange text-white text-xs font-bold shadow-2xl"></div>
 
     <script>
-        const STORAGE_BEST_KEY = 'phx_hq_defense_best_v8';
+        const STORAGE_BEST_KEY = 'phx_hq_defense_best_v9';
         const MAX_LEVEL = 99;
 
-        const ENVIRONMENTS = {
-            volcanic: {
-                label: "🌋 VOLCANIC PHOENIX CITADEL",
-                bgTop: "#1a0b08",
-                bgBottom: "#090608",
-                conduitColor: "rgba(255, 140, 0, 0.22)",
-                zoneFill: "rgba(38, 17, 13, 0.78)",
-                zoneBorder: "rgba(255, 140, 0, 0.36)",
-                coreBg: "rgba(255, 120, 0, 0.24)",
-                coreStroke: "#ff8c00",
-                coreName: "SUN ALTAR",
-                zones: [
-                    "1. Magma Command", "2. Ember Forge", "3. Ash Relay", "4. Obsidian Repair",
-                    "5. Pyre Arena", "6. Cinder Studio", "7. Basalt Vault", "8. Sulfur Gate"
-                ]
-            },
-            cyber: {
-                label: "🌃 CYBER NEON GRID",
-                bgTop: "#061322",
-                bgBottom: "#060813",
-                conduitColor: "rgba(34, 211, 238, 0.24)",
-                zoneFill: "rgba(11, 25, 44, 0.8)",
-                zoneBorder: "rgba(34, 211, 238, 0.38)",
-                coreBg: "rgba(6, 182, 212, 0.22)",
-                coreStroke: "#22d3ee",
-                coreName: "CYBER NEXUS",
-                zones: [
-                    "1. Grid Ops", "2. Holo UI", "3. Synth Node", "4. Firewall Bay",
-                    "5. Neon Stage", "6. Stream Deck", "7. Crypto Core", "8. Uplink Dock"
-                ]
-            },
-            orbital: {
-                label: "🛸 ORBITAL STATION DECK",
-                bgTop: "#0b1124",
-                bgBottom: "#05070e",
-                conduitColor: "rgba(168, 85, 247, 0.24)",
-                zoneFill: "rgba(18, 25, 46, 0.8)",
-                zoneBorder: "rgba(148, 163, 184, 0.34)",
-                coreBg: "rgba(168, 85, 247, 0.22)",
-                coreStroke: "#c084fc",
-                coreName: "REACTOR CORE",
-                zones: [
-                    "1. Bridge Deck", "2. Sensor Array", "3. Comms Pod", "4. Hull Repair",
-                    "5. Hangar Bay", "6. Holo Broadcast", "7. Cargo Hold", "8. Airlock Ring"
-                ]
-            }
-        };
-
-        let currentEnvKey = "volcanic";
-
-        const ROOMS = [
-            { id: 0, name: "1. Command HQ",   x: 20,  y: 20,  w: 225, h: 215, color: "#ff8c00", synergy: "+15% XP Gain", xpMult: 1.15, cdMult: 1.0, credMult: 1.0, regen: 0 },
-            { id: 1, name: "2. Web & UI",     x: 265, y: 20,  w: 225, h: 215, color: "#ff3b30", synergy: "+10% Shot Speed", xpMult: 1.0, cdMult: 0.9, credMult: 1.0, regen: 0 },
-            { id: 2, name: "3. Discord Bot",  x: 510, y: 20,  w: 225, h: 215, color: "#a855f7", synergy: "+12% Shot Speed", xpMult: 1.0, cdMult: 0.88, credMult: 1.0, regen: 0 },
-            { id: 3, name: "4. IT & DevOps",  x: 755, y: 20,  w: 225, h: 215, color: "#06b6d4", synergy: "Core Auto-Repair", xpMult: 1.0, cdMult: 1.0, credMult: 1.0, regen: 0.4 },
-            { id: 4, name: "5. Esports Ops",  x: 20,  y: 405, w: 225, h: 215, color: "#f43f5e", synergy: "+15% Shot Speed", xpMult: 1.0, cdMult: 0.85, credMult: 1.0, regen: 0 },
-            { id: 5, name: "6. Media Studio", x: 265, y: 405, w: 225, h: 215, color: "#ec4899", synergy: "+12% XP Gain", xpMult: 1.12, cdMult: 1.0, credMult: 1.0, regen: 0 },
-            { id: 6, name: "7. Growth & Biz", x: 510, y: 405, w: 225, h: 215, color: "#10b981", synergy: "+20% Credits", xpMult: 1.0, cdMult: 1.0, credMult: 1.2, regen: 0 },
-            { id: 7, name: "8. QA & Deploy",  x: 755, y: 405, w: 225, h: 215, color: "#eab308", synergy: "+10% XP & +10% Cr", xpMult: 1.1, cdMult: 1.0, credMult: 1.1, regen: 0 }
+        // Unified open-plan office workstation coordinates (no separate closed boxes!)
+        const DESK_STATIONS = [
+            { id: 0, name: "Command Desk",   x: 150, y: 145, color: "#ff8c00", synergy: "+15% XP Gain", xpMult: 1.15, cdMult: 1.0, credMult: 1.0, regen: 0 },
+            { id: 1, name: "Web & UI Desk",  x: 380, y: 145, color: "#ff3b30", synergy: "+10% Shot Speed", xpMult: 1.0, cdMult: 0.9, credMult: 1.0, regen: 0 },
+            { id: 2, name: "Bot Station",    x: 620, y: 145, color: "#a855f7", synergy: "+12% Shot Speed", xpMult: 1.0, cdMult: 0.88, credMult: 1.0, regen: 0 },
+            { id: 3, name: "IT & Server",    x: 850, y: 145, color: "#06b6d4", synergy: "Core Auto-Repair", xpMult: 1.0, cdMult: 1.0, credMult: 1.0, regen: 0.4 },
+            { id: 4, name: "Esports Desk",   x: 150, y: 495, color: "#f43f5e", synergy: "+15% Shot Speed", xpMult: 1.0, cdMult: 0.85, credMult: 1.0, regen: 0 },
+            { id: 5, name: "Media Studio",   x: 380, y: 495, color: "#ec4899", synergy: "+12% XP Gain", xpMult: 1.12, cdMult: 1.0, credMult: 1.0, regen: 0 },
+            { id: 6, name: "Growth Desk",    x: 620, y: 495, color: "#10b981", synergy: "+20% Credits", xpMult: 1.0, cdMult: 1.0, credMult: 1.2, regen: 0 },
+            { id: 7, name: "QA & Deploy",    x: 850, y: 495, color: "#eab308", synergy: "+10% XP & +10% Cr", xpMult: 1.1, cdMult: 1.0, credMult: 1.1, regen: 0 }
         ];
 
         const ROLE_PATHS = {
             command: {
                 pathName: "IGNIS SOVEREIGN PATH",
-                perkLabel: "+12% Room DMG Buff",
+                perkLabel: "+12% Desk DMG Buff",
                 weaponType: "sword",
                 weaponLabel: "🔥 Ignis Greatsword",
                 weaponBladeColor: "#fb923c",
@@ -436,7 +382,7 @@
             },
             creator: {
                 pathName: "AETHER PRISM PATH",
-                perkLabel: "+15% Room XP & +15% Cr",
+                perkLabel: "+15% Desk XP & +15% Cr",
                 weaponType: "staff",
                 weaponLabel: "✨ Aether Prism Staff",
                 weaponBladeColor: "#f0abfc",
@@ -470,7 +416,7 @@
             { id: "dmg20", icon: "⚔️", title: "Forge Overclock", desc: "+20% Weapon DMG for all agents", apply: () => { runBuffs.dmgMult += 0.2; } },
             { id: "xp25",  icon: "📈", title: "Neural Stream", desc: "+25% XP Gain for all agents", apply: () => { runBuffs.xpMult += 0.25; } },
             { id: "cr25",  icon: "💰", title: "Treasury Surge", desc: "+25% Credits from defeated enemies", apply: () => { runBuffs.credMult += 0.25; } },
-            { id: "haste", icon: "⚡", title: "Rapid Triggers", desc: "+15% Attack Speed across HQ", apply: () => { runBuffs.spdMult = Math.max(0.55, runBuffs.spdMult * 0.85); } },
+            { id: "haste", icon: "⚡", title: "Rapid Triggers", desc: "+15% Attack Speed across office", apply: () => { runBuffs.spdMult = Math.max(0.55, runBuffs.spdMult * 0.85); } },
             { id: "pulse", icon: "🛡️", title: "Heavy Firewall", desc: "+45 Firewall Pulse DMG & +15% Core HP", apply: () => { runBuffs.pulseBonus += 45; coreHp = Math.min(100, coreHp + 15); updateHud(); } },
             { id: "nova",  icon: "🌟", title: "Nova Resonance", desc: "+25% Nova & Chain Lightning damage", apply: () => { runBuffs.perkMult += 0.25; } }
         ];
@@ -549,13 +495,6 @@
             perkMult: 1.0
         };
 
-        function changeEnvironment(envKey) {
-            if (!ENVIRONMENTS[envKey]) return;
-            currentEnvKey = envKey;
-            document.getElementById('arenaTitleLabel').textContent = ENVIRONMENTS[envKey].label;
-            showToast(`Switched to ${ENVIRONMENTS[envKey].label}`);
-        }
-
         function loadBestRecord() {
             try {
                 const raw = JSON.parse(localStorage.getItem(STORAGE_BEST_KEY) || "null");
@@ -601,10 +540,10 @@
             };
         }
 
-        function getRoomRoleBuffs(roomId) {
-            const roomAgents = agents.filter(a => a.room === roomId);
-            const ignisCount = roomAgents.filter(a => a.pathKey === "command").length;
-            const aetherCount = roomAgents.filter(a => a.pathKey === "creator").length;
+        function getDeskRoleBuffs(deskId) {
+            const deskAgents = agents.filter(a => a.room === deskId);
+            const ignisCount = deskAgents.filter(a => a.pathKey === "command").length;
+            const aetherCount = deskAgents.filter(a => a.pathKey === "creator").length;
             return {
                 roomDmgMult: 1 + ignisCount * 0.12,
                 roomXpMult: 1 + aetherCount * 0.15,
@@ -615,9 +554,9 @@
         function getAgentProfile(ag) {
             const lvl = ag.level;
             const asc = ag.ascensions || 0;
-            const room = ROOMS[ag.room];
+            const desk = DESK_STATIONS[ag.room];
             const pathObj = ROLE_PATHS[ag.pathKey] || ROLE_PATHS.command;
-            const roomBuffs = getRoomRoleBuffs(ag.room);
+            const deskBuffs = getDeskRoleBuffs(ag.room);
 
             let tier = 0;
             if (lvl >= 10) tier = 1;
@@ -628,10 +567,10 @@
             const ascDmgMult = 1 + asc * 0.25;
             const ascXpMult = 1 + asc * 0.15;
 
-            let cdMult = room.cdMult * stg.cdMult * runBuffs.spdMult * Math.max(0.6, 1 - asc * 0.05);
+            let cdMult = desk.cdMult * stg.cdMult * runBuffs.spdMult * Math.max(0.6, 1 - asc * 0.05);
             if (overdriveTimer > 0) cdMult *= 0.5;
 
-            const effectiveDamage = Math.round((22 + (lvl - 1) * 9) * stg.dmgMult * ascDmgMult * runBuffs.dmgMult * roomBuffs.roomDmgMult);
+            const effectiveDamage = Math.round((22 + (lvl - 1) * 9) * stg.dmgMult * ascDmgMult * runBuffs.dmgMult * deskBuffs.roomDmgMult);
             const cooldownFrames = Math.max(8, Math.round(42 * cdMult));
 
             const nextStageObj = tier < 3 ? pathObj.stages[tier + 1] : null;
@@ -656,11 +595,11 @@
                 formIcon: stg.icon || ag.avatar,
                 suitColor: stg.suit,
                 trimColor: asc > 0 ? "#fde047" : stg.trim,
-                ringColor: room.color,
+                ringColor: desk.color,
                 auraColor: asc > 0 ? "#facc15" : stg.aura,
                 sparks: stg.sparks,
-                xpBonus: stg.xpBonus * ascXpMult * runBuffs.xpMult * roomBuffs.roomXpMult,
-                credBonus: runBuffs.credMult * roomBuffs.roomCredMult,
+                xpBonus: stg.xpBonus * ascXpMult * runBuffs.xpMult * deskBuffs.roomXpMult,
+                credBonus: runBuffs.credMult * deskBuffs.roomCredMult,
                 ascDmgPct: Math.round((ascDmgMult - 1) * 100),
                 ascXpPct: Math.round((ascXpMult - 1) * 100),
                 extraShots: stg.extraShots || 0,
@@ -688,8 +627,8 @@
         function grantXp(ag, amount) {
             if (!ag || ag.level >= MAX_LEVEL) return;
             const prof = getAgentProfile(ag);
-            const roomMult = ROOMS[ag.room].xpMult * currentMutator.xpMult * prof.xpBonus;
-            ag.xp += Math.max(1, Math.round(amount * roomMult));
+            const deskMult = DESK_STATIONS[ag.room].xpMult * currentMutator.xpMult * prof.xpBonus;
+            ag.xp += Math.max(1, Math.round(amount * deskMult));
             const oldLvl = ag.level;
             let leveledUp = false;
 
@@ -735,12 +674,12 @@
         function reassignSelectedAgentRoom() {
             const ag = agents.find(a => a.id === selectedAgentId);
             if (!ag) return;
-            const newRoom = parseInt(document.getElementById('inspRoomSelect').value, 10);
-            if (ag.room === newRoom) return;
-            ag.room = newRoom;
+            const newDesk = parseInt(document.getElementById('inspRoomSelect').value, 10);
+            if (ag.room === newDesk) return;
+            ag.room = newDesk;
             recomputePositions();
-            spawnBurst(ag.x, ag.y, ROOMS[newRoom].color, 14);
-            logActivity("MOVE", `${ag.name} moved to Zone ${newRoom + 1}!`, "text-cyan-300");
+            spawnBurst(ag.x, ag.y, DESK_STATIONS[newDesk].color, 14);
+            logActivity("MOVE", `${ag.name} moved to ${DESK_STATIONS[newDesk].name}!`, "text-cyan-300");
             refreshInspector();
         }
 
@@ -750,16 +689,13 @@
         }
 
         function recomputePositions() {
-            ROOMS.forEach(room => {
-                const list = agents.filter(a => a.room === room.id);
-                const cols = list.length <= 2 ? 2 : 3;
+            DESK_STATIONS.forEach(desk => {
+                const list = agents.filter(a => a.room === desk.id);
                 list.forEach((ag, idx) => {
-                    const c = idx % cols;
-                    const r = Math.floor(idx / cols);
-                    const cellW = (room.w - 40) / cols;
-                    const cellH = (room.h - 68) / 2;
-                    ag.x = room.x + 20 + cellW * (c + 0.5);
-                    ag.y = room.y + 52 + cellH * (r + 0.5);
+                    const offsetX = ((idx % 3) - 1) * 42 + (list.length === 1 ? 0 : (idx % 2 === 0 ? -16 : 16));
+                    const offsetY = idx >= 3 ? 44 : 26;
+                    ag.x = desk.x + offsetX;
+                    ag.y = desk.y + offsetY;
                 });
             });
         }
@@ -777,7 +713,7 @@
             document.getElementById('wavePill').textContent = wave;
             document.getElementById('mutatorPill').textContent = `[${currentMutator.name}]`;
             document.getElementById('gameStatusBanner').textContent = isBossWave
-                ? `⚠️ BOSS WAVE ${wave} — Heavy Boss incoming!`
+                ? `⚠️ BOSS WAVE ${wave} — Heavy Boss approaching the office!`
                 : `Wave ${wave} [${currentMutator.name}] — ${waveSpawnRemaining} threats incoming!`;
 
             playTone(isBossWave ? 220 : 440, 0.14, "sawtooth", 0.04);
@@ -802,10 +738,10 @@
 
             const side = Math.floor(Math.random() * 4);
             let ex = 0, ey = 0;
-            if (side === 0) { ex = 40 + Math.random() * 920; ey = 10; }
-            else if (side === 1) { ex = 40 + Math.random() * 920; ey = 630; }
-            else if (side === 2) { ex = 10; ey = 40 + Math.random() * 560; }
-            else { ex = 990; ey = 40 + Math.random() * 560; }
+            if (side === 0) { ex = 40 + Math.random() * 920; ey = 18; }
+            else if (side === 1) { ex = 40 + Math.random() * 920; ey = 622; }
+            else if (side === 2) { ex = 18; ey = 40 + Math.random() * 560; }
+            else { ex = 982; ey = 40 + Math.random() * 560; }
 
             if (isBoss) {
                 const bossHp = Math.round((280 + wave * 95) * scaleHp);
@@ -822,7 +758,7 @@
                     isBoss: true,
                     kind: "boss"
                 });
-                logActivity("BOSS", `⚠️ Raid Boss spawned on Wave ${wave}!`, "text-red-400 font-bold");
+                logActivity("BOSS", `⚠️ Raid Boss entered the office on Wave ${wave}!`, "text-red-400 font-bold");
                 return;
             }
 
@@ -945,7 +881,7 @@
 
         function onEnemyDestroyed(en, killerAgent, bonusNova = false) {
             const prof = killerAgent ? getAgentProfile(killerAgent) : null;
-            const credBonusMult = (killerAgent ? ROOMS[killerAgent.room].credMult : 1) * currentMutator.credMult * (prof ? prof.credBonus : 1);
+            const credBonusMult = (killerAgent ? DESK_STATIONS[killerAgent.room].credMult : 1) * currentMutator.credMult * (prof ? prof.credBonus : 1);
             const earnedCr = Math.round((en.creditReward + (bonusNova ? 5 : 0)) * credBonusMult);
             score += earnedCr * 10;
             credits += earnedCr;
@@ -1111,7 +1047,7 @@
                         gameOver = true;
                         saveBestRecord();
                         document.getElementById('gameStatusBanner').textContent = "CORE BREACHED — Click 'Next Wave' or 'New Run'!";
-                        logActivity("ALERT", "Core breached!", "text-red-400 font-bold");
+                        logActivity("ALERT", "Office Core breached!", "text-red-400 font-bold");
                     }
                 }
             }
@@ -1297,91 +1233,105 @@
 
         function drawGame() {
             const w = canvas.width, h = canvas.height;
-            const env = ENVIRONMENTS[currentEnvKey] || ENVIRONMENTS.volcanic;
             ctx.clearRect(0, 0, w, h);
             ctx.save();
             ctx.scale(w / 1000, h / 640);
 
-            // World Backdrop
-            const grad = ctx.createLinearGradient(0, 0, 0, 640);
-            grad.addColorStop(0, env.bgTop);
-            grad.addColorStop(1, env.bgBottom);
-            ctx.fillStyle = grad;
+            // 1. Unified Open-Plan Office Floor (warm slate-wood & architectural tiles)
+            const floorGrad = ctx.createLinearGradient(0, 0, 1000, 640);
+            floorGrad.addColorStop(0, "#1c2230");
+            floorGrad.addColorStop(0.5, "#161b26");
+            floorGrad.addColorStop(1, "#121620");
+            ctx.fillStyle = floorGrad;
             ctx.fillRect(0, 0, 1000, 640);
 
-            // Environment-specific details
-            if (currentEnvKey === "cyber") {
-                ctx.strokeStyle = "rgba(34, 211, 238, 0.08)";
-                ctx.lineWidth = 1;
-                for (let gx = 0; gx <= 1000; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, 640); ctx.stroke(); }
-                for (let gy = 0; gy <= 640; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(1000, gy); ctx.stroke(); }
-            } else if (currentEnvKey === "orbital") {
-                for (let s = 0; s < 36; s++) {
-                    const sx = (s * 173 + 57) % 1000;
-                    const sy = (s * 97 + 31) % 640;
-                    ctx.fillStyle = "rgba(226, 232, 240, 0.45)";
-                    ctx.fillRect(sx, sy, 2, 2);
-                }
-            } else {
-                // Volcanic magma fissures
-                ctx.strokeStyle = "rgba(255, 85, 0, 0.14)";
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.moveTo(0, 320); ctx.lineTo(240, 305); ctx.lineTo(465, 320);
-                ctx.moveTo(535, 320); ctx.lineTo(760, 335); ctx.lineTo(1000, 320);
-                ctx.stroke();
+            // Subtle floor plank / tile pattern across entire office
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.035)";
+            ctx.lineWidth = 1;
+            for (let gx = 20; gx < 980; gx += 50) {
+                ctx.beginPath(); ctx.moveTo(gx, 16); ctx.lineTo(gx, 624); ctx.stroke();
+            }
+            for (let gy = 20; gy < 620; gy += 40) {
+                ctx.beginPath(); ctx.moveTo(16, gy); ctx.lineTo(984, gy); ctx.stroke();
             }
 
-            // Conduits connecting stations to Core
-            ctx.strokeStyle = env.conduitColor;
-            ctx.lineWidth = 3;
-            ROOMS.forEach(room => {
-                const cx = room.x + room.w / 2;
-                const cy = room.y + room.h / 2;
-                ctx.beginPath();
-                ctx.moveTo(cx, cy);
-                ctx.lineTo(CORE.x, CORE.y);
-                ctx.stroke();
+            // Outer office walls & glass windows
+            ctx.strokeStyle = "#334155";
+            ctx.lineWidth = 10;
+            roundRect(ctx, 10, 10, 980, 620, 16, false, true);
+
+            // Panoramic office windows along top & bottom walls
+            ctx.fillStyle = "#38bdf8";
+            ctx.globalAlpha = 0.25;
+            ctx.fillRect(110, 7, 180, 5);
+            ctx.fillRect(410, 7, 180, 5);
+            ctx.fillRect(710, 7, 180, 5);
+            ctx.fillRect(110, 628, 180, 5);
+            ctx.fillRect(410, 628, 180, 5);
+            ctx.fillRect(710, 628, 180, 5);
+            ctx.globalAlpha = 1;
+
+            // Central office rug / lounge carpet under Core
+            ctx.fillStyle = "rgba(255, 140, 0, 0.06)";
+            ctx.strokeStyle = "rgba(255, 140, 0, 0.22)";
+            ctx.lineWidth = 2;
+            roundRect(ctx, 355, 245, 290, 150, 26, true, true);
+
+            // Office plants in corners
+            [[36, 36], [964, 36], [36, 604], [964, 604]].forEach(([px, py]) => {
+                ctx.fillStyle = "#78350f";
+                ctx.beginPath(); ctx.arc(px, py, 9, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = "#10b981";
+                ctx.beginPath(); ctx.arc(px - 3, py - 2, 6, 0, Math.PI * 2); ctx.arc(px + 3, py - 1, 5.5, 0, Math.PI * 2); ctx.fill();
             });
 
-            // Station Zones & Consoles
-            ROOMS.forEach((room, idx) => {
-                ctx.fillStyle = env.zoneFill;
-                ctx.strokeStyle = env.zoneBorder;
+            // 2. Open-Plan Workstations / Desks (no walls/boxes!)
+            DESK_STATIONS.forEach(desk => {
+                // Desk table
+                ctx.fillStyle = "#293042";
+                ctx.strokeStyle = desk.color + "88";
                 ctx.lineWidth = 2;
-                roundRect(ctx, room.x, room.y, room.w, room.h, 14, true, true);
+                roundRect(ctx, desk.x - 62, desk.y - 44, 124, 34, 8, true, true);
 
-                // Desk / terminal accent bar inside station
-                ctx.fillStyle = room.color + "35";
-                roundRect(ctx, room.x + 8, room.y + 8, room.w - 16, 24, 8, true, false);
-                ctx.fillStyle = "#ffffff";
-                ctx.font = "bold 10.5px 'Inter', sans-serif";
-                ctx.fillText((env.zones[idx] || room.name).toUpperCase(), room.x + 15, room.y + 24);
+                // Dual monitors on desk
+                ctx.fillStyle = "#0f172a";
+                ctx.fillRect(desk.x - 34, desk.y - 38, 28, 14);
+                ctx.fillRect(desk.x + 6, desk.y - 38, 28, 14);
+                ctx.fillStyle = desk.color;
+                ctx.globalAlpha = 0.7;
+                ctx.fillRect(desk.x - 32, desk.y - 36, 24, 10);
+                ctx.fillRect(desk.x + 8, desk.y - 36, 24, 10);
+                ctx.globalAlpha = 1;
 
-                // Decorative console pad at bottom of station
-                ctx.fillStyle = "rgba(255,255,255,0.06)";
-                roundRect(ctx, room.x + 28, room.y + room.h - 22, room.w - 56, 10, 4, true, false);
+                // Desk label badge
+                ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+                roundRect(ctx, desk.x - 56, desk.y - 62, 112, 15, 5, true, false);
+                ctx.fillStyle = "#f8fafc";
+                ctx.font = "bold 9px 'Inter', sans-serif";
+                ctx.textAlign = "center";
+                ctx.fillText(desk.name.toUpperCase(), desk.x, desk.y - 51);
+                ctx.textAlign = "left";
             });
 
-            // Core
+            // 3. Central Phoenix Core Hub
             ctx.save();
-            ctx.fillStyle = env.coreBg;
-            ctx.strokeStyle = coreHp > 35 ? env.coreStroke : "#ef4444";
-            ctx.lineWidth = 3.5;
+            ctx.fillStyle = coreHp > 35 ? "rgba(255, 140, 0, 0.18)" : "rgba(239, 68, 68, 0.25)";
+            ctx.strokeStyle = coreHp > 35 ? "#ff8c00" : "#ef4444";
+            ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.arc(CORE.x, CORE.y, CORE.radius + Math.sin(tickTime * 3) * 2.5, 0, Math.PI * 2);
+            ctx.arc(CORE.x, CORE.y, CORE.radius + Math.sin(tickTime * 3) * 2, 0, Math.PI * 2);
             ctx.fill(); ctx.stroke();
 
             ctx.fillStyle = "#ffffff";
-            ctx.font = "bold 9.5px 'JetBrains Mono', monospace";
+            ctx.font = "bold 10px 'JetBrains Mono', monospace";
             ctx.textAlign = "center";
-            ctx.fillText(env.coreName, CORE.x, CORE.y - 2);
+            ctx.fillText("PHX CORE", CORE.x, CORE.y - 2);
             ctx.fillStyle = "#10b981";
             ctx.fillText(`${Math.max(0, Math.round(coreHp))}%`, CORE.x, CORE.y + 11);
             ctx.textAlign = "left";
             ctx.restore();
 
-            // 2D Characters
+            // 4. 2D Characters at their desks
             agents.forEach((ag, idx) => {
                 const prof = getAgentProfile(ag);
                 const charScale = 1.05 + prof.tier * 0.1 + (prof.asc || 0) * 0.05;
@@ -1398,12 +1348,12 @@
 
                 ctx.font = "bold 8px 'JetBrains Mono', monospace";
                 ctx.textAlign = "center";
-                ctx.fillStyle = prof.asc > 0 ? "#fde047" : "#cbd5e1";
+                ctx.fillStyle = prof.asc > 0 ? "#fde047" : "#e2e8f0";
                 ctx.fillText(prof.asc > 0 ? `A${prof.asc}•L${ag.level}` : `L${ag.level}`, ag.x, ag.y + 21);
                 ctx.textAlign = "left";
             });
 
-            // Chain Lightning Links
+            // 5. Chain Lightning Links
             lightningLinks.forEach(ln => {
                 ctx.save();
                 ctx.strokeStyle = ln.color; ctx.lineWidth = 2.2;
@@ -1416,7 +1366,7 @@
                 ctx.restore();
             });
 
-            // Enemies & Bosses
+            // 6. Enemies & Bosses
             enemies.forEach(en => {
                 const r = en.isBoss ? 19 : (en.kind === "armored" ? 13 : (en.kind === "runner" ? 9 : 11));
                 ctx.fillStyle = en.isBoss ? "#3b0712" : (en.slowTimer > 0 ? "#0c2d3a" : "#2a090d");
@@ -1437,7 +1387,7 @@
                 ctx.textAlign = "left";
             });
 
-            // Projectiles
+            // 7. Projectiles
             projectiles.forEach(p => {
                 ctx.fillStyle = p.isNova ? p.novaColor : "#06b6d4";
                 ctx.shadowColor = p.isNova ? p.novaColor : "#06b6d4";
@@ -1446,7 +1396,7 @@
                 ctx.shadowBlur = 0;
             });
 
-            // Particles
+            // 8. Particles
             particles.forEach(pt => {
                 ctx.globalAlpha = Math.max(0, pt.life / 24);
                 ctx.fillStyle = pt.color;
@@ -1523,7 +1473,7 @@
             const pct = ag.level >= MAX_LEVEL ? 100 : Math.min(100, Math.round((ag.xp / ag.xpToNext) * 100));
 
             const roomSel = document.getElementById('inspRoomSelect');
-            roomSel.innerHTML = ROOMS.map(r => `<option value="${r.id}" ${r.id === ag.room ? 'selected' : ''}>${r.name} (${r.synergy})</option>`).join('');
+            roomSel.innerHTML = DESK_STATIONS.map(r => `<option value="${r.id}" ${r.id === ag.room ? 'selected' : ''}>${r.name} (${r.synergy})</option>`).join('');
 
             const stageLvLabels = ["Lv.1", "Lv.10", "Lv.20", "Lv.50"];
             [0, 1, 2, 3].forEach(t => {
@@ -1567,7 +1517,7 @@
         }
 
         function openHireModal() {
-            document.getElementById('hireRoomSelect').innerHTML = ROOMS.map(r => `<option value="${r.id}">${r.name} (${r.synergy})</option>`).join('');
+            document.getElementById('hireRoomSelect').innerHTML = DESK_STATIONS.map(r => `<option value="${r.id}">${r.name} (${r.synergy})</option>`).join('');
             document.getElementById('rosterPresetSelect').value = "";
             document.getElementById('hirePathSelect').value = "creator";
             document.getElementById('hireModal').classList.remove('hidden');
@@ -1612,7 +1562,7 @@
             closeHireModal();
             selectAgent(newAgent.id);
             playTone(523, 0.1, "triangle", 0.04);
-            logActivity("HR", `Hired ${name} (${ROLE_PATHS[pathKey].weaponLabel}) in Zone ${room + 1}!`, "text-emerald-400 font-bold");
+            logActivity("HR", `Hired ${name} (${ROLE_PATHS[pathKey].weaponLabel}) at ${DESK_STATIONS[room].name}!`, "text-emerald-400 font-bold");
         }
 
         function restartGame() {
