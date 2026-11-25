@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phoenix HQ Defense — Role Weapons, 2D Characters & Ascend</title>
+    <title>Phoenix HQ Defense — Full Role Perks, Room Reassign, Enemies & Upgrade Cards</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
@@ -67,9 +67,9 @@
                     </div>
                     <div>
                         <h1 class="text-sm sm:text-lg font-black tracking-wider text-white">
-                            PHOENIX HQ DEFENSE <span class="text-phx-orange">//</span> <span class="text-gray-300 text-xs sm:text-sm font-bold">ROLE WEAPONS & ASCEND</span>
+                            PHOENIX HQ DEFENSE <span class="text-phx-orange">//</span> <span class="text-gray-300 text-xs sm:text-sm font-bold">COMPLETE EDITION</span>
                         </h1>
-                        <p class="text-[11px] font-mono text-gray-400">Unique 2D Weapons per Role • 2D Agent Sprites • Role Evolution Paths • Ascend at Lv.99</p>
+                        <p class="text-[11px] font-mono text-gray-400">Role Perks • Room Reassign • Enemy Types & Bosses • Wave Upgrade Cards • Ascend</p>
                     </div>
                 </div>
 
@@ -91,13 +91,16 @@
                     </div>
                 </div>
 
-                <!-- Speed, Sound & Hire -->
+                <!-- Speed, Sound, Cards & Hire -->
                 <div class="flex flex-wrap items-center gap-1.5">
                     <button id="speedBtn" onclick="toggleSpeed()" class="px-2.5 py-2 rounded-xl bg-phx-input hover:bg-white/10 border border-white/10 text-xs font-mono font-bold text-white cursor-pointer">
                         1x Speed
                     </button>
                     <button id="soundBtn" onclick="toggleSound()" class="px-2.5 py-2 rounded-xl bg-phx-input hover:bg-white/10 border border-white/10 text-xs font-mono font-bold text-emerald-400 cursor-pointer">
                         🔊 SFX ON
+                    </button>
+                    <button onclick="openUpgradeCardsModal(false)" class="px-3 py-2 rounded-xl bg-purple-600/30 hover:bg-purple-600/50 border border-purple-400/50 text-purple-200 font-black text-xs cursor-pointer">
+                        🃏 Cards
                     </button>
                     <button onclick="spawnWaveNow()" class="px-3 py-2 rounded-xl bg-gradient-to-r from-phx-red to-phx-orange hover:opacity-95 text-white font-black text-xs shadow-[0_0_16px_rgba(255,140,0,0.45)] cursor-pointer">
                         ▶ Next Wave
@@ -135,12 +138,12 @@
         <!-- LEFT 8 COLS: 2D FLOORPLAN ARENA -->
         <section class="xl:col-span-8 glass-panel rounded-2xl p-3 flex flex-col min-h-[560px] lg:min-h-[650px] relative">
             <div class="flex flex-wrap items-center justify-between gap-2 px-2 pb-2 text-[11px] font-mono text-gray-400">
-                <span class="text-white font-bold">🏢 PHOENIX HQ ARENA (ROLE WEAPONS, 2D SPRITES & ASCENSION)</span>
+                <span class="text-white font-bold">🏢 PHOENIX HQ ARENA</span>
                 <div class="flex items-center gap-3">
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-phx-orange"></span> Ignis Sword</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-400"></span> Tempest Lance</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-fuchsia-400"></span> Aether Staff</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Shadow Blade</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-phx-orange"></span> Ignis (+Room DMG)</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-400"></span> Tempest (Chain)</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-fuchsia-400"></span> Aether (+XP/Cr)</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Shadow (Slow)</span>
                 </div>
             </div>
 
@@ -152,7 +155,7 @@
         <!-- RIGHT 4 COLS: INSPECTOR, LOG & RESET -->
         <aside class="xl:col-span-4 flex flex-col gap-4">
 
-            <!-- 1. Agent Inspector with 2D Sprite Preview, Role Weapon & Ascend -->
+            <!-- 1. Agent Inspector with Room Reassign, Role Perks & Ascend -->
             <div class="glass-panel rounded-2xl p-4 border border-phx-orange/30">
                 <div class="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
                     <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-phx-orange">🧬 2D AGENT INSPECTOR</span>
@@ -166,12 +169,15 @@
                             <h2 id="inspName" class="text-sm font-black text-white truncate">Chief Orchestrator</h2>
                             <span id="inspAscBadge" class="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40">ASC 0</span>
                         </div>
-                        <p id="inspOffice" class="text-xs font-semibold text-phx-orange truncate">1. Command HQ</p>
                         <p id="inspRole" class="text-[11px] font-mono text-gray-400 truncate">Starter Commander • Lv.1</p>
+                        <div class="mt-1 flex items-center gap-1.5">
+                            <span class="text-[10px] font-mono text-gray-400">ROOM:</span>
+                            <select id="inspRoomSelect" onchange="reassignSelectedAgentRoom()" class="flex-grow px-2 py-1 rounded-lg bg-phx-input border border-white/15 text-[11px] font-mono text-phx-orange focus:border-phx-orange focus:outline-none"></select>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Role Path & Weapon Pills -->
+                <!-- Role Path, Weapon & Perk -->
                 <div class="mb-2 px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/10 font-mono text-[10px] space-y-1">
                     <div class="flex items-center justify-between">
                         <span class="text-gray-400">ROLE PATH:</span>
@@ -180,6 +186,10 @@
                     <div class="flex items-center justify-between">
                         <span class="text-gray-400">WEAPON:</span>
                         <span id="inspWeaponName" class="font-bold text-orange-400">🔥 Ignis Greatsword</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">ROLE PERK:</span>
+                        <span id="inspRolePerk" class="font-bold text-emerald-300">+12% Room DMG</span>
                     </div>
                 </div>
 
@@ -191,7 +201,7 @@
                     <div id="stage-3" class="py-1 rounded bg-black/40 border border-white/10 text-gray-500">Lv.50<br>APEX</div>
                 </div>
 
-                <div class="mb-3">
+                <div class="mb-2.5">
                     <div class="flex justify-between font-mono text-[10px] text-gray-400 mb-1">
                         <span>AUTO-XP PROGRESS</span>
                         <span id="inspXpText" class="text-emerald-400">0 / 49 XP</span>
@@ -201,8 +211,7 @@
                     </div>
                 </div>
 
-                <div class="bg-black/45 rounded-xl p-2.5 border border-white/5 font-mono text-[11px] space-y-1.5 mb-3">
-                    <div><span class="text-gray-500">2D RIG:</span> <span id="inspFormDesc" class="text-amber-300">2D Cadet Rig</span></div>
+                <div class="bg-black/45 rounded-xl p-2.5 border border-white/5 font-mono text-[11px] space-y-1 mb-3">
                     <div><span class="text-gray-500">ASCEND BONUS:</span> <span id="inspAscBonus" class="text-amber-300">+0% DMG / +0% XP</span></div>
                     <div><span class="text-gray-500">NEXT EVO:</span> <span id="inspNextEvo" class="text-fuchsia-300">Ignis Vanguard (Lv.10)</span></div>
                     <div><span class="text-gray-500">SKILLS:</span> <span id="inspSkills" class="text-cyan-300">Unlocks at Lv.10, Lv.20 & Lv.50</span></div>
@@ -231,7 +240,7 @@
                     </div>
                     <button onclick="clearFeed()" class="text-[10px] font-mono text-gray-400 hover:text-white cursor-pointer">Clear</button>
                 </div>
-                <div id="activityFeed" class="bg-[#08090d] border border-white/10 rounded-xl p-2.5 font-mono text-[11px] leading-relaxed h-40 overflow-y-auto space-y-1.5 text-gray-300">
+                <div id="activityFeed" class="bg-[#08090d] border border-white/10 rounded-xl p-2.5 font-mono text-[11px] leading-relaxed h-36 overflow-y-auto space-y-1.5 text-gray-300">
                 </div>
             </div>
 
@@ -245,7 +254,7 @@
         </aside>
     </main>
 
-    <!-- HIRE AGENT MODAL WITH PHX ROSTER PRESETS & ROLE EVOLUTION PATH -->
+    <!-- HIRE AGENT MODAL -->
     <div id="hireModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="glass-panel rounded-2xl max-w-md w-full p-5 border border-phx-orange/40 shadow-2xl space-y-4">
             <div class="flex items-center justify-between border-b border-white/10 pb-3">
@@ -280,10 +289,10 @@
                 <div>
                     <label class="block text-gray-400 font-mono mb-1">Role Evolution Path & Weapon:</label>
                     <select id="hirePathSelect" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
-                        <option value="command">🔥 Ignis Sovereign (Ignis Greatsword • Command)</option>
-                        <option value="esports">⚡ Tempest Striker (Tempest Lance • Esports)</option>
-                        <option value="creator">✨ Aether Prism (Aether Prism Staff • Creator)</option>
-                        <option value="tech">🌑 Shadow Core (Shadow Twin-Blade • Tech/Ops)</option>
+                        <option value="command">🔥 Ignis Sovereign (Ignis Greatsword • +Room DMG)</option>
+                        <option value="esports">⚡ Tempest Striker (Tempest Lance • Chain Lightning)</option>
+                        <option value="creator">✨ Aether Prism (Aether Prism Staff • +Room XP & +Cr)</option>
+                        <option value="tech">🌑 Shadow Core (Shadow Twin-Blade • Enemy Slow)</option>
                     </select>
                 </div>
                 <div>
@@ -311,10 +320,25 @@
         </div>
     </div>
 
+    <!-- UPGRADE CARDS MODAL -->
+    <div id="cardsModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl max-w-2xl w-full p-5 border border-purple-400/40 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <div>
+                    <h3 id="cardsModalTitle" class="text-base font-black text-white">🃏 WAVE UPGRADE CARDS</h3>
+                    <p id="cardsModalSub" class="text-[11px] font-mono text-purple-300">Pick 1 tactical upgrade for your Phoenix HQ run</p>
+                </div>
+                <button onclick="closeUpgradeCardsModal()" class="text-gray-400 hover:text-white font-bold text-lg cursor-pointer">✕</button>
+            </div>
+
+            <div id="cardsGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+        </div>
+    </div>
+
     <div id="toast" class="fixed bottom-4 right-4 z-50 hidden px-4 py-2.5 rounded-xl bg-phx-panel border border-phx-orange text-white text-xs font-bold shadow-2xl"></div>
 
     <script>
-        const STORAGE_BEST_KEY = 'phx_hq_defense_best_v5';
+        const STORAGE_BEST_KEY = 'phx_hq_defense_best_v6';
         const MAX_LEVEL = 99;
 
         const ROOMS = [
@@ -331,61 +355,74 @@
         const ROLE_PATHS = {
             command: {
                 pathName: "IGNIS SOVEREIGN PATH",
+                perkLabel: "+12% Room DMG Buff",
                 weaponType: "sword",
                 weaponLabel: "🔥 Ignis Greatsword",
                 weaponBladeColor: "#fb923c",
                 weaponGlowColor: "#ff8c00",
                 accent: "#ff8c00",
                 stages: {
-                    0: { formName: "INITIATE", rigStyle: "cadet", icon: null, desc: "2D Cadet Rig • Ignis Blade", suit: "#334155", trim: "#ff8c00", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 1.0, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
-                    1: { formName: "IGNIS VANGUARD", rigStyle: "vanguard", icon: "🛡️", desc: "2D Armored Vanguard • Twin Volley", suit: "#7c2d12", trim: "#ff8c00", aura: "#ff8c00", sparks: 1, dmgMult: 1.15, cdMult: 0.9, xpBonus: 1.05, novaEvery: 0, extraShots: 0, skill: "🔥 Ember Volley" },
-                    2: { formName: "PYRE WARLORD", rigStyle: "warlord", icon: "⚔️", desc: "2D Blade Warlord • +35% DMG & Fast Reload", suit: "#881337", trim: "#ff3b30", aura: "#ff3b30", sparks: 2, dmgMult: 1.35, cdMult: 0.72, xpBonus: 1.1, novaEvery: 0, extraShots: 0, skill: "⚡ Overclocked Burst" },
-                    3: { formName: "PHOENIX SOVEREIGN", rigStyle: "sovereign", icon: "👑", desc: "2D Winged Sovereign • Phoenix Nova every 4th shot", suit: "#78350f", trim: "#facc15", aura: "#facc15", sparks: 3, dmgMult: 1.6, cdMult: 0.56, xpBonus: 1.2, novaEvery: 4, extraShots: 0, skill: "👑 Phoenix Nova" }
+                    0: { formName: "INITIATE", rigStyle: "cadet", icon: null, suit: "#334155", trim: "#ff8c00", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 1.0, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
+                    1: { formName: "IGNIS VANGUARD", rigStyle: "vanguard", icon: "🛡️", suit: "#7c2d12", trim: "#ff8c00", aura: "#ff8c00", sparks: 1, dmgMult: 1.15, cdMult: 0.9, xpBonus: 1.05, novaEvery: 0, extraShots: 0, skill: "🔥 Ember Volley" },
+                    2: { formName: "PYRE WARLORD", rigStyle: "warlord", icon: "⚔️", suit: "#881337", trim: "#ff3b30", aura: "#ff3b30", sparks: 2, dmgMult: 1.35, cdMult: 0.72, xpBonus: 1.1, novaEvery: 0, extraShots: 0, skill: "⚡ Overclocked Burst" },
+                    3: { formName: "PHOENIX SOVEREIGN", rigStyle: "sovereign", icon: "👑", suit: "#78350f", trim: "#facc15", aura: "#facc15", sparks: 3, dmgMult: 1.6, cdMult: 0.56, xpBonus: 1.2, novaEvery: 4, extraShots: 0, skill: "👑 Phoenix Nova" }
                 }
             },
             esports: {
                 pathName: "TEMPEST STRIKER PATH",
+                perkLabel: "⚡ Chain Lightning",
                 weaponType: "lance",
                 weaponLabel: "⚡ Tempest Storm Lance",
                 weaponBladeColor: "#7dd3fc",
                 weaponGlowColor: "#38bdf8",
                 accent: "#38bdf8",
                 stages: {
-                    0: { formName: "ROOKIE SCOUT", rigStyle: "cadet", icon: null, desc: "2D Scout Rig • Storm Lance", suit: "#1e3a5f", trim: "#38bdf8", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 0.95, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
-                    1: { formName: "TEMPEST AEGIS", rigStyle: "vanguard", icon: "⚡", desc: "2D Storm Striker • High-Velocity Twin Bolt", suit: "#0c4a6e", trim: "#38bdf8", aura: "#38bdf8", sparks: 1, dmgMult: 1.12, cdMult: 0.82, xpBonus: 1.0, novaEvery: 0, extraShots: 0, skill: "⚡ Storm Twin-Bolt" },
-                    2: { formName: "STORM DUELIST", rigStyle: "warlord", icon: "🗡️", desc: "2D Duelist Rig • Triple Bolt Salvo", suit: "#1e3a8a", trim: "#60a5fa", aura: "#60a5fa", sparks: 2, dmgMult: 1.28, cdMult: 0.66, xpBonus: 1.05, novaEvery: 0, extraShots: 1, skill: "🌪️ Triple Salvo" },
-                    3: { formName: "THUNDER PARAGON", rigStyle: "sovereign", icon: "🌩️", desc: "2D Winged Paragon • Triple Salvo + Shock Nova", suit: "#172554", trim: "#22d3ee", aura: "#22d3ee", sparks: 3, dmgMult: 1.5, cdMult: 0.5, xpBonus: 1.1, novaEvery: 5, extraShots: 1, skill: "🌩️ Thunder Nova" }
+                    0: { formName: "ROOKIE SCOUT", rigStyle: "cadet", icon: null, suit: "#1e3a5f", trim: "#38bdf8", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 0.95, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
+                    1: { formName: "TEMPEST AEGIS", rigStyle: "vanguard", icon: "⚡", suit: "#0c4a6e", trim: "#38bdf8", aura: "#38bdf8", sparks: 1, dmgMult: 1.12, cdMult: 0.82, xpBonus: 1.0, novaEvery: 0, extraShots: 0, skill: "⚡ Storm Twin-Bolt" },
+                    2: { formName: "STORM DUELIST", rigStyle: "warlord", icon: "🗡️", suit: "#1e3a8a", trim: "#60a5fa", aura: "#60a5fa", sparks: 2, dmgMult: 1.28, cdMult: 0.66, xpBonus: 1.05, novaEvery: 0, extraShots: 1, skill: "🌪️ Triple Salvo" },
+                    3: { formName: "THUNDER PARAGON", rigStyle: "sovereign", icon: "🌩️", suit: "#172554", trim: "#22d3ee", aura: "#22d3ee", sparks: 3, dmgMult: 1.5, cdMult: 0.5, xpBonus: 1.1, novaEvery: 5, extraShots: 1, skill: "🌩️ Thunder Nova" }
                 }
             },
             creator: {
                 pathName: "AETHER PRISM PATH",
+                perkLabel: "+15% Room XP & +15% Cr",
                 weaponType: "staff",
                 weaponLabel: "✨ Aether Prism Staff",
                 weaponBladeColor: "#f0abfc",
                 weaponGlowColor: "#e879f9",
                 accent: "#e879f9",
                 stages: {
-                    0: { formName: "NOVICE CREATOR", rigStyle: "cadet", icon: null, desc: "2D Creator Rig • Prism Staff", suit: "#3b1d5e", trim: "#e879f9", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 1.0, xpBonus: 1.1, novaEvery: 0, extraShots: 0 },
-                    1: { formName: "AETHER WEAVER", rigStyle: "vanguard", icon: "✨", desc: "2D Prism Weaver • +20% XP & Twin Bolt", suit: "#581c87", trim: "#e879f9", aura: "#e879f9", sparks: 1, dmgMult: 1.1, cdMult: 0.88, xpBonus: 1.2, novaEvery: 0, extraShots: 0, skill: "✨ Prism Focus" },
-                    2: { formName: "PRISM ARCHITECT", rigStyle: "warlord", icon: "💎", desc: "2D Prism Architect • +35% XP & Fast Shot", suit: "#701a75", trim: "#f472b6", aura: "#f472b6", sparks: 2, dmgMult: 1.25, cdMult: 0.72, xpBonus: 1.35, novaEvery: 0, extraShots: 0, skill: "💎 Radiant Burst" },
-                    3: { formName: "ASTRAL VIRTUOSO", rigStyle: "sovereign", icon: "🌟", desc: "2D Winged Virtuoso • Solar Nova every 4th shot", suit: "#4a044e", trim: "#f0abfc", aura: "#f0abfc", sparks: 3, dmgMult: 1.48, cdMult: 0.55, xpBonus: 1.5, novaEvery: 4, extraShots: 0, skill: "🌟 Solar Nova" }
+                    0: { formName: "NOVICE CREATOR", rigStyle: "cadet", icon: null, suit: "#3b1d5e", trim: "#e879f9", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 1.0, xpBonus: 1.1, novaEvery: 0, extraShots: 0 },
+                    1: { formName: "AETHER WEAVER", rigStyle: "vanguard", icon: "✨", suit: "#581c87", trim: "#e879f9", aura: "#e879f9", sparks: 1, dmgMult: 1.1, cdMult: 0.88, xpBonus: 1.2, novaEvery: 0, extraShots: 0, skill: "✨ Prism Focus" },
+                    2: { formName: "PRISM ARCHITECT", rigStyle: "warlord", icon: "💎", suit: "#701a75", trim: "#f472b6", aura: "#f472b6", sparks: 2, dmgMult: 1.25, cdMult: 0.72, xpBonus: 1.35, novaEvery: 0, extraShots: 0, skill: "💎 Radiant Burst" },
+                    3: { formName: "ASTRAL VIRTUOSO", rigStyle: "sovereign", icon: "🌟", suit: "#4a044e", trim: "#f0abfc", aura: "#f0abfc", sparks: 3, dmgMult: 1.48, cdMult: 0.55, xpBonus: 1.5, novaEvery: 4, extraShots: 0, skill: "🌟 Solar Nova" }
                 }
             },
             tech: {
                 pathName: "SHADOW CORE PATH",
+                perkLabel: "❄️ Slows Enemies (45%)",
                 weaponType: "blade",
                 weaponLabel: "🌑 Shadow Twin-Blade",
                 weaponBladeColor: "#34d399",
                 weaponGlowColor: "#10b981",
                 accent: "#10b981",
                 stages: {
-                    0: { formName: "UNIT-01 INITIATE", rigStyle: "cadet", icon: null, desc: "2D Tactical Operator • Shadow Blade", suit: "#134e4a", trim: "#10b981", aura: null, sparks: 0, dmgMult: 1.05, cdMult: 1.0, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
-                    1: { formName: "SHADOW SENTINEL", rigStyle: "vanguard", icon: "🛡️", desc: "2D Shadow Sentinel • Heavy Twin Pulse", suit: "#065f46", trim: "#10b981", aura: "#10b981", sparks: 1, dmgMult: 1.2, cdMult: 0.88, xpBonus: 1.05, novaEvery: 0, extraShots: 0, skill: "🛡️ Firewall Bolt" },
-                    2: { formName: "VOID SABOTEUR", rigStyle: "warlord", icon: "🕶️", desc: "2D Void Saboteur • High-Impact Piercing Shot", suit: "#064e3b", trim: "#34d399", aura: "#34d399", sparks: 2, dmgMult: 1.42, cdMult: 0.74, xpBonus: 1.1, novaEvery: 0, extraShots: 0, skill: "🕶️ Void Pierce" },
-                    3: { formName: "ABYSSAL OVERLORD", rigStyle: "sovereign", icon: "🌌", desc: "2D Winged Overlord • Rift Nova every 4th shot", suit: "#042f2e", trim: "#2dd4bf", aura: "#2dd4bf", sparks: 3, dmgMult: 1.68, cdMult: 0.58, xpBonus: 1.15, novaEvery: 4, extraShots: 0, skill: "🌌 Rift Nova" }
+                    0: { formName: "UNIT-01 INITIATE", rigStyle: "cadet", icon: null, suit: "#134e4a", trim: "#10b981", aura: null, sparks: 0, dmgMult: 1.05, cdMult: 1.0, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
+                    1: { formName: "SHADOW SENTINEL", rigStyle: "vanguard", icon: "🛡️", suit: "#065f46", trim: "#10b981", aura: "#10b981", sparks: 1, dmgMult: 1.2, cdMult: 0.88, xpBonus: 1.05, novaEvery: 0, extraShots: 0, skill: "🛡️ Firewall Bolt" },
+                    2: { formName: "VOID SABOTEUR", rigStyle: "warlord", icon: "🕶️", suit: "#064e3b", trim: "#34d399", aura: "#34d399", sparks: 2, dmgMult: 1.42, cdMult: 0.74, xpBonus: 1.1, novaEvery: 0, extraShots: 0, skill: "🕶️ Void Pierce" },
+                    3: { formName: "ABYSSAL OVERLORD", rigStyle: "sovereign", icon: "🌌", suit: "#042f2e", trim: "#2dd4bf", aura: "#2dd4bf", sparks: 3, dmgMult: 1.68, cdMult: 0.58, xpBonus: 1.15, novaEvery: 4, extraShots: 0, skill: "🌌 Rift Nova" }
                 }
             }
         };
+
+        const UPGRADE_CARD_POOL = [
+            { id: "dmg20", icon: "⚔️", title: "Forge Overclock", desc: "+20% Weapon DMG for all agents", cost: 0, apply: () => { runBuffs.dmgMult += 0.2; } },
+            { id: "xp25",  icon: "📈", title: "Neural Stream", desc: "+25% XP Gain for all agents", cost: 0, apply: () => { runBuffs.xpMult += 0.25; } },
+            { id: "cr25",  icon: "💰", title: "Treasury Surge", desc: "+25% Credits from defeated enemies", cost: 0, apply: () => { runBuffs.credMult += 0.25; } },
+            { id: "haste", icon: "⚡", title: "Rapid Triggers", desc: "+15% Attack Speed across HQ", cost: 0, apply: () => { runBuffs.spdMult = Math.max(0.55, runBuffs.spdMult * 0.85); } },
+            { id: "pulse", icon: "🛡️", title: "Heavy Firewall", desc: "+45 Firewall Pulse DMG & +15% Core HP", cost: 0, apply: () => { runBuffs.pulseBonus += 45; coreHp = Math.min(100, coreHp + 15); updateHud(); } },
+            { id: "nova",  icon: "🌟", title: "Nova Resonance", desc: "+25% Nova & Chain Lightning damage", cost: 0, apply: () => { runBuffs.perkMult += 0.25; } }
+        ];
 
         function inferPathFromRole(roleText = "") {
             const r = roleText.toLowerCase();
@@ -410,8 +447,7 @@
             name: "Chief Orchestrator",
             role: "👑 Leader & Commander",
             avatar: "🧠",
-            pathKey: "command",
-            specialty: "Follows the Ignis Sovereign Evolution Path."
+            pathKey: "command"
         };
 
         let soundEnabled = true;
@@ -436,6 +472,7 @@
         let enemies = [];
         let projectiles = [];
         let particles = [];
+        let lightningLinks = [];
         let selectedAgentId = "a1";
         let selectedHireAvatar = "🦾";
         let wave = 1;
@@ -450,6 +487,16 @@
         let waveSpawnRemaining = 0;
         let spawnCooldown = 0;
         let tickTime = 0;
+        let pendingWaveCardPick = false;
+
+        let runBuffs = {
+            dmgMult: 1.0,
+            xpMult: 1.0,
+            credMult: 1.0,
+            spdMult: 1.0,
+            pulseBonus: 0,
+            perkMult: 1.0
+        };
 
         function loadBestRecord() {
             try {
@@ -496,11 +543,23 @@
             };
         }
 
+        function getRoomRoleBuffs(roomId) {
+            const roomAgents = agents.filter(a => a.room === roomId);
+            const ignisCount = roomAgents.filter(a => a.pathKey === "command").length;
+            const aetherCount = roomAgents.filter(a => a.pathKey === "creator").length;
+            return {
+                roomDmgMult: 1 + ignisCount * 0.12,
+                roomXpMult: 1 + aetherCount * 0.15,
+                roomCredMult: 1 + aetherCount * 0.15
+            };
+        }
+
         function getAgentProfile(ag) {
             const lvl = ag.level;
             const asc = ag.ascensions || 0;
             const room = ROOMS[ag.room];
             const pathObj = ROLE_PATHS[ag.pathKey] || ROLE_PATHS.command;
+            const roomBuffs = getRoomRoleBuffs(ag.room);
 
             let tier = 0;
             if (lvl >= 10) tier = 1;
@@ -512,15 +571,15 @@
             for (let t = 1; t <= tier; t++) {
                 if (pathObj.stages[t].skill) skills.push(pathObj.stages[t].skill);
             }
-            if (asc > 0) skills.push(`✨ Ascended Aura x${asc}`);
+            if (asc > 0) skills.push(`✨ Ascended x${asc}`);
 
             const ascDmgMult = 1 + asc * 0.25;
             const ascXpMult = 1 + asc * 0.15;
 
-            let cdMult = room.cdMult * stg.cdMult * Math.max(0.65, 1 - asc * 0.05);
+            let cdMult = room.cdMult * stg.cdMult * runBuffs.spdMult * Math.max(0.6, 1 - asc * 0.05);
             if (overdriveTimer > 0) cdMult *= 0.5;
 
-            const effectiveDamage = Math.round((22 + (lvl - 1) * 9) * stg.dmgMult * ascDmgMult);
+            const effectiveDamage = Math.round((22 + (lvl - 1) * 9) * stg.dmgMult * ascDmgMult * runBuffs.dmgMult * roomBuffs.roomDmgMult);
             const cooldownFrames = Math.max(8, Math.round(42 * cdMult));
 
             const nextStageObj = tier < 3 ? pathObj.stages[tier + 1] : null;
@@ -534,6 +593,7 @@
                 asc,
                 pathKey: ag.pathKey,
                 pathName: pathObj.pathName,
+                perkLabel: pathObj.perkLabel,
                 weaponType: pathObj.weaponType,
                 weaponLabel: pathObj.weaponLabel,
                 weaponBladeColor: pathObj.weaponBladeColor,
@@ -542,14 +602,14 @@
                 formName: stg.formName,
                 rigStyle: stg.rigStyle,
                 formIcon: stg.icon || ag.avatar,
-                formDesc: stg.desc,
                 suitColor: stg.suit,
                 trimColor: asc > 0 ? "#fde047" : stg.trim,
                 ringColor: room.color,
                 auraColor: asc > 0 ? "#facc15" : stg.aura,
                 sparks: stg.sparks,
                 skills,
-                xpBonus: stg.xpBonus * ascXpMult,
+                xpBonus: stg.xpBonus * ascXpMult * runBuffs.xpMult * roomBuffs.roomXpMult,
+                credBonus: runBuffs.credMult * roomBuffs.roomCredMult,
                 ascDmgPct: Math.round((ascDmgMult - 1) * 100),
                 ascXpPct: Math.round((ascXpMult - 1) * 100),
                 extraShots: stg.extraShots || 0,
@@ -566,7 +626,7 @@
                     const prof = getAgentProfile(ag);
                     spawnBurst(ag.x, ag.y, prof.auraColor || "#ff8c00", 28);
                     playTone(740, 0.18, "triangle", 0.06);
-                    logActivity("ROLE EVO", `${ag.name} (${prof.pathName}) evolved into ${prof.formName} at Lv.${m}!`, "text-amber-300 font-bold");
+                    logActivity("ROLE EVO", `${ag.name} evolved into ${prof.formName} at Lv.${m}!`, "text-amber-300 font-bold");
                     showToast(`🧬 ${ag.name} evolved into ${prof.formName}!`);
                 }
             });
@@ -619,8 +679,20 @@
 
             spawnBurst(ag.x, ag.y, "#facc15", 36);
             playTone(880, 0.22, "triangle", 0.07);
-            logActivity("ASCEND", `✨ ${ag.name} ASCENDED to Rank ASC ${ag.ascensions}! (+25% DMG / +15% XP)`, "text-yellow-300 font-bold");
+            logActivity("ASCEND", `✨ ${ag.name} ASCENDED to ASC ${ag.ascensions}!`, "text-yellow-300 font-bold");
             showToast(`✨ ${ag.name} Ascended to ASC ${ag.ascensions}!`);
+            refreshInspector();
+        }
+
+        function reassignSelectedAgentRoom() {
+            const ag = agents.find(a => a.id === selectedAgentId);
+            if (!ag) return;
+            const newRoom = parseInt(document.getElementById('inspRoomSelect').value, 10);
+            if (ag.room === newRoom) return;
+            ag.room = newRoom;
+            recomputePositions();
+            spawnBurst(ag.x, ag.y, ROOMS[newRoom].color, 14);
+            logActivity("MOVE", `${ag.name} moved to ${ROOMS[newRoom].name}!`, "text-cyan-300");
             refreshInspector();
         }
 
@@ -675,6 +747,7 @@
             }
         }
 
+        // Distinct enemy archetypes: RUNNER, ARMORED, BREACH, BOSS
         function spawnEnemy() {
             const isBoss = (wave % 5 === 0) && (enemies.filter(e => e.isBoss).length === 0);
             const scaleHp = (1 + (wave - 1) * 0.35) * currentMutator.hpMult;
@@ -693,28 +766,40 @@
                     id: "boss_" + Math.random().toString(36).slice(2, 7),
                     x: ex, y: ey,
                     hp: bossHp, maxHp: bossHp,
-                    speed: Math.max(0.45, scaleSpd * 0.65),
+                    baseSpeed: Math.max(0.45, scaleSpd * 0.65),
+                    slowTimer: 0,
                     coreDmg: 22,
                     xpReward: 75 + wave * 15,
                     creditReward: 65 + wave * 12,
                     label: "BOSS",
-                    isBoss: true
+                    isBoss: true,
+                    kind: "boss"
                 });
                 logActivity("BOSS", `⚠️ Raid Boss spawned on Wave ${wave}!`, "text-red-400 font-bold");
                 return;
             }
 
-            const maxHp = Math.round((34 + wave * 12) * scaleHp);
+            const roll = Math.random();
+            let kind = "breach", label = "BREACH", hpMult = 1.0, spdMult = 1.0, crBonus = 0;
+            if (roll < 0.35) {
+                kind = "runner"; label = "RUNNER"; hpMult = 0.72; spdMult = 1.42; crBonus = 2;
+            } else if (roll < 0.68) {
+                kind = "armored"; label = "ARMOR"; hpMult = 1.55; spdMult = 0.76; crBonus = 5;
+            }
+
+            const maxHp = Math.round((34 + wave * 12) * scaleHp * hpMult);
             enemies.push({
                 id: "e_" + Math.random().toString(36).slice(2, 7),
                 x: ex, y: ey,
                 hp: maxHp, maxHp,
-                speed: scaleSpd,
+                baseSpeed: scaleSpd * spdMult,
+                slowTimer: 0,
                 coreDmg: Math.min(25, 7 + Math.floor((wave - 1) * 1.5)),
                 xpReward: 18 + wave * 5,
-                creditReward: 14 + wave * 3,
-                label: wave >= 6 ? "BREACH" : (Math.random() > 0.5 ? "RAID" : "BUG"),
-                isBoss: false
+                creditReward: 14 + wave * 3 + crBonus,
+                label,
+                isBoss: false,
+                kind
             });
         }
 
@@ -724,9 +809,10 @@
             credits -= 30;
             updateHud();
             playTone(320, 0.12, "square", 0.04);
-            logActivity("PULSE", "Firewall Pulse fired!", "text-cyan-400 font-bold");
+            const pulseDmg = 50 + runBuffs.pulseBonus;
+            logActivity("PULSE", `Firewall Pulse fired (${pulseDmg} DMG)!`, "text-cyan-400 font-bold");
 
-            enemies.forEach(en => { en.hp -= 50; spawnBurst(en.x, en.y, "#06b6d4", 8); });
+            enemies.forEach(en => { en.hp -= pulseDmg; spawnBurst(en.x, en.y, "#06b6d4", 8); });
             enemies = enemies.filter(en => {
                 if (en.hp <= 0) { onEnemyDestroyed(en, agents[0], false); return false; }
                 return true;
@@ -775,7 +861,7 @@
             for (let i = enemies.length - 1; i >= 0; i--) {
                 const en = enemies[i];
                 if (Math.hypot(en.x - centerX, en.y - centerY) <= 95) {
-                    en.hp -= Math.round(dmg * 0.75);
+                    en.hp -= Math.round(dmg * 0.75 * runBuffs.perkMult);
                     if (en.hp <= 0) {
                         enemies.splice(i, 1);
                         onEnemyDestroyed(en, killerAgent, true);
@@ -784,8 +870,36 @@
             }
         }
 
+        function applyRoleOnHitPerks(killerAgent, hitEnemy, dmg) {
+            if (!killerAgent) return;
+            if (killerAgent.pathKey === "tech") {
+                hitEnemy.slowTimer = 90; // slows enemy for 1.5s
+            } else if (killerAgent.pathKey === "esports") {
+                // Chain lightning to closest other enemy within 130px
+                let chainTarget = null;
+                let bestD = 130;
+                enemies.forEach(other => {
+                    if (other.id !== hitEnemy.id) {
+                        const d = Math.hypot(other.x - hitEnemy.x, other.y - hitEnemy.y);
+                        if (d < bestD) { bestD = d; chainTarget = other; }
+                    }
+                });
+                if (chainTarget) {
+                    const chainDmg = Math.round(dmg * 0.55 * runBuffs.perkMult);
+                    chainTarget.hp -= chainDmg;
+                    lightningLinks.push({ x1: hitEnemy.x, y1: hitEnemy.y, x2: chainTarget.x, y2: chainTarget.y, life: 10, color: "#38bdf8" });
+                    if (chainTarget.hp <= 0) {
+                        const idx = enemies.indexOf(chainTarget);
+                        if (idx !== -1) enemies.splice(idx, 1);
+                        onEnemyDestroyed(chainTarget, killerAgent, false);
+                    }
+                }
+            }
+        }
+
         function onEnemyDestroyed(en, killerAgent, bonusNova = false) {
-            const credBonusMult = (killerAgent ? ROOMS[killerAgent.room].credMult : 1) * currentMutator.credMult;
+            const prof = killerAgent ? getAgentProfile(killerAgent) : null;
+            const credBonusMult = (killerAgent ? ROOMS[killerAgent.room].credMult : 1) * currentMutator.credMult * (prof ? prof.credBonus : 1);
             const earnedCr = Math.round((en.creditReward + (bonusNova ? 5 : 0)) * credBonusMult);
             score += earnedCr * 10;
             credits += earnedCr;
@@ -805,6 +919,64 @@
             logActivity(killerAgent ? killerAgent.name : "HQ", `Defeated ${en.label} (+${earnedCr} cr)`, "text-emerald-400");
             updateHud();
             saveBestRecord();
+        }
+
+        function openUpgradeCardsModal(fromWaveClear = false) {
+            const modal = document.getElementById('cardsModal');
+            const grid = document.getElementById('cardsGrid');
+            document.getElementById('cardsModalTitle').textContent = fromWaveClear
+                ? `🃏 WAVE ${wave - 1} CLEARED — PICK AN UPGRADE CARD!`
+                : "🃏 TACTICAL UPGRADE CARDS";
+            document.getElementById('cardsModalSub').textContent = fromWaveClear
+                ? "Free Wave Clear Reward — Choose 1 card"
+                : "Pick a card (Costs 45 Credits per pick)";
+
+            const shuffled = [...UPGRADE_CARD_POOL].sort(() => Math.random() - 0.5).slice(0, 3);
+            grid.innerHTML = shuffled.map(card => {
+                const effectiveCost = fromWaveClear ? 0 : 45;
+                return `
+                    <button onclick="pickUpgradeCard('${card.id}', ${effectiveCost})"
+                        class="text-left p-4 rounded-xl bg-phx-input hover:bg-purple-950/50 border border-white/15 hover:border-purple-400 transition flex flex-col justify-between gap-3 cursor-pointer">
+                        <div>
+                            <div class="text-2xl mb-2">${card.icon}</div>
+                            <div class="text-sm font-black text-white">${card.title}</div>
+                            <div class="text-xs text-gray-300 mt-1">${card.desc}</div>
+                        </div>
+                        <div class="font-mono text-[11px] font-bold ${effectiveCost === 0 ? 'text-emerald-400' : 'text-amber-300'}">
+                            ${effectiveCost === 0 ? "FREE WAVE REWARD" : `COST: ${effectiveCost} CR`}
+                        </div>
+                    </button>
+                `;
+            }).join('');
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeUpgradeCardsModal() {
+            document.getElementById('cardsModal').classList.add('hidden');
+            if (pendingWaveCardPick) {
+                pendingWaveCardPick = false;
+                startWave(wave + 1);
+            }
+        }
+
+        function pickUpgradeCard(cardId, cost) {
+            if (cost > 0) {
+                if (credits < cost) { showToast(`Need ${cost} Credits!`); return; }
+                credits -= cost;
+                updateHud();
+            }
+            const card = UPGRADE_CARD_POOL.find(c => c.id === cardId);
+            if (card) {
+                card.apply();
+                logActivity("CARD", `Activated "${card.title}" (${card.desc})!`, "text-purple-300 font-bold");
+                showToast(`🃏 Activated: ${card.title}!`);
+            }
+            const shouldStartNext = pendingWaveCardPick;
+            pendingWaveCardPick = false;
+            document.getElementById('cardsModal').classList.add('hidden');
+            refreshInspector();
+            if (shouldStartNext) startWave(wave + 1);
         }
 
         function spawnBurst(x, y, color, count) {
@@ -870,16 +1042,24 @@
                     waveSpawnRemaining--;
                     spawnCooldown = Math.max(18, 60 - wave * 4);
                 }
-            } else if (enemies.length === 0) {
-                startWave(wave + 1);
+            } else if (enemies.length === 0 && !pendingWaveCardPick) {
+                if (wave >= 1) {
+                    pendingWaveCardPick = true;
+                    openUpgradeCardsModal(true);
+                } else {
+                    startWave(wave + 1);
+                }
             }
 
             for (let i = enemies.length - 1; i >= 0; i--) {
                 const en = enemies[i];
+                if (en.slowTimer > 0) en.slowTimer--;
+                const curSpeed = en.baseSpeed * (en.slowTimer > 0 ? 0.55 : 1.0);
+
                 const dx = CORE.x - en.x;
                 const dy = CORE.y - en.y;
                 const dist = Math.hypot(dx, dy);
-                if (dist > 1) { en.x += (dx / dist) * en.speed; en.y += (dy / dist) * en.speed; }
+                if (dist > 1) { en.x += (dx / dist) * curSpeed; en.y += (dy / dist) * curSpeed; }
                 if (dist <= CORE.radius + (en.isBoss ? 18 : 10)) {
                     coreHp -= en.coreDmg;
                     spawnBurst(en.x, en.y, "#ef4444", 12);
@@ -905,7 +1085,6 @@
                     if (d < bestD) { bestD = d; target = e; }
                 });
 
-                // Smoothly aim weapon toward nearest enemy
                 ag.aimAngle = Math.atan2(target.y - (ag.y - 2), target.x - ag.x);
 
                 if (ag.cooldown > 0) { ag.cooldown--; return; }
@@ -953,6 +1132,7 @@
                     spawnBurst(hitX, hitY, p.isNova ? p.novaColor : "#06b6d4", 4);
                     projectiles.splice(i, 1);
                     const killer = agents.find(a => a.id === p.ownerId);
+                    applyRoleOnHitPerks(killer, target, p.damage);
                     if (p.isNova) triggerPhoenixNova(hitX, hitY, p.damage, killer, p.novaColor);
                     if (target.hp <= 0) {
                         const idx = enemies.indexOf(target);
@@ -965,6 +1145,11 @@
                 }
             }
 
+            for (let i = lightningLinks.length - 1; i >= 0; i--) {
+                lightningLinks[i].life--;
+                if (lightningLinks[i].life <= 0) lightningLinks.splice(i, 1);
+            }
+
             for (let i = particles.length - 1; i >= 0; i--) {
                 const pt = particles[i];
                 pt.x += pt.vx; pt.y += pt.vy; pt.life--;
@@ -972,7 +1157,6 @@
             }
         }
 
-        // Draws the role-specific 2D weapon in the agent's hand
         function drawRoleWeapon(targetCtx, prof, aimAngle, recoilOffset) {
             targetCtx.save();
             targetCtx.translate(4, -1 - recoilOffset);
@@ -982,84 +1166,65 @@
             targetCtx.scale(lenScale, lenScale);
 
             if (prof.weaponType === "sword") {
-                // Ignis Greatsword: hilt + crossguard + fiery blade
                 targetCtx.strokeStyle = "#92400e";
                 targetCtx.lineWidth = 2.4;
                 targetCtx.beginPath();
-                targetCtx.moveTo(-4, 0);
-                targetCtx.lineTo(1, 0);
+                targetCtx.moveTo(-4, 0); targetCtx.lineTo(1, 0);
                 targetCtx.stroke();
 
                 targetCtx.strokeStyle = "#facc15";
                 targetCtx.lineWidth = 2.4;
                 targetCtx.beginPath();
-                targetCtx.moveTo(1, -4.5);
-                targetCtx.lineTo(1, 4.5);
+                targetCtx.moveTo(1, -4.5); targetCtx.lineTo(1, 4.5);
                 targetCtx.stroke();
 
                 targetCtx.fillStyle = prof.weaponBladeColor;
                 targetCtx.shadowColor = prof.weaponGlowColor;
                 targetCtx.shadowBlur = 7;
                 targetCtx.beginPath();
-                targetCtx.moveTo(1, -2.5);
-                targetCtx.lineTo(16, 0);
-                targetCtx.lineTo(1, 2.5);
+                targetCtx.moveTo(1, -2.5); targetCtx.lineTo(16, 0); targetCtx.lineTo(1, 2.5);
                 targetCtx.closePath();
                 targetCtx.fill();
             } else if (prof.weaponType === "lance") {
-                // Tempest Storm Lance: long shaft + twin storm prongs
                 targetCtx.strokeStyle = "#e2e8f0";
                 targetCtx.lineWidth = 2;
                 targetCtx.beginPath();
-                targetCtx.moveTo(-7, 0);
-                targetCtx.lineTo(13, 0);
+                targetCtx.moveTo(-7, 0); targetCtx.lineTo(13, 0);
                 targetCtx.stroke();
 
                 targetCtx.fillStyle = prof.weaponBladeColor;
                 targetCtx.shadowColor = prof.weaponGlowColor;
                 targetCtx.shadowBlur = 8;
                 targetCtx.beginPath();
-                targetCtx.moveTo(12, -3.5);
-                targetCtx.lineTo(20, 0);
-                targetCtx.lineTo(12, 3.5);
-                targetCtx.lineTo(14.5, 0);
+                targetCtx.moveTo(12, -3.5); targetCtx.lineTo(20, 0); targetCtx.lineTo(12, 3.5); targetCtx.lineTo(14.5, 0);
                 targetCtx.closePath();
                 targetCtx.fill();
             } else if (prof.weaponType === "staff") {
-                // Aether Prism Staff: staff + floating prism crystal at tip
                 targetCtx.strokeStyle = "#c084fc";
                 targetCtx.lineWidth = 2.2;
                 targetCtx.beginPath();
-                targetCtx.moveTo(-5, 0);
-                targetCtx.lineTo(12, 0);
+                targetCtx.moveTo(-5, 0); targetCtx.lineTo(12, 0);
                 targetCtx.stroke();
 
                 targetCtx.fillStyle = prof.weaponBladeColor;
                 targetCtx.shadowColor = prof.weaponGlowColor;
                 targetCtx.shadowBlur = 9;
                 targetCtx.beginPath();
-                targetCtx.moveTo(12, -5);
-                targetCtx.lineTo(17.5, 0);
-                targetCtx.lineTo(12, 5);
-                targetCtx.lineTo(9.5, 0);
+                targetCtx.moveTo(12, -5); targetCtx.lineTo(17.5, 0); targetCtx.lineTo(12, 5); targetCtx.lineTo(9.5, 0);
                 targetCtx.closePath();
                 targetCtx.fill();
             } else {
-                // Shadow Twin-Blade: curved stealth blade
                 targetCtx.strokeStyle = "#334155";
                 targetCtx.lineWidth = 2.4;
                 targetCtx.beginPath();
-                targetCtx.moveTo(-3, 0);
-                targetCtx.lineTo(2, 0);
+                targetCtx.moveTo(-3, 0); targetCtx.lineTo(2, 0);
                 targetCtx.stroke();
 
                 targetCtx.fillStyle = prof.weaponBladeColor;
                 targetCtx.shadowColor = prof.weaponGlowColor;
                 targetCtx.shadowBlur = 7;
                 targetCtx.beginPath();
-                targetCtx.moveTo(2, -2.5);
-                targetCtx.quadraticCurveTo(11, -3.5, 16, 1.5);
-                targetCtx.lineTo(2, 2.2);
+                targetCtx.moveTo(2, -2.5); targetCtx.quadraticCurveTo(11, -3.5, 16, 1.5); targetCtx.lineTo(2, 2.2);
                 targetCtx.closePath();
                 targetCtx.fill();
             }
@@ -1096,39 +1261,28 @@
                 targetCtx.fillStyle = prof.trimColor;
                 targetCtx.globalAlpha = 0.75;
                 targetCtx.beginPath();
-                targetCtx.moveTo(-4, -2 + bob);
-                targetCtx.lineTo(-17, -11 + bob * 0.6);
-                targetCtx.lineTo(-11, 3 + bob);
-                targetCtx.closePath();
-                targetCtx.fill();
+                targetCtx.moveTo(-4, -2 + bob); targetCtx.lineTo(-17, -11 + bob * 0.6); targetCtx.lineTo(-11, 3 + bob);
+                targetCtx.closePath(); targetCtx.fill();
 
                 targetCtx.beginPath();
-                targetCtx.moveTo(4, -2 + bob);
-                targetCtx.lineTo(17, -11 + bob * 0.6);
-                targetCtx.lineTo(11, 3 + bob);
-                targetCtx.closePath();
-                targetCtx.fill();
+                targetCtx.moveTo(4, -2 + bob); targetCtx.lineTo(17, -11 + bob * 0.6); targetCtx.lineTo(11, 3 + bob);
+                targetCtx.closePath(); targetCtx.fill();
                 targetCtx.globalAlpha = 1;
             }
 
-            // Legs
             targetCtx.strokeStyle = "#cbd5e1";
             targetCtx.lineWidth = 2.4;
             targetCtx.lineCap = "round";
             targetCtx.beginPath();
-            targetCtx.moveTo(-3.5, 4 + bob * 0.5);
-            targetCtx.lineTo(-4.5 - swing * 0.35, 11);
-            targetCtx.moveTo(3.5, 4 + bob * 0.5);
-            targetCtx.lineTo(4.5 + swing * 0.35, 11);
+            targetCtx.moveTo(-3.5, 4 + bob * 0.5); targetCtx.lineTo(-4.5 - swing * 0.35, 11);
+            targetCtx.moveTo(3.5, 4 + bob * 0.5); targetCtx.lineTo(4.5 + swing * 0.35, 11);
             targetCtx.stroke();
 
-            // Torso
             targetCtx.fillStyle = prof.suitColor;
             targetCtx.strokeStyle = prof.trimColor;
             targetCtx.lineWidth = 1.8;
             roundRect(targetCtx, -6.5, -4 + bob, 13, 9.5, 3, true, true);
 
-            // Pauldrons
             if (prof.tier >= 1) {
                 targetCtx.fillStyle = prof.trimColor;
                 targetCtx.beginPath();
@@ -1137,18 +1291,14 @@
                 targetCtx.fill();
             }
 
-            // Left arm
             targetCtx.strokeStyle = prof.trimColor;
             targetCtx.lineWidth = 2.2;
             targetCtx.beginPath();
-            targetCtx.moveTo(-6.5, -2 + bob);
-            targetCtx.lineTo(-10.5, 2 + bob - swing * 0.4);
+            targetCtx.moveTo(-6.5, -2 + bob); targetCtx.lineTo(-10.5, 2 + bob - swing * 0.4);
             targetCtx.stroke();
 
-            // Role-specific weapon in right hand
             drawRoleWeapon(targetCtx, prof, aimAngle, recoil * 0.4);
 
-            // Right arm holding weapon
             targetCtx.strokeStyle = prof.trimColor;
             targetCtx.lineWidth = 2.2;
             targetCtx.beginPath();
@@ -1156,16 +1306,13 @@
             targetCtx.lineTo(6.5 + Math.cos(aimAngle) * 5, -2 + bob + Math.sin(aimAngle) * 5 - recoil * 0.3);
             targetCtx.stroke();
 
-            // Head
             targetCtx.fillStyle = "#fde68a";
             targetCtx.strokeStyle = prof.trimColor;
             targetCtx.lineWidth = 1.6;
             targetCtx.beginPath();
             targetCtx.arc(0, -10 + bob, 5.6, 0, Math.PI * 2);
-            targetCtx.fill();
-            targetCtx.stroke();
+            targetCtx.fill(); targetCtx.stroke();
 
-            // Visor / Eyes
             targetCtx.fillStyle = "#0f172a";
             targetCtx.fillRect(-3.2, -11.2 + bob, 2, 2);
             targetCtx.fillRect(1.2, -11.2 + bob, 2, 2);
@@ -1173,11 +1320,8 @@
             if (prof.tier >= 2) {
                 targetCtx.fillStyle = prof.trimColor;
                 targetCtx.beginPath();
-                targetCtx.moveTo(-4, -15 + bob);
-                targetCtx.lineTo(0, -20 + bob);
-                targetCtx.lineTo(4, -15 + bob);
-                targetCtx.closePath();
-                targetCtx.fill();
+                targetCtx.moveTo(-4, -15 + bob); targetCtx.lineTo(0, -20 + bob); targetCtx.lineTo(4, -15 + bob);
+                targetCtx.closePath(); targetCtx.fill();
             }
 
             targetCtx.restore();
@@ -1212,8 +1356,7 @@
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.arc(CORE.x, CORE.y, CORE.radius + Math.sin(tickTime * 3) * 2, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.stroke();
+            ctx.fill(); ctx.stroke();
 
             ctx.fillStyle = "#ffffff";
             ctx.font = "bold 10px 'JetBrains Mono', monospace";
@@ -1224,7 +1367,7 @@
             ctx.textAlign = "left";
             ctx.restore();
 
-            // 2D Characters with Role Weapons
+            // 2D Characters
             agents.forEach((ag, idx) => {
                 const prof = getAgentProfile(ag);
                 const charScale = 1.05 + prof.tier * 0.1 + (prof.asc || 0) * 0.05;
@@ -1249,16 +1392,29 @@
                 ctx.textAlign = "left";
             });
 
+            // Chain Lightning Links
+            lightningLinks.forEach(ln => {
+                ctx.save();
+                ctx.strokeStyle = ln.color;
+                ctx.lineWidth = 2.2;
+                ctx.globalAlpha = Math.max(0, ln.life / 10);
+                ctx.beginPath();
+                ctx.moveTo(ln.x1, ln.y1);
+                ctx.lineTo((ln.x1 + ln.x2) / 2 + (Math.random() - 0.5) * 10, (ln.y1 + ln.y2) / 2 + (Math.random() - 0.5) * 10);
+                ctx.lineTo(ln.x2, ln.y2);
+                ctx.stroke();
+                ctx.restore();
+            });
+
             // Enemies & Bosses
             enemies.forEach(en => {
-                const r = en.isBoss ? 19 : 11;
-                ctx.fillStyle = en.isBoss ? "#3b0712" : "#2a090d";
-                ctx.strokeStyle = en.isBoss ? "#facc15" : "#ef4444";
-                ctx.lineWidth = en.isBoss ? 3 : 2;
+                const r = en.isBoss ? 19 : (en.kind === "armored" ? 13 : (en.kind === "runner" ? 9 : 11));
+                ctx.fillStyle = en.isBoss ? "#3b0712" : (en.slowTimer > 0 ? "#0c2d3a" : "#2a090d");
+                ctx.strokeStyle = en.isBoss ? "#facc15" : (en.slowTimer > 0 ? "#2dd4bf" : (en.kind === "armored" ? "#fb923c" : "#ef4444"));
+                ctx.lineWidth = en.isBoss || en.kind === "armored" ? 3 : 2;
                 ctx.beginPath();
                 ctx.arc(en.x, en.y, r, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.stroke();
+                ctx.fill(); ctx.stroke();
 
                 const barW = en.isBoss ? 34 : 20;
                 const hpPct = Math.max(0, en.hp / en.maxHp);
@@ -1268,9 +1424,9 @@
                 ctx.fillRect(en.x - barW / 2, en.y - r - 8, barW * hpPct, 4);
 
                 ctx.fillStyle = en.isBoss ? "#fde047" : "#fca5a5";
-                ctx.font = "bold 7.5px 'JetBrains Mono', monospace";
+                ctx.font = "bold 7px 'JetBrains Mono', monospace";
                 ctx.textAlign = "center";
-                ctx.fillText(en.label, en.x, en.y + 3);
+                ctx.fillText(en.label, en.x, en.y + 2.5);
                 ctx.textAlign = "left";
             });
 
@@ -1359,8 +1515,10 @@
             const ag = agents.find(a => a.id === selectedAgentId) || agents[0];
             if (!ag) return;
             const prof = getAgentProfile(ag);
-            const room = ROOMS[ag.room];
             const pct = ag.level >= MAX_LEVEL ? 100 : Math.min(100, Math.round((ag.xp / ag.xpToNext) * 100));
+
+            const roomSel = document.getElementById('inspRoomSelect');
+            roomSel.innerHTML = ROOMS.map(r => `<option value="${r.id}" ${r.id === ag.room ? 'selected' : ''}>${r.name} (${r.synergy})</option>`).join('');
 
             const stageLvLabels = ["Lv.1", "Lv.10", "Lv.20", "Lv.50"];
             [0, 1, 2, 3].forEach(t => {
@@ -1390,13 +1548,12 @@
             document.getElementById('inspPathName').style.color = prof.auraColor || ROLE_PATHS[ag.pathKey].accent;
             document.getElementById('inspWeaponName').textContent = prof.weaponLabel;
             document.getElementById('inspWeaponName').style.color = prof.weaponBladeColor;
+            document.getElementById('inspRolePerk').textContent = prof.perkLabel;
             document.getElementById('inspEvoBadge').textContent = `${prof.formName} • LV.${ag.level}`;
             document.getElementById('inspName').textContent = ag.name;
-            document.getElementById('inspOffice').textContent = room.name;
             document.getElementById('inspRole').textContent = `${ag.role} • Lv.${ag.level} (${prof.effectiveDamage} DMG)`;
             document.getElementById('inspXpText').textContent = ag.level >= MAX_LEVEL ? "MAX LV.99" : `${ag.xp} / ${ag.xpToNext} XP`;
             document.getElementById('inspXpBar').style.width = `${pct}%`;
-            document.getElementById('inspFormDesc').textContent = prof.formDesc;
             document.getElementById('inspAscBonus').textContent = `+${prof.ascDmgPct}% DMG / +${prof.ascXpPct}% XP`;
             document.getElementById('inspNextEvo').textContent = prof.nextEvoText;
             document.getElementById('inspSkills').textContent = prof.skills.length ? prof.skills.join(" • ") : "Unlocks at Lv.10, Lv.20 & Lv.50";
@@ -1443,8 +1600,7 @@
             const newAgent = createAgentInstance({
                 id: "hired_" + Date.now(),
                 room, name, role, pathKey,
-                avatar: selectedHireAvatar,
-                specialty: `${role} armed with ${ROLE_PATHS[pathKey].weaponLabel}.`
+                avatar: selectedHireAvatar
             });
             agents.push(newAgent);
             recomputePositions();
@@ -1452,7 +1608,7 @@
             closeHireModal();
             selectAgent(newAgent.id);
             playTone(523, 0.1, "triangle", 0.04);
-            logActivity("HR", `Hired ${name} with ${ROLE_PATHS[pathKey].weaponLabel} in ${ROOMS[room].name}!`, "text-emerald-400 font-bold");
+            logActivity("HR", `Hired ${name} (${ROLE_PATHS[pathKey].weaponLabel}) in ${ROOMS[room].name}!`, "text-emerald-400 font-bold");
         }
 
         function restartGame() {
@@ -1461,10 +1617,13 @@
             coreHp = 100;
             credits = 140;
             overdriveTimer = 0;
+            pendingWaveCardPick = false;
+            runBuffs = { dmgMult: 1.0, xpMult: 1.0, credMult: 1.0, spdMult: 1.0, pulseBonus: 0, perkMult: 1.0 };
             document.getElementById('overdriveBadge').classList.add('hidden');
             enemies = [];
             projectiles = [];
             particles = [];
+            lightningLinks = [];
             gameOver = false;
             initStarterRoster();
             selectAgent("a1");
