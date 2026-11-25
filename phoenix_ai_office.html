@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phoenix AI Office — Animated 2D Floorplan Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        phx: {
+                            bg: '#0b0c10',
+                            panel: '#14161f',
+                            input: '#1d202d',
+                            orange: '#ff8c00',
+                            red: '#ff3b30',
+                            emerald: '#10b981',
+                            cyan: '#06b6d4'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0b0c10;
+            color: #f8fafc;
+            background-image:
+                radial-gradient(circle at 10% 10%, rgba(255, 140, 0, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(255, 59, 48, 0.06) 0%, transparent 40%);
+        }
+        .glass-panel {
+            background: rgba(20, 22, 31, 0.92);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            border-radius: 0.75rem;
+        }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #0b0c10; }
+        ::-webkit-scrollbar-thumb { background: #2b3044; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #ff8c00; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans antialiased selection:bg-phx-orange selection:text-black">
+
+    <!-- TOP COMMAND BAR -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-white/10 px-4 sm:px-6 py-3">
+        <div class="max-w-[1640px] mx-auto space-y-2.5">
+            <!-- Row 1: Title, Live Counters & Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-phx-orange to-phx-red flex items-center justify-center text-white font-black text-xl shadow-[0_0_20px_rgba(255,140,0,0.45)]">
+                        🔥
+                    </div>
+                    <div>
+                        <h1 class="text-sm sm:text-lg font-black tracking-wider text-white">
+                            PHOENIX AI OFFICE <span class="text-phx-orange">//</span> <span class="text-gray-300 text-xs sm:text-sm font-bold">2D ANIMATED FLOORPLAN STUDIO</span>
+                        </h1>
+                        <p class="text-[11px] font-mono text-gray-400">Live Autonomous Multi-Agent Simulation • Click any agent on the floorplan to inspect</p>
+                    </div>
+                </div>
+
+                <!-- Live Telemetry Pills -->
+                <div class="flex flex-wrap items-center gap-2 font-mono text-[11px]">
+                    <div class="px-2.5 py-1.5 rounded-lg bg-phx-input border border-white/10">
+                        <span class="text-gray-400">OFFICES:</span> <span class="text-white font-bold">8 ROOMS</span>
+                    </div>
+                    <div class="px-2.5 py-1.5 rounded-lg bg-emerald-950/60 border border-phx-emerald/40 text-phx-emerald font-bold flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-phx-emerald animate-ping"></span>
+                        <span id="agentCounterPill">31 AGENTS LIVE</span>
+                    </div>
+                    <button id="autoPilotBtn" onclick="toggleAutoPilot()"
+                        class="px-3 py-1.5 rounded-lg bg-emerald-950/80 border border-phx-emerald text-phx-emerald font-bold flex items-center gap-1.5 transition cursor-pointer">
+                        <span id="autoPilotDot" class="w-2 h-2 rounded-full bg-phx-emerald animate-pulse"></span>
+                        <span id="autoPilotText">AUTO-PILOT LOOP: ON</span>
+                    </button>
+                </div>
+
+                <!-- Mode Switcher & Hire Extra Agent -->
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center bg-phx-input p-1 rounded-xl border border-white/10 text-[11px] font-mono">
+                        <button id="btnModeAuto" onclick="setEngineMode('auto')" class="px-2.5 py-1 rounded-lg bg-gradient-to-r from-phx-orange to-phx-red text-white font-bold cursor-pointer">
+                            ⚡ Visual Auto-Pilot
+                        </button>
+                        <button id="btnModeGemini" onclick="openApiKeyModal()" class="px-2.5 py-1 rounded-lg text-gray-400 hover:text-white font-semibold cursor-pointer">
+                            ✨ Gemini API <span id="apiKeyStatusBadge" class="text-[9px] text-amber-400">(Key)</span>
+                        </button>
+                    </div>
+
+                    <button onclick="openHireModal()"
+                        class="px-3.5 py-2 rounded-xl bg-phx-orange hover:bg-amber-400 text-black font-black text-xs shadow-[0_0_15px_rgba(255,140,0,0.4)] transition flex items-center gap-1.5 cursor-pointer">
+                        <span>➕</span> <span>Hire Agent</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Row 2: Task Prompt & Presets -->
+            <div class="flex flex-col lg:flex-row gap-2 items-stretch lg:items-center">
+                <div class="relative flex-grow">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-phx-orange font-mono text-xs font-bold">&gt;_</span>
+                    <input id="taskPromptInput" type="text"
+                        value="Launch Weekend 5v5 Tournament & Live OBS Overlay"
+                        placeholder="Enter a task for the 8 offices (or let Auto-Pilot run automatically)..."
+                        class="w-full pl-9 pr-4 py-2 rounded-xl bg-phx-input border border-white/15 focus:border-phx-orange focus:outline-none text-xs sm:text-sm text-white placeholder-gray-500">
+                </div>
+
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <button onclick="runPresetMission(0)" class="px-2.5 py-2 rounded-lg bg-phx-input hover:bg-white/10 border border-white/10 text-[11px] font-semibold text-gray-200 cursor-pointer">🏆 Tournament</button>
+                    <button onclick="runPresetMission(1)" class="px-2.5 py-2 rounded-lg bg-phx-input hover:bg-white/10 border border-white/10 text-[11px] font-semibold text-gray-200 cursor-pointer">🌐 Website GR/EN</button>
+                    <button onclick="runPresetMission(2)" class="px-2.5 py-2 rounded-lg bg-phx-input hover:bg-white/10 border border-white/10 text-[11px] font-semibold text-gray-200 cursor-pointer">🤖 Bot 24/7 Sync</button>
+                    <button onclick="runPresetMission(3)" class="px-2.5 py-2 rounded-lg bg-phx-input hover:bg-white/10 border border-white/10 text-[11px] font-semibold text-gray-200 cursor-pointer">🐳 IT Docker Ops</button>
+
+                    <button onclick="triggerManualTask()"
+                        class="px-4 py-2 rounded-xl bg-gradient-to-r from-phx-red to-phx-orange hover:opacity-95 text-white font-black text-xs shadow-[0_0_18px_rgba(255,140,0,0.45)] transition flex items-center gap-1.5 cursor-pointer">
+                        <span>▶</span> <span>Run Task</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT GRID -->
+    <main class="flex-grow max-w-[1640px] w-full mx-auto px-4 sm:px-6 py-4 grid grid-cols-1 xl:grid-cols-12 gap-4 items-stretch">
+
+        <!-- LEFT 8 COLS: 2D ARCHITECTURAL FLOORPLAN CANVAS -->
+        <section class="xl:col-span-8 glass-panel rounded-2xl p-3 flex flex-col min-h-[560px] lg:min-h-[650px] relative">
+            <div class="flex flex-wrap items-center justify-between gap-2 px-2 pb-2 text-[11px] font-mono text-gray-400">
+                <div class="flex items-center gap-3">
+                    <span class="text-white font-bold">🏢 PHOENIX HQ FLOORPLAN</span>
+                    <span id="currentMissionBanner" class="text-phx-orange truncate max-w-[260px] sm:max-w-[420px]">Active: Initializing Autonomous Shift...</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-phx-orange"></span> Working</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> Delivering Packet</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Idle / Lounge</span>
+                </div>
+            </div>
+
+            <div id="canvasContainer" class="relative flex-grow w-full rounded-xl overflow-hidden border border-white/10 bg-[#090a0f]">
+                <canvas id="officeCanvas"></canvas>
+            </div>
+        </section>
+
+        <!-- RIGHT 4 COLS: INSPECTOR, LIVE ACTIVITY LOG & DELIVERABLE -->
+        <aside class="xl:col-span-4 flex flex-col gap-4">
+
+            <!-- 1. Clickable Agent Inspector Card -->
+            <div class="glass-panel rounded-2xl p-4 border border-phx-orange/30">
+                <div class="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
+                    <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-phx-orange">🪪 AGENT INSPECTOR</span>
+                    <span id="inspBadge" class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-950 text-phx-emerald border border-phx-emerald/40">ACTIVE</span>
+                </div>
+
+                <div class="flex items-center gap-3 mb-3">
+                    <div id="inspColorDot" class="w-11 h-11 rounded-xl bg-phx-orange/20 border border-phx-orange flex items-center justify-center text-xl shrink-0">
+                        🧠
+                    </div>
+                    <div class="min-w-0 flex-grow">
+                        <h2 id="inspName" class="text-sm font-black text-white truncate">Chief Orchestrator</h2>
+                        <p id="inspOffice" class="text-xs font-semibold text-phx-orange truncate">Room 1 • Command HQ</p>
+                        <p id="inspRole" class="text-[11px] font-mono text-gray-400 truncate">Director • Multi-Agent Lead</p>
+                    </div>
+                </div>
+
+                <div class="bg-black/45 rounded-xl p-2.5 border border-white/5 font-mono text-[11px] space-y-1.5 mb-3">
+                    <div><span class="text-gray-500">STATE:</span> <span id="inspStateText" class="text-emerald-400">Coordinating cross-office tasks</span></div>
+                    <div><span class="text-gray-500">SPECIALTY:</span> <span id="inspSpecialty" class="text-gray-300">Decomposes Phoenix Force goals into parallel office deliverables.</span></div>
+                </div>
+
+                <button onclick="sendSelectedAgentOnMission()"
+                    class="w-full py-2 px-3 rounded-xl bg-phx-input hover:bg-phx-orange hover:text-black text-phx-orange border border-phx-orange/50 font-bold text-xs transition cursor-pointer">
+                    ⚡ Dispatch Selected Agent Now
+                </button>
+            </div>
+
+            <!-- 2. Live Activity Feed Log -->
+            <div class="glass-panel rounded-2xl p-4 flex-grow flex flex-col">
+                <div class="flex items-center justify-between border-b border-white/10 pb-2 mb-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-phx-emerald animate-ping"></span>
+                        <h3 class="text-[11px] font-mono font-bold uppercase tracking-wider text-gray-200">LIVE FLOORPLAN TELEMETRY</h3>
+                    </div>
+                    <button onclick="clearFeed()" class="text-[10px] font-mono text-gray-400 hover:text-white cursor-pointer">Clear</button>
+                </div>
+                <div id="activityFeed" class="bg-[#08090d] border border-white/10 rounded-xl p-2.5 font-mono text-[11px] leading-relaxed h-44 overflow-y-auto space-y-1.5 text-gray-300">
+                </div>
+            </div>
+
+            <!-- 3. Deliverable Output Box -->
+            <div class="glass-panel rounded-2xl p-4 border border-phx-emerald/30">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 id="deliverableTitle" class="text-xs font-black uppercase tracking-wide text-white">📦 LIVE OFFICE OUTPUT</h3>
+                    <button onclick="copyDeliverable()" class="px-2.5 py-1 rounded-lg bg-phx-orange hover:bg-phx-red text-black hover:text-white font-bold text-[11px] transition cursor-pointer">
+                        📋 Copy
+                    </button>
+                </div>
+                <pre id="deliverableBox" class="bg-[#08090d] border border-white/10 rounded-xl p-2.5 font-mono text-[10.5px] text-emerald-300 max-h-36 overflow-y-auto whitespace-pre-wrap leading-relaxed"># Auto-Pilot engaged. Agents are actively producing artifacts...</pre>
+            </div>
+        </aside>
+    </main>
+
+    <!-- MODAL: + HIRE EXTRA AGENT -->
+    <div id="hireModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl max-w-md w-full p-5 border border-phx-orange/40 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 class="text-base font-black text-white flex items-center gap-2"><span>➕</span> Hire Extra AI Agent</h3>
+                <button onclick="closeHireModal()" class="text-gray-400 hover:text-white font-bold text-lg cursor-pointer">✕</button>
+            </div>
+
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-gray-400 font-mono mb-1">Agent Name:</label>
+                    <input id="hireName" type="text" placeholder="e.g. CyberSentinel or ClipMaster"
+                        class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-mono mb-1">Role / Title:</label>
+                    <input id="hireRole" type="text" placeholder="e.g. Tournament Referee / TikTok Editor"
+                        class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-mono mb-1">Assign to Office Room:</label>
+                    <select id="hireRoomSelect" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-mono mb-1">Avatar Badge:</label>
+                    <div class="flex gap-2" id="avatarPicker">
+                        <button type="button" onclick="pickAvatar('🦾', this)" class="av-opt px-3 py-1.5 rounded-lg bg-phx-orange text-black font-bold cursor-pointer">🦾</button>
+                        <button type="button" onclick="pickAvatar('🦊', this)" class="av-opt px-3 py-1.5 rounded-lg bg-phx-input text-white cursor-pointer">🦊</button>
+                        <button type="button" onclick="pickAvatar('⚡', this)" class="av-opt px-3 py-1.5 rounded-lg bg-phx-input text-white cursor-pointer">⚡</button>
+                        <button type="button" onclick="pickAvatar('🛰️', this)" class="av-opt px-3 py-1.5 rounded-lg bg-phx-input text-white cursor-pointer">🛰️</button>
+                        <button type="button" onclick="pickAvatar('🎯', this)" class="av-opt px-3 py-1.5 rounded-lg bg-phx-input text-white cursor-pointer">🎯</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button onclick="closeHireModal()" class="px-4 py-2 rounded-xl bg-phx-input text-gray-300 font-bold text-xs cursor-pointer">Cancel</button>
+                <button onclick="confirmHireAgent()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-phx-orange to-phx-red text-white font-black text-xs shadow-lg cursor-pointer">
+                    Add Desk & Spawn Agent
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: GEMINI API KEY CONFIGURATION -->
+    <div id="apiKeyModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel rounded-2xl max-w-md w-full p-5 border border-cyan-500/40 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-white/10 pb-3">
+                <h3 class="text-base font-black text-white">✨ Connect Live Gemini AI Engine</h3>
+                <button onclick="closeApiKeyModal()" class="text-gray-400 hover:text-white font-bold text-lg cursor-pointer">✕</button>
+            </div>
+            <p class="text-xs text-gray-300 leading-relaxed">
+                Enter your Google AI Studio Gemini API Key to have the 8 offices generate real code, strategies, and deliverables whenever you run a task. Stored locally in your browser (<code class="text-phx-orange">localStorage</code>).
+            </p>
+            <input id="geminiApiKeyInput" type="password" placeholder="AIzaSy..."
+                class="w-full px-3 py-2.5 rounded-xl bg-phx-input border border-white/15 text-white text-xs font-mono focus:border-cyan-400 focus:outline-none">
+            <div class="flex justify-between items-center pt-1">
+                <button onclick="clearGeminiKey()" class="text-xs font-mono text-red-400 hover:underline cursor-pointer">Remove Key</button>
+                <div class="flex gap-2">
+                    <button onclick="closeApiKeyModal()" class="px-3.5 py-2 rounded-xl bg-phx-input text-gray-300 text-xs font-bold cursor-pointer">Close</button>
+                    <button onclick="saveGeminiKey()" class="px-4 py-2 rounded-xl bg-cyan-500 text-black text-xs font-black cursor-pointer">Save & Enable Live AI</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-4 right-4 z-50 hidden px-4 py-2.5 rounded-xl bg-phx-panel border border-phx-orange text-white text-xs font-bold shadow-2xl"></div>
+
+    <script>
+        // =========================================================================
+        // 1. ARCHITECTURAL FLOORPLAN & 8 OFFICES + 31 AGENTS DATA
+        // =========================================================================
+        const STORAGE_HIRED_KEY = 'phx_office_hired_agents_v1';
+        const STORAGE_API_KEY = 'phx_gemini_api_key';
+
+        // Normalized floorplan coordinates (0..1000 x 0..640 logical space)
+        const ROOMS = [
+            // TOP ROW (4 OFFICES)
+            { id: 0, name: "1. Command HQ",     x: 20,  y: 20,  w: 225, h: 215, doorX: 132, doorY: 235, color: "#ff8c00" },
+            { id: 1, name: "2. Web & UI",       x: 265, y: 20,  w: 225, h: 215, doorX: 377, doorY: 235, color: "#ff3b30" },
+            { id: 2, name: "3. Discord Bot",    x: 510, y: 20,  w: 225, h: 215, doorX: 622, doorY: 235, color: "#a855f7" },
+            { id: 3, name: "4. IT & DevOps",    x: 755, y: 20,  w: 225, h: 215, doorX: 867, doorY: 235, color: "#06b6d4" },
+            // BOTTOM ROW (4 OFFICES)
+            { id: 4, name: "5. Esports Ops",    x: 20,  y: 405, w: 225, h: 215, doorX: 132, doorY: 405, color: "#f43f5e" },
+            { id: 5, name: "6. Media Studio",   x: 265, y: 405, w: 225, h: 215, doorX: 377, doorY: 405, color: "#ec4899" },
+            { id: 6, name: "7. Growth & Biz",   x: 510, y: 405, w: 225, h: 215, doorX: 622, doorY: 405, color: "#10b981" },
+            { id: 7, name: "8. QA & Deploy",    x: 755, y: 405, w: 225, h: 215, doorX: 867, doorY: 405, color: "#eab308" }
+        ];
+
+        // Central Lounge & Server Room landmarks in the middle corridor (y: 235..405)
+        const LOUNGE = { x: 265, y: 268, w: 220, h: 104, coffeeX: 452, coffeeY: 292, sofaX: 315, sofaY: 320 };
+        const SERVER_ROOM = { x: 515, y: 268, w: 220, h: 104 };
+
+        const BASE_AGENTS = [
+            // Room 0: Command HQ (4)
+            { id: "a1", room: 0, name: "Chief Orchestrator", role: "Director", avatar: "🧠", specialty: "Decomposes directives into multi-office workflows." },
+            { id: "a2", room: 0, name: "Sprint Planner", role: "Strategist", avatar: "🗺️", specialty: "Aligns Phoenix Force web, bot & event roadmaps." },
+            { id: "a3", room: 0, name: "Priority Router", role: "Dispatcher", avatar: "⚡", specialty: "Routes tasks and balances compute across 8 rooms." },
+            { id: "a4", room: 0, name: "Quality Auditor", role: "Auditor", avatar: "🛡️", specialty: "Signs off on deliverables before deployment." },
+            // Room 1: Web & UI (4)
+            { id: "a5", room: 1, name: "UI/UX Architect", role: "Lead Designer", avatar: "📐", specialty: "Crafts glassmorphic layouts and responsive grids." },
+            { id: "a6", room: 1, name: "Tailwind Stylist", role: "Motion Dev", avatar: "🎨", specialty: "Applies #0b0c10 & #ff8c00 Phoenix glow tokens." },
+            { id: "a7", room: 1, name: "SPA JS Engineer", role: "Frontend Dev", avatar: "⚙️", specialty: "Hydrates live Twitch roster & interactive brackets." },
+            { id: "a8", room: 1, name: "GR/EN Translator", role: "i18n Specialist", avatar: "🌍", specialty: "Maintains Greek default & 1-click English toggle." },
+            // Room 2: Discord Bot (4)
+            { id: "a9", room: 2, name: "Discord.py Core", role: "Bot Architect", avatar: "🐍", specialty: "Builds slash commands, modals, and persistent views." },
+            { id: "a10", room: 2, name: "Twitch Helix Sync", role: "API Bridge", avatar: "📡", specialty: "Polls live status for all 9 Phoenix creators." },
+            { id: "a11", room: 2, name: "/lfg Squad Dev", role: "Matchmaking", avatar: "🎮", specialty: "Powers /lfg squad cards and temp voice channels." },
+            { id: "a12", room: 2, name: "Raid Sentinel", role: "Security Mod", avatar: "🚨", specialty: "Protects Phoenix HQ Discord from raids & spam." },
+            // Room 3: IT & DevOps (4)
+            { id: "a13", room: 3, name: "Control Center Dev", role: "Python GUI", avatar: "🪟", specialty: "Upgrades phoenix_control_center.py tabs & tools." },
+            { id: "a14", room: 3, name: "Docker 24/7 Ops", role: "DevOps Lead", avatar: "🐳", specialty: "Runs restart:always containers & NSSM services." },
+            { id: "a15", room: 3, name: "M365 & Cloud Ops", role: "Sysadmin", avatar: "☁️", specialty: "Automates Entra ID, Exchange & cloud connectors." },
+            { id: "a16", room: 3, name: "Vault Guardian", role: "SecOps", avatar: "🔐", specialty: "Protects .env tokens and automated backups." },
+            // Room 4: Esports Ops (4)
+            { id: "a17", room: 4, name: "Bracket Director", role: "Tournament Lead", avatar: "🏆", specialty: "Seeds 8-slot & 16-slot PHX brackets." },
+            { id: "a18", room: 4, name: "OBS Overlay Dev", role: "Broadcast UI", avatar: "🎥", specialty: "Renders transparent ?view=obs scoreboards." },
+            { id: "a19", room: 4, name: "Match Referee", role: "Live Control", avatar: "⏱️", specialty: "Tracks real-time scores and series advancement." },
+            { id: "a20", room: 4, name: "Roster Scout", role: "Talent Analyst", avatar: "🔍", specialty: "Tracks LoL, AION2 & Valorant creator stats." },
+            // Room 5: Media Studio (4)
+            { id: "a21", room: 5, name: "Promo Artist", role: "Graphic Designer", avatar: "🖼️", specialty: "Designs Go-Live cards and Phoenix emblems." },
+            { id: "a22", room: 5, name: "Clip Editor", role: "Video Producer", avatar: "✂️", specialty: "Cuts Twitch clips into TikTok/Shorts highlights." },
+            { id: "a23", room: 5, name: "Audio Composer", role: "Sound Designer", avatar: "🎵", specialty: "Produces stream intro tracks and alert stingers." },
+            { id: "a24", room: 5, name: "Panel Copywriter", role: "Brand Writer", avatar: "✍️", specialty: "Writes GR/EN Twitch panels & Discord announcements." },
+            // Room 6: Growth & Biz (4)
+            { id: "a25", room: 6, name: "GA4 Analyst", role: "Data Lead", avatar: "📊", specialty: "Tracks phoenixforce.eu traffic and funnel clicks." },
+            { id: "a26", room: 6, name: "Sponsor Lead", role: "Partnerships", avatar: "🤝", specialty: "Builds official Phoenix Force Media Kits." },
+            { id: "a27", room: 6, name: "Social Strategist", role: "Social Growth", avatar: "📱", specialty: "Schedules TikTok, Instagram & X drops." },
+            { id: "a28", room: 6, name: "Community Lead", role: "Engagement", avatar: "💬", specialty: "Runs game nights, polls & member retention." },
+            // Room 7: QA & Deploy (3 -> total 31)
+            { id: "a29", room: 7, name: "Bug Hunter", role: "QA Engineer", avatar: "🐞", specialty: "Tests responsive layouts and edge-case inputs." },
+            { id: "a30", room: 7, name: "GitHub CI/CD Bot", role: "Release Ops", avatar: "🐙", specialty: "Packages clean commits for GitHub Pages deploy." },
+            { id: "a31", room: 7, name: "Uptime Sentinel", role: "SRE Monitor", avatar: "💓", specialty: "Pings phoenixforce.eu & Twitch webhooks 24/7." }
+        ];
+
+        const AUTONOMOUS_MISSIONS = [
+            {
+                title: "Launch Weekend 5v5 Tournament & OBS Overlay",
+                legs: [
+                    { from: "a1", to: "a17", bubble: "Seeding 8 PHX squads", log: "Chief Orchestrator delivered tournament brief to Bracket Director." },
+                    { from: "a17", to: "a18", bubble: "Syncing ?view=obs", log: "Bracket Director handed seed table to OBS Overlay Dev." },
+                    { from: "a18", to: "a21", bubble: "Rendering Go-Live card", log: "OBS Overlay Dev synced overlay frame with Promo Artist." },
+                    { from: "a21", to: "a11", bubble: "Opening /event signup", log: "Promo Artist delivered hype banner to Discord Bot team." },
+                    { from: "a11", to: "a29", bubble: "QA check passed ✔", log: "Bug Hunter verified mobile bracket & OBS transparency." }
+                ],
+                output: `// PHOENIX FORCE TOURNAMENT & OBS PACKAGE (AUTO-GENERATED)\n• OBS Browser Source: https://phoenixforce.eu/tournament.html?view=obs&bo=3\n• Discord Command: /event create title:"PHX Weekend 5v5" slots:8 auto_vc:true\n• Quarterfinal #1: Kill3rGuy94 Squad vs VanessaMermaid Squad`
+            },
+            {
+                title: "Sync 9 Creators Live Status & GR/EN Website Toggle",
+                legs: [
+                    { from: "a10", to: "a7", bubble: "Twitch Helix 9/9 OK", log: "Twitch Helix Sync delivered live stream JSON to SPA JS Engineer." },
+                    { from: "a7", to: "a8", bubble: "Verifying GR/EN cookie", log: "SPA JS Engineer synced live badges with GR/EN Translator." },
+                    { from: "a8", to: "a25", bubble: "GA4 funnel tracked", log: "GR/EN Translator updated bilingual roster & notified GA4 Analyst." },
+                    { from: "a25", to: "a30", bubble: "Staged for GitHub Pages", log: "GitHub CI/CD Bot packaged clean index.html commit." }
+                ],
+                output: `// WEBSITE ROSTER & TRANSLATION SYNC (phoenixforce.eu)\n• Active Roster (9): Kill3rGuy94, YipYipMan_, catgamer_tv, CreepyPuppet_Tv,\n  FenChris, Ghost_R4in, demon_gekkouga, YioGki, VanessaMermaid\n• Default Language: Greek (el) with instant 🌐 EN/GR toggle`
+            },
+            {
+                title: "Deploy 24/7 Discord 🔴 LIVE NOW Role & Docker Stack",
+                legs: [
+                    { from: "a1", to: "a9", bubble: "Building /lfg & Live Role", log: "Chief Orchestrator assigned Discord.py Core to upgrade DiscBot.py." },
+                    { from: "a9", to: "a14", bubble: "Packing docker-compose", log: "Discord.py Core handed bot build to Docker 24/7 Ops." },
+                    { from: "a14", to: "a16", bubble: "Sealing .env tokens", log: "Vault Guardian verified Twitch & Discord secrets in .env." },
+                    { from: "a16", to: "a31", bubble: "24/7 Heartbeat 200 OK", log: "Uptime Sentinel locked continuous 24/7 container watchdog." }
+                ],
+                output: `# docker-compose.yml — 24/7 Phoenix Force Bot Stack\nservices:\n  phx-bot:\n    build: .\n    restart: always\n    env_file: .env\n    environment:\n      - LIVE_ROLE_NAME=🔴 LIVE NOW`
+            },
+            {
+                title: "Compile Sponsor Media Kit & Control Center Schedule",
+                legs: [
+                    { from: "a25", to: "a26", bubble: "+42% MoM web traffic", log: "GA4 Analyst delivered growth metrics to Sponsor Lead." },
+                    { from: "a26", to: "a24", bubble: "Drafting sponsor tiers", log: "Sponsor Lead collaborated with Panel Copywriter on Media Kit." },
+                    { from: "a13", to: "a4", bubble: "DD/MM/YYYY schedule sync", log: "Control Center Dev synced weekly schedule with Quality Auditor." },
+                    { from: "a4", to: "a30", bubble: "Release signed off ✔", log: "Quality Auditor approved Media Kit & Control Center v1.2." }
+                ],
+                output: `=== PHOENIX FORCE 2026 MEDIA KIT & SCHEDULE SUMMARY ===\n• Audience Growth: +42% MoM on phoenixforce.eu | 9 Active Creators\n• Tiers: Flame Partner | Inferno Partner | Phoenix Title Partner\n• Control Center v1.2: DD/MM/YYYY auto-weekday + 1-click Discord copy`
+            }
+        ];
+
+        // =========================================================================
+        // 2. RUNTIME STATE (AUTO-PLAY ENABLED ON LOAD!)
+        // =========================================================================
+        let agents = [];
+        let packets = [];
+        let selectedAgentId = "a1";
+        let autoPilotEnabled = true;
+        let engineMode = "auto"; // 'auto' | 'gemini'
+        let missionQueue = [];
+        let activeLeg = null;
+        let missionIndex = 0;
+        let selectedHireAvatar = "🦾";
+        let tickTime = 0;
+
+        // =========================================================================
+        // 3. INITIALIZE AGENTS & DYNAMIC DESK LAYOUTS PER ROOM
+        // =========================================================================
+        function loadAllAgents() {
+            let hired = [];
+            try {
+                hired = JSON.parse(localStorage.getItem(STORAGE_HIRED_KEY) || "[]");
+            } catch (e) { hired = []; }
+
+            const combined = [...BASE_AGENTS, ...hired];
+            agents = combined.map(cfg => ({
+                ...cfg,
+                deskX: 0,
+                deskY: 0,
+                x: 0,
+                y: 0,
+                targetX: 0,
+                targetY: 0,
+                waypoints: [],
+                state: "working", // 'working' | 'walking' | 'lounge'
+                bubble: "",
+                bubbleTimer: 0,
+                monitorGlow: Math.random() > 0.35,
+                walkPhase: Math.random() * Math.PI * 2,
+                onMissionComplete: null
+            }));
+
+            recomputeDeskPositions();
+        }
+
+        function recomputeDeskPositions() {
+            ROOMS.forEach(room => {
+                const roomAgents = agents.filter(a => a.room === room.id);
+                const count = roomAgents.length;
+                const cols = count <= 4 ? 2 : 3;
+                const rows = Math.ceil(count / cols);
+
+                const padX = 26;
+                const padTop = 48;
+                const padBottom = 26;
+                const usableW = room.w - padX * 2;
+                const usableH = room.h - padTop - padBottom;
+
+                roomAgents.forEach((ag, idx) => {
+                    const c = idx % cols;
+                    const r = Math.floor(idx / cols);
+                    const cellW = usableW / cols;
+                    const cellH = usableH / Math.max(rows, 2);
+
+                    const dx = room.x + padX + cellW * (c + 0.5);
+                    const dy = room.y + padTop + cellH * (r + 0.5);
+
+                    const wasAtDesk = (Math.hypot(ag.x - ag.deskX, ag.y - ag.deskY) < 12) || (ag.x === 0 && ag.y === 0);
+                    ag.deskX = dx;
+                    ag.deskY = dy;
+                    if (wasAtDesk) {
+                        ag.x = dx;
+                        ag.y = dy;
+                        ag.targetX = dx;
+                        ag.targetY = dy;
+                    }
+                });
+            });
+
+            document.getElementById('agentCounterPill').textContent = `${agents.length} AGENTS LIVE`;
+        }
+
+        // =========================================================================
+        // 4. PATHFINDING THROUGH ROOM DOORWAYS & CENTRAL CORRIDOR
+        // =========================================================================
+        function sendAgentToLocation(agent, destX, destY, destRoomId = null, onArrive = null) {
+            const startRoom = ROOMS[agent.room];
+            const corridorY = 320 + (Math.random() * 24 - 12);
+            const path = [];
+
+            // Exit current room doorway
+            path.push({ x: startRoom.doorX, y: startRoom.doorY });
+            path.push({ x: startRoom.doorX, y: corridorY });
+
+            if (destRoomId !== null && ROOMS[destRoomId]) {
+                const endRoom = ROOMS[destRoomId];
+                path.push({ x: endRoom.doorX, y: corridorY });
+                path.push({ x: endRoom.doorX, y: endRoom.doorY });
+            } else {
+                path.push({ x: destX, y: corridorY });
+            }
+            path.push({ x: destX, y: destY });
+
+            agent.waypoints = path;
+            agent.state = "walking";
+            agent.onMissionComplete = onArrive;
+        }
+
+        function sendAgentBackToDesk(agent) {
+            sendAgentToLocation(agent, agent.deskX, agent.deskY, agent.room, () => {
+                agent.state = "working";
+                agent.monitorGlow = true;
+            });
+        }
+
+        // =========================================================================
+        // 5. AUTONOMOUS MISSION DISPATCHER (RUNS IMMEDIATELY ON LOAD!)
+        // =========================================================================
+        function queueMission(missionObj) {
+            document.getElementById('currentMissionBanner').textContent = `Active: ${missionObj.title}`;
+            logActivity("HQ", `Started mission: "${missionObj.title}"`, "text-phx-orange font-bold");
+
+            missionQueue = missionObj.legs.map((leg, idx) => ({
+                ...leg,
+                isLast: idx === missionObj.legs.length - 1,
+                finalOutput: missionObj.output,
+                title: missionObj.title
+            }));
+            activeLeg = null;
+        }
+
+        function processMissionEngine() {
+            if (activeLeg) return;
+            if (missionQueue.length === 0) {
+                if (autoPilotEnabled) {
+                    const nextMission = AUTONOMOUS_MISSIONS[missionIndex % AUTONOMOUS_MISSIONS.length];
+                    missionIndex++;
+                    queueMission(nextMission);
+                }
+                return;
+            }
+
+            activeLeg = missionQueue.shift();
+            const sender = agents.find(a => a.id === activeLeg.from) || agents[0];
+            const receiver = agents.find(a => a.id === activeLeg.to) || agents[1];
+
+            sender.monitorGlow = true;
+            sender.bubble = activeLeg.bubble;
+            sender.bubbleTimer = 260;
+
+            // Spawn glowing data packet traveling along corridor
+            packets.push({
+                x: sender.x,
+                y: sender.y,
+                tx: receiver.deskX,
+                ty: receiver.deskY,
+                color: ROOMS[sender.room].color,
+                progress: 0
+            });
+
+            logActivity(sender.name, activeLeg.log, "text-gray-200");
+
+            // Physically walk sender to receiver's desk to hand off work!
+            sendAgentToLocation(sender, receiver.deskX - 18, receiver.deskY + 6, receiver.room, () => {
+                receiver.monitorGlow = true;
+                receiver.bubble = activeLeg.bubble;
+                receiver.bubbleTimer = 240;
+                selectAgent(receiver.id, false);
+
+                if (activeLeg.isLast) {
+                    document.getElementById('deliverableTitle').textContent = `📦 OUTPUT // ${activeLeg.title.slice(0, 26).toUpperCase()}`;
+                    document.getElementById('deliverableBox').textContent = activeLeg.finalOutput;
+                    logActivity("SYSTEM", `Completed: "${activeLeg.title}" ✔`, "text-phx-emerald font-bold");
+                }
+
+                // Return sender back to their own desk
+                sendAgentBackToDesk(sender);
+                activeLeg = null;
+            });
+        }
+
+        // Background ambient movement: idle agents occasionally grab coffee in the lounge
+        function triggerAmbientLoungeWalk() {
+            if (!autoPilotEnabled) return;
+            const idleCandidates = agents.filter(a => a.state === "working" && (!activeLeg || (a.id !== activeLeg.from && a.id !== activeLeg.to)));
+            if (idleCandidates.length === 0) return;
+
+            const lucky = idleCandidates[Math.floor(Math.random() * idleCandidates.length)];
+            lucky.bubble = "☕ Coffee break";
+            lucky.bubbleTimer = 180;
+
+            const spotX = LOUNGE.coffeeX - 24 + (Math.random() * 20 - 10);
+            const spotY = LOUNGE.coffeeY + 18 + (Math.random() * 14 - 7);
+
+            sendAgentToLocation(lucky, spotX, spotY, null, () => {
+                lucky.state = "lounge";
+                setTimeout(() => {
+                    if (lucky.state === "lounge") {
+                        lucky.bubble = "Back to desk!";
+                        lucky.bubbleTimer = 140;
+                        sendAgentBackToDesk(lucky);
+                    }
+                }, 2600);
+            });
+        }
+
+        // =========================================================================
+        // 6. CANVAS RENDERING LOOP (60 FPS ARCHITECTURAL 2D OFFICE)
+        // =========================================================================
+        const canvas = document.getElementById('officeCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            const container = document.getElementById('canvasContainer');
+            const rect = container.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        function updateSimulation() {
+            tickTime += 0.05;
+            processMissionEngine();
+
+            // Update Agents movement & timers
+            agents.forEach(ag => {
+                if (ag.bubbleTimer > 0) {
+                    ag.bubbleTimer--;
+                    if (ag.bubbleTimer === 0) ag.bubble = "";
+                }
+
+                if (ag.waypoints.length > 0) {
+                    const wp = ag.waypoints[0];
+                    const dx = wp.x - ag.x;
+                    const dy = wp.y - ag.y;
+                    const dist = Math.hypot(dx, dy);
+                    const speed = 3.2;
+
+                    if (dist <= speed) {
+                        ag.x = wp.x;
+                        ag.y = wp.y;
+                        ag.waypoints.shift();
+                        if (ag.waypoints.length === 0 && ag.onMissionComplete) {
+                            const cb = ag.onMissionComplete;
+                            ag.onMissionComplete = null;
+                            cb();
+                        }
+                    } else {
+                        ag.x += (dx / dist) * speed;
+                        ag.y += (dy / dist) * speed;
+                        ag.walkPhase += 0.28;
+                    }
+                }
+            });
+
+            // Update glowing packets
+            for (let i = packets.length - 1; i >= 0; i--) {
+                const p = packets[i];
+                p.progress += 0.025;
+                if (p.progress >= 1) {
+                    packets.splice(i, 1);
+                }
+            }
+        }
+
+        function drawFloorplan() {
+            const w = canvas.width;
+            const h = canvas.height;
+            ctx.clearRect(0, 0, w, h);
+
+            ctx.save();
+            const scaleX = w / 1000;
+            const scaleY = h / 640;
+            ctx.scale(scaleX, scaleY);
+
+            // 1. Blueprint Floor Grid
+            ctx.fillStyle = "#090b10";
+            ctx.fillRect(0, 0, 1000, 640);
+
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.03)";
+            ctx.lineWidth = 1;
+            for (let gx = 0; gx <= 1000; gx += 25) {
+                ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, 640); ctx.stroke();
+            }
+            for (let gy = 0; gy <= 640; gy += 25) {
+                ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(1000, gy); ctx.stroke();
+            }
+
+            // Central Corridor Carpet Strip
+            ctx.fillStyle = "rgba(255, 140, 0, 0.035)";
+            ctx.fillRect(20, 242, 960, 156);
+
+            // 2. Central Lounge (Sofa + Coffee Machine)
+            ctx.fillStyle = "#131722";
+            ctx.strokeStyle = "rgba(255,255,255,0.1)";
+            ctx.lineWidth = 1.5;
+            roundRect(ctx, LOUNGE.x, LOUNGE.y, LOUNGE.w, LOUNGE.h, 12, true, true);
+
+            ctx.fillStyle = "#94a3b8";
+            ctx.font = "bold 9px 'JetBrains Mono', monospace";
+            ctx.fillText("☕ BREAK LOUNGE", LOUNGE.x + 12, LOUNGE.y + 16);
+
+            // Sofa graphic
+            ctx.fillStyle = "#1e293b";
+            roundRect(ctx, LOUNGE.sofaX - 30, LOUNGE.sofaY - 12, 65, 26, 6, true, false);
+            ctx.fillStyle = "#ff8c00";
+            roundRect(ctx, LOUNGE.sofaX - 26, LOUNGE.sofaY - 8, 57, 16, 4, true, false);
+
+            // Coffee Machine + Animated Steam
+            ctx.fillStyle = "#334155";
+            roundRect(ctx, LOUNGE.coffeeX - 14, LOUNGE.coffeeY - 14, 28, 32, 5, true, false);
+            ctx.fillStyle = "#06b6d4";
+            ctx.fillRect(LOUNGE.coffeeX - 8, LOUNGE.coffeeY - 6, 16, 8);
+            const steamOffset = Math.sin(tickTime * 2) * 3;
+            ctx.strokeStyle = "rgba(255,255,255,0.4)";
+            ctx.beginPath();
+            ctx.moveTo(LOUNGE.coffeeX - 3, LOUNGE.coffeeY - 18);
+            ctx.quadraticCurveTo(LOUNGE.coffeeX + steamOffset, LOUNGE.coffeeY - 26, LOUNGE.coffeeX - 2, LOUNGE.coffeeY - 34);
+            ctx.stroke();
+
+            // 3. Central Server Room (Blinking Racks)
+            ctx.fillStyle = "#111520";
+            ctx.strokeStyle = "rgba(6, 182, 212, 0.35)";
+            roundRect(ctx, SERVER_ROOM.x, SERVER_ROOM.y, SERVER_ROOM.w, SERVER_ROOM.h, 12, true, true);
+            ctx.fillStyle = "#06b6d4";
+            ctx.font = "bold 9px 'JetBrains Mono', monospace";
+            ctx.fillText("🗄️ PHOENIX CORE SERVER ROOM", SERVER_ROOM.x + 12, SERVER_ROOM.y + 16);
+
+            for (let r = 0; r < 4; r++) {
+                const rx = SERVER_ROOM.x + 18 + r * 48;
+                const ry = SERVER_ROOM.y + 28;
+                ctx.fillStyle = "#090d16";
+                roundRect(ctx, rx, ry, 38, 62, 4, true, false);
+                for (let led = 0; led < 4; led++) {
+                    const blink = Math.sin(tickTime * 3 + r + led) > 0;
+                    ctx.fillStyle = blink ? "#10b981" : "#ff8c00";
+                    ctx.fillRect(rx + 6, ry + 8 + led * 13, 10, 4);
+                    ctx.fillStyle = "#1e293b";
+                    ctx.fillRect(rx + 20, ry + 8 + led * 13, 12, 4);
+                }
+            }
+
+            // 4. Draw the 8 Rooms with Walls, Doorways & Room Labels
+            ROOMS.forEach(room => {
+                ctx.fillStyle = "rgba(20, 23, 34, 0.92)";
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.14)";
+                ctx.lineWidth = 2;
+                roundRect(ctx, room.x, room.y, room.w, room.h, 14, true, true);
+
+                // Top Header Accent Bar inside room
+                ctx.fillStyle = room.color + "26";
+                roundRect(ctx, room.x + 6, room.y + 6, room.w - 12, 24, 8, true, false);
+
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 10.5px 'Inter', sans-serif";
+                ctx.fillText(room.name.toUpperCase(), room.x + 14, room.y + 22);
+
+                // Cutout Doorway opening
+                ctx.fillStyle = "#090b10";
+                ctx.fillRect(room.doorX - 18, room.doorY - 4, 36, 8);
+                ctx.strokeStyle = room.color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(room.doorX - 18, room.doorY);
+                ctx.lineTo(room.doorX + 18, room.doorY);
+                ctx.stroke();
+            });
+
+            // 5. Draw Desks & Glowing Computer Monitors
+            agents.forEach(ag => {
+                const room = ROOMS[ag.room];
+                // Desk surface
+                ctx.fillStyle = "#1e2233";
+                ctx.strokeStyle = "rgba(255,255,255,0.08)";
+                ctx.lineWidth = 1;
+                roundRect(ctx, ag.deskX - 24, ag.deskY - 16, 48, 20, 5, true, true);
+
+                // Monitor
+                const isWorkingAtDesk = ag.state === "working" && Math.hypot(ag.x - ag.deskX, ag.y - ag.deskY) < 10;
+                ctx.fillStyle = isWorkingAtDesk ? room.color : "#334155";
+                if (isWorkingAtDesk) {
+                    ctx.shadowColor = room.color;
+                    ctx.shadowBlur = 10;
+                }
+                roundRect(ctx, ag.deskX - 11, ag.deskY - 14, 22, 10, 2, true, false);
+                ctx.shadowBlur = 0;
+            });
+
+            // 6. Draw Glowing Data Packets in Transit
+            packets.forEach(p => {
+                const cx = p.x + (p.tx - p.x) * p.progress;
+                const cy = p.y + (p.ty - p.y) * p.progress - Math.sin(p.progress * Math.PI) * 28;
+
+                ctx.save();
+                ctx.fillStyle = "#06b6d4";
+                ctx.shadowColor = "#06b6d4";
+                ctx.shadowBlur = 14;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 5.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            // 7. Draw Animated Agents & Speech Bubbles
+            agents.forEach(ag => {
+                const room = ROOMS[ag.room];
+                const bob = ag.state === "walking" ? Math.abs(Math.sin(ag.walkPhase)) * 3.5 : 0;
+                const drawY = ag.y + 8 - bob;
+                const isSelected = ag.id === selectedAgentId;
+
+                // Selection Halo
+                if (isSelected) {
+                    ctx.strokeStyle = "#ff8c00";
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(ag.x, drawY, 15, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                // Agent Body Circle
+                ctx.fillStyle = "#0f172a";
+                ctx.strokeStyle = ag.state === "walking" ? "#06b6d4" : room.color;
+                ctx.lineWidth = 2.2;
+                ctx.beginPath();
+                ctx.arc(ag.x, drawY, 11.5, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                // Emoji Avatar
+                ctx.font = "11px sans-serif";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(ag.avatar, ag.x, drawY + 0.5);
+
+                // Short Name Tag below agent
+                ctx.fillStyle = "rgba(255,255,255,0.78)";
+                ctx.font = "600 8px 'Inter', sans-serif";
+                const shortLabel = ag.name.split(" ")[0];
+                ctx.fillText(shortLabel, ag.x, drawY + 17);
+                ctx.textAlign = "left";
+                ctx.textBaseline = "alphabetic";
+            });
+
+            // 8. Draw Floating Speech Bubbles on Top Layer
+            agents.forEach(ag => {
+                if (!ag.bubble) return;
+                ctx.font = "bold 9px 'JetBrains Mono', monospace";
+                const textW = ctx.measureText(ag.bubble).width;
+                const boxW = textW + 14;
+                const boxH = 18;
+                const bx = Math.min(Math.max(ag.x - boxW / 2, 8), 992 - boxW);
+                const by = Math.max(ag.y - 26, 6);
+
+                ctx.fillStyle = "#ff8c00";
+                roundRect(ctx, bx, by, boxW, boxH, 5, true, false);
+                ctx.fillStyle = "#090a0f";
+                ctx.fillText(ag.bubble, bx + 7, by + 12);
+            });
+
+            ctx.restore();
+        }
+
+        function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+            if (fill) ctx.fill();
+            if (stroke) ctx.stroke();
+        }
+
+        function animationLoop() {
+            updateSimulation();
+            drawFloorplan();
+            requestAnimationFrame(animationLoop);
+        }
+
+        // =========================================================================
+        // 7. CLICKABLE CANVAS AGENT INSPECTOR & CONTROLS
+        // =========================================================================
+        canvas.addEventListener('click', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const logicalX = ((e.clientX - rect.left) / rect.width) * 1000;
+            const logicalY = ((e.clientY - rect.top) / rect.height) * 640;
+
+            let closest = null;
+            let minDist = 26;
+            agents.forEach(ag => {
+                const d = Math.hypot(ag.x - logicalX, (ag.y + 8) - logicalY);
+                if (d < minDist) {
+                    minDist = d;
+                    closest = ag;
+                }
+            });
+
+            if (closest) {
+                selectAgent(closest.id, true);
+            }
+        });
+
+        function selectAgent(agentId, announce = false) {
+            selectedAgentId = agentId;
+            const ag = agents.find(a => a.id === agentId);
+            if (!ag) return;
+
+            const room = ROOMS[ag.room];
+            document.getElementById('inspColorDot').textContent = ag.avatar;
+            document.getElementById('inspName').textContent = ag.name;
+            document.getElementById('inspOffice').textContent = room.name;
+            document.getElementById('inspRole').textContent = `${ag.role} • Desk #${ag.id.toUpperCase()}`;
+            document.getElementById('inspSpecialty').textContent = ag.specialty;
+            document.getElementById('inspStateText').textContent = ag.bubble || (ag.state === 'walking' ? 'Delivering packet across floorplan...' : 'Active at workstation');
+
+            if (announce) {
+                showToast(`Inspecting ${ag.name} (${room.name})`);
+            }
+        }
+
+        function sendSelectedAgentOnMission() {
+            const ag = agents.find(a => a.id === selectedAgentId) || agents[0];
+            const partner = agents.find(a => a.room !== ag.room) || agents[1];
+            queueMission({
+                title: `Direct Task: ${ag.name} (${ag.role})`,
+                legs: [
+                    { from: ag.id, to: partner.id, bubble: `Executing ${ag.role}`, log: `${ag.name} initiated priority handoff to ${partner.name}.` },
+                    { from: partner.id, to: "a4", bubble: "Verified ✔", log: `Quality Auditor signed off on ${ag.name}'s deliverable.` }
+                ],
+                output: `// DIRECT AGENT EXECUTION REPORT\n• Agent: ${ag.name} (${ag.role})\n• Office: ${ROOMS[ag.room].name}\n• Specialty: ${ag.specialty}\n• Status: Completed & verified ✔`
+            });
+        }
+
+        function toggleAutoPilot() {
+            autoPilotEnabled = !autoPilotEnabled;
+            const btn = document.getElementById('autoPilotBtn');
+            const dot = document.getElementById('autoPilotDot');
+            const txt = document.getElementById('autoPilotText');
+
+            if (autoPilotEnabled) {
+                btn.className = "px-3 py-1.5 rounded-lg bg-emerald-950/80 border border-phx-emerald text-phx-emerald font-bold flex items-center gap-1.5 transition cursor-pointer";
+                dot.className = "w-2 h-2 rounded-full bg-phx-emerald animate-pulse";
+                txt.textContent = "AUTO-PILOT LOOP: ON";
+                showToast("Auto-Pilot Continuous Loop ENABLED");
+            } else {
+                btn.className = "px-3 py-1.5 rounded-lg bg-phx-input border border-white/15 text-gray-400 font-bold flex items-center gap-1.5 transition cursor-pointer";
+                dot.className = "w-2 h-2 rounded-full bg-gray-500";
+                txt.textContent = "AUTO-PILOT LOOP: PAUSED";
+                showToast("Auto-Pilot Loop Paused");
+            }
+        }
+
+        function runPresetMission(idx) {
+            const m = AUTONOMOUS_MISSIONS[idx];
+            if (!m) return;
+            document.getElementById('taskPromptInput').value = m.title;
+            queueMission(m);
+        }
+
+        async function triggerManualTask() {
+            const promptVal = document.getElementById('taskPromptInput').value.trim();
+            if (!promptVal) return;
+
+            const savedKey = localStorage.getItem(STORAGE_API_KEY);
+            if (engineMode === 'gemini' && savedKey) {
+                await runLiveGeminiMission(promptVal, savedKey);
+            } else {
+                queueMission({
+                    title: promptVal,
+                    legs: [
+                        { from: "a1", to: "a7", bubble: "Parsing directive", log: `Chief Orchestrator routed "${promptVal}" to engineering.` },
+                        { from: "a7", to: "a9", bubble: "Syncing modules", log: `SPA JS Engineer & Discord.py Core synchronized endpoints.` },
+                        { from: "a9", to: "a29", bubble: "QA verified ✔", log: `Bug Hunter validated output for "${promptVal}".` }
+                    ],
+                    output: `// PHOENIX AI OFFICE DELIVERABLE\n// Task: ${promptVal}\n// Status: Executed across Command HQ, Web & UI, Discord Bot & QA\n\nAll sub-tasks verified and ready for deployment.`
+                });
+            }
+        }
+
+        // =========================================================================
+        // 8. + HIRE EXTRA AGENT MODAL (PERSISTED IN LOCALSTORAGE)
+        // =========================================================================
+        function openHireModal() {
+            const sel = document.getElementById('hireRoomSelect');
+            sel.innerHTML = ROOMS.map(r => `<option value="${r.id}">${r.name}</option>`).join('');
+            document.getElementById('hireModal').classList.remove('hidden');
+        }
+        function closeHireModal() {
+            document.getElementById('hireModal').classList.add('hidden');
+        }
+        function pickAvatar(emoji, btn) {
+            selectedHireAvatar = emoji;
+            document.querySelectorAll('.av-opt').forEach(b => {
+                b.className = "av-opt px-3 py-1.5 rounded-lg bg-phx-input text-white cursor-pointer";
+            });
+            btn.className = "av-opt px-3 py-1.5 rounded-lg bg-phx-orange text-black font-bold cursor-pointer";
+        }
+        function confirmHireAgent() {
+            const name = document.getElementById('hireName').value.trim();
+            const role = document.getElementById('hireRole').value.trim() || "Specialist";
+            const room = parseInt(document.getElementById('hireRoomSelect').value, 10);
+            if (!name) {
+                showToast("Enter an agent name first!");
+                return;
+            }
+
+            const newAgentCfg = {
+                id: "hired_" + Date.now(),
+                room,
+                name,
+                role,
+                avatar: selectedHireAvatar,
+                specialty: `Custom hired ${role} operating inside ${ROOMS[room].name}.`
+            };
+
+            let hired = [];
+            try { hired = JSON.parse(localStorage.getItem(STORAGE_HIRED_KEY) || "[]"); } catch (e) {}
+            hired.push(newAgentCfg);
+            localStorage.setItem(STORAGE_HIRED_KEY, JSON.stringify(hired));
+
+            loadAllAgents();
+            closeHireModal();
+            selectAgent(newAgentCfg.id, false);
+            logActivity("HR", `Hired new agent "${name}" (${role}) into ${ROOMS[room].name}!`, "text-phx-emerald font-bold");
+            showToast(`Hired ${name} into ${ROOMS[room].name}!`);
+
+            // Send the new hire on an immediate welcome walk!
+            const spawned = agents.find(a => a.id === newAgentCfg.id);
+            if (spawned) {
+                spawned.bubble = "Reporting for duty!";
+                spawned.bubbleTimer = 240;
+                sendAgentToLocation(spawned, ROOMS[0].doorX, ROOMS[0].doorY + 25, 0, () => {
+                    sendAgentBackToDesk(spawned);
+                });
+            }
+        }
+
+        // =========================================================================
+        // 9. LIVE GEMINI API INTEGRATION
+        // =========================================================================
+        function setEngineMode(mode) {
+            engineMode = mode;
+            const bAuto = document.getElementById('btnModeAuto');
+            const bGem = document.getElementById('btnModeGemini');
+            if (mode === 'auto') {
+                bAuto.className = "px-2.5 py-1 rounded-lg bg-gradient-to-r from-phx-orange to-phx-red text-white font-bold cursor-pointer";
+                bGem.className = "px-2.5 py-1 rounded-lg text-gray-400 hover:text-white font-semibold cursor-pointer";
+            } else {
+                bGem.className = "px-2.5 py-1 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-bold cursor-pointer";
+                bAuto.className = "px-2.5 py-1 rounded-lg text-gray-400 hover:text-white font-semibold cursor-pointer";
+            }
+        }
+
+        function openApiKeyModal() {
+            document.getElementById('geminiApiKeyInput').value = localStorage.getItem(STORAGE_API_KEY) || '';
+            document.getElementById('apiKeyModal').classList.remove('hidden');
+        }
+        function closeApiKeyModal() {
+            document.getElementById('apiKeyModal').classList.add('hidden');
+        }
+        function saveGeminiKey() {
+            const key = document.getElementById('geminiApiKeyInput').value.trim();
+            if (!key) return;
+            localStorage.setItem(STORAGE_API_KEY, key);
+            document.getElementById('apiKeyStatusBadge').textContent = "(Connected)";
+            document.getElementById('apiKeyStatusBadge').className = "text-[9px] text-phx-emerald";
+            setEngineMode('gemini');
+            closeApiKeyModal();
+            showToast("Gemini API Key saved locally!");
+        }
+        function clearGeminiKey() {
+            localStorage.removeItem(STORAGE_API_KEY);
+            document.getElementById('geminiApiKeyInput').value = '';
+            document.getElementById('apiKeyStatusBadge').textContent = "(Key)";
+            document.getElementById('apiKeyStatusBadge').className = "text-[9px] text-amber-400";
+            setEngineMode('auto');
+            closeApiKeyModal();
+            showToast("API Key removed.");
+        }
+
+        async function runLiveGeminiMission(promptText, apiKey) {
+            logActivity("GEMINI", `Sending live prompt to Gemini 3 Flash...`, "text-cyan-400 font-bold");
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${encodeURIComponent(apiKey)}`;
+                const resp = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: `You are the Phoenix Force AI Office. Provide a concise, actionable code/strategy deliverable for: ${promptText}` }] }]
+                    })
+                });
+                const data = await resp.json();
+                const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "No output returned.";
+
+                queueMission({
+                    title: `Live AI: ${promptText}`,
+                    legs: [
+                        { from: "a1", to: "a7", bubble: "AI plan ready", log: "Chief Orchestrator distributed Gemini AI synthesis." },
+                        { from: "a7", to: "a4", bubble: "Deliverable packaged", log: "Quality Auditor verified live Gemini AI output." }
+                    ],
+                    output: text
+                });
+            } catch (err) {
+                logActivity("ERROR", `Gemini API call failed: ${err.message}`, "text-red-400");
+                showToast("API Error — check your Gemini API Key.");
+            }
+        }
+
+        // =========================================================================
+        // 10. HELPERS & BOOTSTRAP ON WINDOW LOAD
+        // =========================================================================
+        function logActivity(actor, msg, cls = "text-gray-300") {
+            const feed = document.getElementById('activityFeed');
+            const timeStr = new Date().toTimeString().split(' ')[0];
+            const row = document.createElement('div');
+            row.className = cls;
+            row.innerHTML = `<span class="text-gray-500">[${timeStr}]</span> <span class="text-phx-orange font-bold">${actor}:</span> ${msg}`;
+            feed.appendChild(row);
+            feed.scrollTop = feed.scrollHeight;
+        }
+
+        function clearFeed() {
+            document.getElementById('activityFeed').innerHTML = '';
+        }
+
+        function copyDeliverable() {
+            const text = document.getElementById('deliverableBox').textContent;
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast("Copied deliverable to clipboard!");
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 2600);
+        }
+
+        window.onload = function () {
+            if (localStorage.getItem(STORAGE_API_KEY)) {
+                document.getElementById('apiKeyStatusBadge').textContent = "(Connected)";
+                document.getElementById('apiKeyStatusBadge').className = "text-[9px] text-phx-emerald";
+            }
+            loadAllAgents();
+            resizeCanvas();
+            selectAgent("a1", false);
+
+            // Immediately start Auto-Pilot mission #1 on page load!
+            queueMission(AUTONOMOUS_MISSIONS[0]);
+            missionIndex = 1;
+
+            // Periodic ambient coffee breaks in the central lounge
+            setInterval(triggerAmbientLoungeWalk, 5500);
+
+            // Start 60fps floorplan animation loop
+            animationLoop();
+        };
+    </script>
+</body>
+</html>
