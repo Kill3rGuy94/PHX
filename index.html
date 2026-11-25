@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phoenix HQ Defense — Full Edition</title>
+    <title>Phoenix HQ Defense — Role Evolution Paths Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
@@ -67,9 +67,9 @@
                     </div>
                     <div>
                         <h1 class="text-sm sm:text-lg font-black tracking-wider text-white">
-                            PHOENIX HQ DEFENSE <span class="text-phx-orange">//</span> <span class="text-gray-300 text-xs sm:text-sm font-bold">FULL ARCADE EDITION</span>
+                            PHOENIX HQ DEFENSE <span class="text-phx-orange">//</span> <span class="text-gray-300 text-xs sm:text-sm font-bold">ROLE EVOLUTION PATHS</span>
                         </h1>
-                        <p class="text-[11px] font-mono text-gray-400">Boss Waves (Every 5) • Mutators • PHX Roster • Auto-XP Evo (Lv.10/20/50) • SFX</p>
+                        <p class="text-[11px] font-mono text-gray-400">Unique Body & Skill Paths per Role at Lv.10, Lv.20 & Lv.50 • Boss Waves • Auto-XP</p>
                     </div>
                 </div>
 
@@ -135,9 +135,9 @@
         <!-- LEFT 8 COLS: 2D FLOORPLAN ARENA -->
         <section class="xl:col-span-8 glass-panel rounded-2xl p-3 flex flex-col min-h-[560px] lg:min-h-[650px] relative">
             <div class="flex flex-wrap items-center justify-between gap-2 px-2 pb-2 text-[11px] font-mono text-gray-400">
-                <span class="text-white font-bold">🏢 PHOENIX HQ ARENA (8 ROOMS)</span>
+                <span class="text-white font-bold">🏢 PHOENIX HQ ARENA (ROLE EVOLUTION PATHS)</span>
                 <div class="flex items-center gap-3">
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-phx-orange"></span> Evolved</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-phx-orange"></span> Ignis / Role Form</span>
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> Shot</span>
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span> Enemy / Boss</span>
                 </div>
@@ -151,22 +151,36 @@
         <!-- RIGHT 4 COLS: INSPECTOR, LOG & RESET -->
         <aside class="xl:col-span-4 flex flex-col gap-4">
 
-            <!-- 1. Agent Inspector -->
+            <!-- 1. Agent Inspector with Role Evolution Path -->
             <div class="glass-panel rounded-2xl p-4 border border-phx-orange/30">
                 <div class="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
-                    <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-phx-orange">🪪 AGENT INSPECTOR & AUTO-XP</span>
+                    <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-phx-orange">🧬 ROLE EVOLUTION INSPECTOR</span>
                     <span id="inspEvoBadge" class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/10 text-gray-200 border border-white/15">INITIATE • LV.1</span>
                 </div>
 
                 <div class="flex items-center gap-3 mb-2.5">
-                    <div id="inspColorDot" class="w-12 h-12 rounded-xl bg-phx-orange/20 border-2 border-phx-orange flex items-center justify-center text-2xl shrink-0 transition-all">
-                        🧠
+                    <div id="inspFormAvatarBox" class="w-14 h-14 rounded-2xl bg-phx-orange/15 border-2 border-phx-orange flex items-center justify-center text-2xl shrink-0 transition-all duration-300">
+                        <span id="inspAvatar">🧠</span>
                     </div>
                     <div class="min-w-0 flex-grow">
                         <h2 id="inspName" class="text-sm font-black text-white truncate">Chief Orchestrator</h2>
                         <p id="inspOffice" class="text-xs font-semibold text-phx-orange truncate">1. Command HQ</p>
                         <p id="inspRole" class="text-[11px] font-mono text-gray-400 truncate">Starter Commander • Lv.1</p>
                     </div>
+                </div>
+
+                <!-- Role Path Pill -->
+                <div class="mb-2 px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/10 font-mono text-[10px] flex items-center justify-between">
+                    <span class="text-gray-400">ROLE PATH:</span>
+                    <span id="inspPathName" class="font-bold text-amber-300">IGNIS SOVEREIGN PATH</span>
+                </div>
+
+                <!-- Evolution Stage Ladder -->
+                <div class="grid grid-cols-4 gap-1 text-center font-mono text-[9px] mb-2.5">
+                    <div id="stage-0" class="py-1 rounded bg-white/10 border border-white/15 text-white font-bold">Lv.1<br>BASE</div>
+                    <div id="stage-1" class="py-1 rounded bg-black/40 border border-white/10 text-gray-500">Lv.10<br>STAGE I</div>
+                    <div id="stage-2" class="py-1 rounded bg-black/40 border border-white/10 text-gray-500">Lv.20<br>STAGE II</div>
+                    <div id="stage-3" class="py-1 rounded bg-black/40 border border-white/10 text-gray-500">Lv.50<br>APEX</div>
                 </div>
 
                 <div class="mb-3">
@@ -180,7 +194,8 @@
                 </div>
 
                 <div class="bg-black/45 rounded-xl p-2.5 border border-white/5 font-mono text-[11px] space-y-1.5 mb-3">
-                    <div><span class="text-gray-500">FORM:</span> <span id="inspFormDesc" class="text-amber-300">Standard Agent Frame</span></div>
+                    <div><span class="text-gray-500">BODY FORM:</span> <span id="inspFormDesc" class="text-amber-300">Circular Rookie Frame</span></div>
+                    <div><span class="text-gray-500">NEXT EVO:</span> <span id="inspNextEvo" class="text-fuchsia-300">Ignis Vanguard (Lv.10)</span></div>
                     <div><span class="text-gray-500">SKILLS:</span> <span id="inspSkills" class="text-cyan-300">Unlocks at Lv.10, Lv.20 & Lv.50</span></div>
                     <div><span class="text-gray-500">ROOM SYNERGY:</span> <span id="inspSynergy" class="text-emerald-300">+15% XP Gain</span></div>
                     <div><span class="text-gray-500">KILLS:</span> <span id="inspKills" class="text-emerald-400">0</span></div>
@@ -188,7 +203,7 @@
 
                 <button onclick="boostSelectedAgent()"
                     class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-phx-orange/20 to-phx-red/20 hover:from-phx-orange hover:to-phx-red hover:text-white text-amber-300 border border-phx-red/50 font-bold text-xs transition cursor-pointer">
-                    🔥 Field Boost +10 Lv (220 cr)
+                    🔥 Field Boost +10 Lv (220 cr) — Evolve Along Role Path!
                 </button>
             </div>
 
@@ -215,7 +230,7 @@
         </aside>
     </main>
 
-    <!-- HIRE AGENT MODAL WITH PHX ROSTER PRESETS -->
+    <!-- HIRE AGENT MODAL WITH PHX ROSTER PRESETS & ROLE EVOLUTION PATH -->
     <div id="hireModal" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="glass-panel rounded-2xl max-w-md w-full p-5 border border-phx-orange/40 shadow-2xl space-y-4">
             <div class="flex items-center justify-between border-b border-white/10 pb-3">
@@ -228,15 +243,15 @@
                     <label class="block text-gray-400 font-mono mb-1">Quick PHX Roster Preset:</label>
                     <select id="rosterPresetSelect" onchange="applyRosterPreset()" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
                         <option value="">-- Custom Agent --</option>
-                        <option value="Kill3rGuy94|PHX Founder & Streamer|🔥|0">Kill3rGuy94 (Command HQ)</option>
-                        <option value="YipYipMan_|PHX Creator|⚡|4">YipYipMan_ (Esports Ops)</option>
-                        <option value="catgamer_tv|PHX Creator|🐱|5">catgamer_tv (Media Studio)</option>
-                        <option value="CreepyPuppet_Tv|PHX Creator|🎭|2">CreepyPuppet_Tv (Discord Bot)</option>
-                        <option value="FenChris|PHX Creator|🐺|3">FenChris (IT & DevOps)</option>
-                        <option value="Ghost_R4in|PHX Creator|👻|7">Ghost_R4in (QA & Deploy)</option>
-                        <option value="demon_gekkouga|PHX Creator|🥷|4">demon_gekkouga (Esports Ops)</option>
-                        <option value="YioGki|PHX Creator|🎯|6">YioGki (Growth & Biz)</option>
-                        <option value="VanessaMermaid|PHX Creator|🧜‍♀️|1">VanessaMermaid (Web & UI)</option>
+                        <option value="Kill3rGuy94|👑 Leader & Founder|🔥|0|command">Kill3rGuy94 (Command HQ • Ignis Path)</option>
+                        <option value="YipYipMan_|⭐ Streamers Manager|⚡|4|command">YipYipMan_ (Esports Ops • Ignis Path)</option>
+                        <option value="catgamer_tv|🎮 Creator & Media|🐱|5|creator">catgamer_tv (Media Studio • Aether Path)</option>
+                        <option value="CreepyPuppet_Tv|🎭 Creator & Bot Ops|🎭|2|tech">CreepyPuppet_Tv (Discord Bot • Shadow Path)</option>
+                        <option value="FenChris|🐺 Esports & AION2|🐺|3|esports">FenChris (IT & DevOps • Tempest Path)</option>
+                        <option value="Ghost_R4in|👻 Creator & QA|👻|7|tech">Ghost_R4in (QA & Deploy • Shadow Path)</option>
+                        <option value="demon_gekkouga|🥷 Esports Striker|🥷|4|esports">demon_gekkouga (Esports Ops • Tempest Path)</option>
+                        <option value="YioGki|🎯 Creator & Growth|🎯|6|creator">YioGki (Growth & Biz • Aether Path)</option>
+                        <option value="VanessaMermaid|🧜‍♀️ Creator & Web UI|🧜‍♀️|1|creator">VanessaMermaid (Web & UI • Aether Path)</option>
                     </select>
                 </div>
                 <div>
@@ -245,7 +260,16 @@
                 </div>
                 <div>
                     <label class="block text-gray-400 font-mono mb-1">Role / Title:</label>
-                    <input id="hireRole" type="text" placeholder="e.g. Raid Defender" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
+                    <input id="hireRole" type="text" placeholder="e.g. Esports Striker / Creator / DevOps" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-gray-400 font-mono mb-1">Role Evolution Path:</label>
+                    <select id="hirePathSelect" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
+                        <option value="command">🔥 Ignis Sovereign (Leader / Manager / Command)</option>
+                        <option value="esports">⚡ Tempest Striker (Esports / Pro / Competitive)</option>
+                        <option value="creator">✨ Aether Prism (Creator / Streamer / Media / UI)</option>
+                        <option value="tech">🌑 Shadow Core (IT / DevOps / Bot / QA / Growth)</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-gray-400 font-mono mb-1">Office Room (with Synergy):</label>
@@ -275,7 +299,7 @@
     <div id="toast" class="fixed bottom-4 right-4 z-50 hidden px-4 py-2.5 rounded-xl bg-phx-panel border border-phx-orange text-white text-xs font-bold shadow-2xl"></div>
 
     <script>
-        const STORAGE_BEST_KEY = 'phx_hq_defense_best_v1';
+        const STORAGE_BEST_KEY = 'phx_hq_defense_best_v3';
 
         const ROOMS = [
             { id: 0, name: "1. Command HQ",   x: 20,  y: 20,  w: 225, h: 215, color: "#ff8c00", synergy: "+15% XP Gain", xpMult: 1.15, cdMult: 1.0, credMult: 1.0, regen: 0 },
@@ -287,6 +311,54 @@
             { id: 6, name: "7. Growth & Biz", x: 510, y: 405, w: 225, h: 215, color: "#10b981", synergy: "+20% Credits", xpMult: 1.0, cdMult: 1.0, credMult: 1.2, regen: 0 },
             { id: 7, name: "8. QA & Deploy",  x: 755, y: 405, w: 225, h: 215, color: "#eab308", synergy: "+10% XP & +10% Cr", xpMult: 1.1, cdMult: 1.0, credMult: 1.1, regen: 0 }
         ];
+
+        // Distinct Role Evolution Paths
+        const ROLE_PATHS = {
+            command: {
+                pathName: "IGNIS SOVEREIGN PATH",
+                stages: {
+                    0: { formName: "INITIATE", shapeType: "circle", icon: null, desc: "Circular Rookie Frame • Single Laser Bolt", fill: "#0f172a", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 1.0, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
+                    1: { formName: "IGNIS VANGUARD", shapeType: "hexagon", icon: "🛡️", desc: "Hexagon Command Chassis • Twin Volley", fill: "#271406", aura: "#ff8c00", sparks: 1, dmgMult: 1.15, cdMult: 0.9, xpBonus: 1.05, novaEvery: 0, extraShots: 0, skill: "🔥 Ember Volley" },
+                    2: { formName: "PYRE WARLORD", shapeType: "diamond", icon: "⚔️", desc: "Crimson-Orange Prism • +25% DMG & Fast Reload", fill: "#2c090e", aura: "#ff3b30", sparks: 2, dmgMult: 1.35, cdMult: 0.72, xpBonus: 1.1, novaEvery: 0, extraShots: 0, skill: "⚡ Overclocked Burst" },
+                    3: { formName: "PHOENIX SOVEREIGN", shapeType: "phoenix_star", icon: "👑", desc: "Ascended Winged Star • Phoenix Nova every 4th shot", fill: "#332203", aura: "#facc15", sparks: 3, dmgMult: 1.6, cdMult: 0.56, xpBonus: 1.2, novaEvery: 4, extraShots: 0, skill: "👑 Phoenix Nova" }
+                }
+            },
+            esports: {
+                pathName: "TEMPEST STRIKER PATH",
+                stages: {
+                    0: { formName: "ROOKIE SCOUT", shapeType: "circle", icon: null, desc: "Agile Circular Scout • Rapid Single Bolt", fill: "#0b172a", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 0.95, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
+                    1: { formName: "TEMPEST AEGIS", shapeType: "hexagon", icon: "⚡", desc: "Storm Hex Striker • High-Velocity Twin Bolt", fill: "#081f2c", aura: "#38bdf8", sparks: 1, dmgMult: 1.12, cdMult: 0.82, xpBonus: 1.0, novaEvery: 0, extraShots: 0, skill: "⚡ Storm Twin-Bolt" },
+                    2: { formName: "STORM DUELIST", shapeType: "diamond", icon: "🗡️", desc: "Razor Prism Duelist • Triple Bolt Salvo", fill: "#0b1936", aura: "#60a5fa", sparks: 2, dmgMult: 1.28, cdMult: 0.66, xpBonus: 1.05, novaEvery: 0, extraShots: 1, skill: "🌪️ Triple Salvo" },
+                    3: { formName: "THUNDER PARAGON", shapeType: "phoenix_star", icon: "🌩️", desc: "Apex Lightning Star • Triple Salvo + Shock Nova", fill: "#172554", aura: "#22d3ee", sparks: 3, dmgMult: 1.5, cdMult: 0.5, xpBonus: 1.1, novaEvery: 5, extraShots: 1, skill: "🌩️ Thunder Nova" }
+                }
+            },
+            creator: {
+                pathName: "AETHER PRISM PATH",
+                stages: {
+                    0: { formName: "NOVICE CREATOR", shapeType: "circle", icon: null, desc: "Aether Circular Frame • Focused Beam Bolt", fill: "#1e102b", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 1.0, xpBonus: 1.1, novaEvery: 0, extraShots: 0 },
+                    1: { formName: "AETHER WEAVER", shapeType: "hexagon", icon: "✨", desc: "Prism Hex Frame • +15% XP & Twin Bolt", fill: "#281138", aura: "#e879f9", sparks: 1, dmgMult: 1.1, cdMult: 0.88, xpBonus: 1.2, novaEvery: 0, extraShots: 0, skill: "✨ Prism Focus" },
+                    2: { formName: "PRISM ARCHITECT", shapeType: "diamond", icon: "💎", desc: "Faceted Diamond Core • +30% XP & Fast Shot", fill: "#2e1042", aura: "#f472b6", sparks: 2, dmgMult: 1.25, cdMult: 0.72, xpBonus: 1.35, novaEvery: 0, extraShots: 0, skill: "💎 Radiant Burst" },
+                    3: { formName: "ASTRAL VIRTUOSO", shapeType: "phoenix_star", icon: "🌟", desc: "Celestial Star Core • Solar Nova every 4th shot", fill: "#3b0d52", aura: "#f0abfc", sparks: 3, dmgMult: 1.48, cdMult: 0.55, xpBonus: 1.5, novaEvery: 4, extraShots: 0, skill: "🌟 Solar Nova" }
+                }
+            },
+            tech: {
+                pathName: "SHADOW CORE PATH",
+                stages: {
+                    0: { formName: "UNIT-01 INITIATE", shapeType: "circle", icon: null, desc: "Tactical Frame • Precision Pulse Bolt", fill: "#0a1f1c", aura: null, sparks: 0, dmgMult: 1.05, cdMult: 1.0, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
+                    1: { formName: "SHADOW SENTINEL", shapeType: "hexagon", icon: "🛡️", desc: "Encrypted Hex Frame • Heavy Twin Pulse", fill: "#072622", aura: "#10b981", sparks: 1, dmgMult: 1.2, cdMult: 0.88, xpBonus: 1.05, novaEvery: 0, extraShots: 0, skill: "🛡️ Firewall Bolt" },
+                    2: { formName: "VOID SABOTEUR", shapeType: "diamond", icon: "🕶️", desc: "Stealth Diamond Core • High-Impact Piercing Shot", fill: "#062b26", aura: "#34d399", sparks: 2, dmgMult: 1.42, cdMult: 0.74, xpBonus: 1.1, novaEvery: 0, extraShots: 0, skill: "🕶️ Void Pierce" },
+                    3: { formName: "ABYSSAL OVERLORD", shapeType: "phoenix_star", icon: "🌌", desc: "Omega Star Core • Rift Nova every 4th shot", fill: "#042f2e", aura: "#2dd4bf", sparks: 3, dmgMult: 1.68, cdMult: 0.58, xpBonus: 1.15, novaEvery: 4, extraShots: 0, skill: "🌌 Rift Nova" }
+                }
+            }
+        };
+
+        function inferPathFromRole(roleText = "") {
+            const r = roleText.toLowerCase();
+            if (r.includes("leader") || r.includes("founder") || r.includes("manager") || r.includes("command")) return "command";
+            if (r.includes("esports") || r.includes("pro") || r.includes("raid") || r.includes("competitive") || r.includes("striker")) return "esports";
+            if (r.includes("it") || r.includes("devops") || r.includes("bot") || r.includes("qa") || r.includes("deploy") || r.includes("growth") || r.includes("tech")) return "tech";
+            return "creator";
+        }
 
         const MUTATORS = [
             { name: "NORMAL", hpMult: 1.0, spdMult: 1.0, xpMult: 1.0, credMult: 1.0 },
@@ -301,12 +373,12 @@
             id: "a1",
             room: 0,
             name: "Chief Orchestrator",
-            role: "Starter Commander",
+            role: "👑 Leader & Commander",
             avatar: "🧠",
-            specialty: "Solo starter defender — keeps its level & XP permanently across hires."
+            pathKey: "command",
+            specialty: "Follows the Ignis Sovereign Evolution Path."
         };
 
-        // Lightweight Web Audio SFX synthesizer
         let soundEnabled = true;
         let audioCtx = null;
         function playTone(freq, duration = 0.07, type = "sine", vol = 0.04) {
@@ -371,8 +443,10 @@
         }
 
         function createAgentInstance(cfg) {
+            const resolvedPath = cfg.pathKey && ROLE_PATHS[cfg.pathKey] ? cfg.pathKey : inferPathFromRole(cfg.role);
             return {
                 ...cfg,
+                pathKey: resolvedPath,
                 level: 1,
                 xp: 0,
                 xpToNext: getXpNeededForLevel(1),
@@ -387,56 +461,50 @@
         function getAgentProfile(ag) {
             const lvl = ag.level;
             const room = ROOMS[ag.room];
+            const pathObj = ROLE_PATHS[ag.pathKey] || ROLE_PATHS.command;
+
             let tier = 0;
-            let formName = "INITIATE";
-            let formDesc = "Standard Agent Frame";
-            let auraColor = null;
-            let sparks = 0;
+            if (lvl >= 10) tier = 1;
+            if (lvl >= 20) tier = 2;
+            if (lvl >= 50) tier = 3;
+
+            const stg = pathObj.stages[tier];
             const skills = [];
-            let dmgMult = 1.0;
-            let cdMult = room.cdMult;
-            let novaEvery = 0;
-
-            if (lvl >= 10) {
-                tier = 1;
-                formName = "EMBER EVO";
-                formDesc = "Ember Ring +1 Orbit Spark • Twin-shot volley";
-                auraColor = "#ff8c00";
-                sparks = 1;
-                skills.push("🔥 Ember Volley");
-            }
-            if (lvl >= 20) {
-                tier = 2;
-                formName = "INFERNO EVO";
-                formDesc = "Crimson Armor +2 Sparks • Faster CD & +25% DMG";
-                auraColor = "#ff3b30";
-                sparks = 2;
-                dmgMult = 1.25;
-                cdMult *= 0.72;
-                skills.push("⚡ Overclocked Burst");
-            }
-            if (lvl >= 50) {
-                tier = 3;
-                formName = "PHOENIX ASCENDED";
-                formDesc = "Golden Halo +3 Flames • AoE Nova every 4th shot";
-                auraColor = "#facc15";
-                sparks = 3;
-                dmgMult = 1.5;
-                cdMult *= 0.55;
-                novaEvery = 4;
-                skills.push("👑 Phoenix Nova");
+            for (let t = 1; t <= tier; t++) {
+                if (pathObj.stages[t].skill) skills.push(pathObj.stages[t].skill);
             }
 
+            let cdMult = room.cdMult * stg.cdMult;
             if (overdriveTimer > 0) cdMult *= 0.5;
 
-            const effectiveDamage = Math.round((22 + (lvl - 1) * 9) * dmgMult);
-            const cooldownFrames = Math.max(10, Math.round(42 * cdMult));
+            const effectiveDamage = Math.round((22 + (lvl - 1) * 9) * stg.dmgMult);
+            const cooldownFrames = Math.max(9, Math.round(42 * cdMult));
+
+            const nextStageObj = tier < 3 ? pathObj.stages[tier + 1] : null;
+            const nextLvReq = tier === 0 ? 10 : (tier === 1 ? 20 : (tier === 2 ? 50 : null));
+            const nextEvoText = nextStageObj
+                ? `${nextStageObj.formName} (Lv.${nextLvReq})`
+                : "MAX APEX EVOLUTION REACHED";
 
             return {
-                tier, formName, formDesc,
+                tier,
+                pathName: pathObj.pathName,
+                stages: pathObj.stages,
+                formName: stg.formName,
+                shapeType: stg.shapeType,
+                formIcon: stg.icon || ag.avatar,
+                formDesc: stg.desc,
+                fillColor: stg.fill,
                 ringColor: room.color,
-                auraColor, sparks, skills,
-                effectiveDamage, cooldownFrames, novaEvery
+                auraColor: stg.aura,
+                sparks: stg.sparks,
+                skills,
+                xpBonus: stg.xpBonus,
+                extraShots: stg.extraShots || 0,
+                effectiveDamage,
+                cooldownFrames,
+                novaEvery: stg.novaEvery || 0,
+                nextEvoText
             };
         }
 
@@ -444,17 +512,18 @@
             [10, 20, 50].forEach(m => {
                 if (oldLevel < m && newLevel >= m) {
                     const prof = getAgentProfile(ag);
-                    spawnBurst(ag.x, ag.y, prof.auraColor || "#ff8c00", 22);
-                    playTone(740, 0.16, "triangle", 0.06);
-                    logActivity("EVO", `${ag.name} hit Lv.${m} → ${prof.formName}!`, "text-amber-300 font-bold");
-                    showToast(`🔥 ${ag.name} evolved to ${prof.formName} (Lv.${m})!`);
+                    spawnBurst(ag.x, ag.y, prof.auraColor || "#ff8c00", 28);
+                    playTone(740, 0.18, "triangle", 0.06);
+                    logActivity("ROLE EVO", `${ag.name} (${prof.pathName}) evolved into ${prof.formName} at Lv.${m}!`, "text-amber-300 font-bold");
+                    showToast(`🧬 ${ag.name} evolved into ${prof.formName}!`);
                 }
             });
         }
 
         function grantXp(ag, amount) {
             if (!ag || ag.level >= 99) return;
-            const roomMult = ROOMS[ag.room].xpMult * currentMutator.xpMult;
+            const prof = getAgentProfile(ag);
+            const roomMult = ROOMS[ag.room].xpMult * currentMutator.xpMult * prof.xpBonus;
             ag.xp += Math.max(1, Math.round(amount * roomMult));
             const oldLvl = ag.level;
             let leveledUp = false;
@@ -469,7 +538,7 @@
             if (leveledUp) {
                 spawnBurst(ag.x, ag.y, "#10b981", 12);
                 playTone(587, 0.11, "sine", 0.05);
-                logActivity("LVL UP", `${ag.name} auto-leveled to Lv.${ag.level}!`, "text-emerald-400 font-bold");
+                logActivity("LVL UP", `${ag.name} reached Lv.${ag.level}!`, "text-emerald-400 font-bold");
                 checkMilestones(ag, oldLvl, ag.level);
             }
 
@@ -589,11 +658,11 @@
             if (gameOver) return;
             if (credits < 40) { showToast("Need 40 Credits!"); return; }
             credits -= 40;
-            overdriveTimer = 420; // ~7 seconds at 60fps
+            overdriveTimer = 420;
             document.getElementById('overdriveBadge').classList.remove('hidden');
             updateHud();
             playTone(660, 0.15, "triangle", 0.05);
-            logActivity("HRAVE", "Haste Overdrive activated (2x fire speed for 7s)!", "text-amber-300 font-bold");
+            logActivity("HASTE", "Haste Overdrive activated (2x fire speed for 7s)!", "text-amber-300 font-bold");
         }
 
         function healCore() {
@@ -618,8 +687,8 @@
             refreshInspector();
         }
 
-        function triggerPhoenixNova(centerX, centerY, dmg, killerAgent) {
-            spawnBurst(centerX, centerY, "#facc15", 18);
+        function triggerPhoenixNova(centerX, centerY, dmg, killerAgent, color = "#facc15") {
+            spawnBurst(centerX, centerY, color, 18);
             for (let i = enemies.length - 1; i >= 0; i--) {
                 const en = enemies[i];
                 if (Math.hypot(en.x - centerX, en.y - centerY) <= 95) {
@@ -705,7 +774,6 @@
                 if (overdriveTimer === 0) document.getElementById('overdriveBadge').classList.add('hidden');
             }
 
-            // IT & DevOps room passive core repair
             const hasDevOps = agents.some(a => a.room === 3);
             if (hasDevOps && coreHp < 100) {
                 coreHp = Math.min(100, coreHp + 0.008);
@@ -760,14 +828,17 @@
 
                 projectiles.push({
                     x: ag.x, y: ag.y, targetId: target.id,
-                    damage: prof.effectiveDamage, ownerId: ag.id, speed: 6.8, isNova: isNovaShot
+                    damage: prof.effectiveDamage, ownerId: ag.id, speed: 6.8,
+                    isNova: isNovaShot, novaColor: prof.auraColor || "#facc15"
                 });
 
-                if (prof.tier >= 1 && enemies.length > 1) {
-                    const altTarget = enemies.find(e => e.id !== target.id) || target;
+                const totalBonusBolts = (prof.tier >= 1 ? 1 : 0) + prof.extraShots;
+                for (let b = 0; b < totalBonusBolts; b++) {
+                    const altTarget = enemies[(b + 1) % enemies.length] || target;
                     projectiles.push({
-                        x: ag.x + 4, y: ag.y - 4, targetId: altTarget.id,
-                        damage: Math.round(prof.effectiveDamage * 0.65), ownerId: ag.id, speed: 7.2, isNova: false
+                        x: ag.x + (b + 1) * 4, y: ag.y - (b + 1) * 4, targetId: altTarget.id,
+                        damage: Math.round(prof.effectiveDamage * 0.65), ownerId: ag.id, speed: 7.2,
+                        isNova: false, novaColor: prof.auraColor || "#06b6d4"
                     });
                 }
 
@@ -785,10 +856,10 @@
                 if (dist <= p.speed + 8) {
                     const hitX = target.x, hitY = target.y;
                     target.hp -= p.damage;
-                    spawnBurst(hitX, hitY, p.isNova ? "#facc15" : "#06b6d4", 4);
+                    spawnBurst(hitX, hitY, p.isNova ? p.novaColor : "#06b6d4", 4);
                     projectiles.splice(i, 1);
                     const killer = agents.find(a => a.id === p.ownerId);
-                    if (p.isNova) triggerPhoenixNova(hitX, hitY, p.damage, killer);
+                    if (p.isNova) triggerPhoenixNova(hitX, hitY, p.damage, killer, p.novaColor);
                     if (target.hp <= 0) {
                         const idx = enemies.indexOf(target);
                         if (idx !== -1) enemies.splice(idx, 1);
@@ -804,6 +875,57 @@
                 const pt = particles[i];
                 pt.x += pt.vx; pt.y += pt.vy; pt.life--;
                 if (pt.life <= 0) particles.splice(i, 1);
+            }
+        }
+
+        function drawPolygon(ctx, cx, cy, r, sides, rot = 0) {
+            ctx.beginPath();
+            for (let i = 0; i < sides; i++) {
+                const a = rot + (Math.PI * 2 * i) / sides;
+                const px = cx + Math.cos(a) * r;
+                const py = cy + Math.sin(a) * r;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+        }
+
+        function drawPhoenixStar(ctx, cx, cy, outerR, innerR, rot = 0) {
+            ctx.beginPath();
+            const spikes = 8;
+            for (let i = 0; i < spikes * 2; i++) {
+                const r = i % 2 === 0 ? outerR : innerR;
+                const a = rot + (Math.PI * i) / spikes;
+                const px = cx + Math.cos(a) * r;
+                const py = cy + Math.sin(a) * r;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+        }
+
+        function drawAgentShape(ctx, ag, prof, r) {
+            ctx.fillStyle = prof.fillColor;
+            ctx.strokeStyle = prof.auraColor || prof.ringColor;
+            ctx.lineWidth = 2.5;
+
+            if (prof.shapeType === "hexagon") {
+                drawPolygon(ctx, ag.x, ag.y, r + 2, 6, tickTime * 0.4);
+                ctx.fill();
+                ctx.stroke();
+            } else if (prof.shapeType === "diamond") {
+                drawPolygon(ctx, ag.x, ag.y, r + 3, 4, Math.PI / 4 + Math.sin(tickTime * 2) * 0.15);
+                ctx.fill();
+                ctx.stroke();
+            } else if (prof.shapeType === "phoenix_star") {
+                drawPhoenixStar(ctx, ag.x, ag.y, r + 6, r * 0.65, tickTime * 0.6);
+                ctx.fill();
+                ctx.stroke();
+            } else {
+                ctx.beginPath();
+                ctx.arc(ag.x, ag.y, r, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
             }
         }
 
@@ -848,39 +970,33 @@
             ctx.textAlign = "left";
             ctx.restore();
 
-            // Agents
+            // Agents with Role Evolution Forms
             agents.forEach(ag => {
                 const prof = getAgentProfile(ag);
-                const radius = 11.5 + prof.tier * 1.3;
+                const radius = 11.5 + prof.tier * 1.5;
 
                 if (ag.id === selectedAgentId) {
                     ctx.strokeStyle = "#ffffff";
                     ctx.lineWidth = 1.6;
                     ctx.beginPath();
-                    ctx.arc(ag.x, ag.y, radius + 6, 0, Math.PI * 2);
+                    ctx.arc(ag.x, ag.y, radius + 7, 0, Math.PI * 2);
                     ctx.stroke();
                 }
 
                 if (prof.auraColor) {
                     ctx.strokeStyle = prof.auraColor;
-                    ctx.lineWidth = 2;
+                    ctx.lineWidth = 1.6;
                     ctx.beginPath();
-                    ctx.arc(ag.x, ag.y, radius + 3.5, 0, Math.PI * 2);
+                    ctx.arc(ag.x, ag.y, radius + 4.5, 0, Math.PI * 2);
                     ctx.stroke();
                 }
 
-                ctx.fillStyle = prof.tier >= 3 ? "#291d04" : "#0f172a";
-                ctx.strokeStyle = prof.auraColor || prof.ringColor;
-                ctx.lineWidth = 2.4;
-                ctx.beginPath();
-                ctx.arc(ag.x, ag.y, radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.stroke();
+                drawAgentShape(ctx, ag, prof, radius);
 
                 for (let s = 0; s < prof.sparks; s++) {
                     const ang = tickTime * (1.8 + prof.tier * 0.4) + (Math.PI * 2 * s) / prof.sparks;
-                    const ox = ag.x + Math.cos(ang) * (radius + 6);
-                    const oy = ag.y + Math.sin(ang) * (radius + 6);
+                    const ox = ag.x + Math.cos(ang) * (radius + 7);
+                    const oy = ag.y + Math.sin(ang) * (radius + 7);
                     ctx.fillStyle = prof.auraColor || "#ff8c00";
                     ctx.beginPath();
                     ctx.arc(ox, oy, 2.8, 0, Math.PI * 2);
@@ -890,7 +1006,7 @@
                 ctx.font = `${11 + prof.tier}px sans-serif`;
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
-                ctx.fillText(ag.avatar, ag.x, ag.y + 0.5);
+                ctx.fillText(prof.formIcon, ag.x, ag.y + 0.5);
                 ctx.textAlign = "left";
                 ctx.textBaseline = "alphabetic";
             });
@@ -906,7 +1022,6 @@
                 ctx.fill();
                 ctx.stroke();
 
-                // HP Bar
                 const barW = en.isBoss ? 34 : 20;
                 const hpPct = Math.max(0, en.hp / en.maxHp);
                 ctx.fillStyle = "#111827";
@@ -923,8 +1038,8 @@
 
             // Projectiles
             projectiles.forEach(p => {
-                ctx.fillStyle = p.isNova ? "#facc15" : "#06b6d4";
-                ctx.shadowColor = p.isNova ? "#facc15" : "#06b6d4";
+                ctx.fillStyle = p.isNova ? p.novaColor : "#06b6d4";
+                ctx.shadowColor = p.isNova ? p.novaColor : "#06b6d4";
                 ctx.shadowBlur = p.isNova ? 12 : 8;
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.isNova ? 5.5 : 4, 0, Math.PI * 2);
@@ -1000,10 +1115,27 @@
             const room = ROOMS[ag.room];
             const pct = Math.min(100, Math.round((ag.xp / ag.xpToNext) * 100));
 
-            const dot = document.getElementById('inspColorDot');
-            dot.textContent = ag.avatar;
-            dot.style.borderColor = prof.auraColor || prof.ringColor;
+            const box = document.getElementById('inspFormAvatarBox');
+            document.getElementById('inspAvatar').textContent = prof.formIcon;
+            box.style.borderColor = prof.auraColor || prof.ringColor;
+            box.style.borderRadius = prof.shapeType === "diamond" ? "0.5rem" : (prof.shapeType === "phoenix_star" ? "9999px" : "1rem");
+            box.style.transform = prof.shapeType === "diamond" ? "rotate(45deg) scale(0.85)" : "none";
+            document.getElementById('inspAvatar').style.transform = prof.shapeType === "diamond" ? "rotate(-45deg)" : "none";
 
+            const stageLvLabels = ["Lv.1", "Lv.10", "Lv.20", "Lv.50"];
+            [0, 1, 2, 3].forEach(t => {
+                const el = document.getElementById(`stage-${t}`);
+                const stName = prof.stages[t].formName.split(" ")[0];
+                el.innerHTML = `${stageLvLabels[t]}<br>${stName}`;
+                if (prof.tier >= t) {
+                    el.className = "py-1 rounded bg-phx-orange/25 border border-phx-orange text-amber-200 font-bold";
+                } else {
+                    el.className = "py-1 rounded bg-black/40 border border-white/10 text-gray-500";
+                }
+            });
+
+            document.getElementById('inspPathName').textContent = prof.pathName;
+            document.getElementById('inspPathName').style.color = prof.auraColor || "#ff8c00";
             document.getElementById('inspEvoBadge').textContent = `${prof.formName} • LV.${ag.level}`;
             document.getElementById('inspName').textContent = ag.name;
             document.getElementById('inspOffice').textContent = room.name;
@@ -1011,6 +1143,7 @@
             document.getElementById('inspXpText').textContent = `${ag.xp} / ${ag.xpToNext} XP`;
             document.getElementById('inspXpBar').style.width = `${pct}%`;
             document.getElementById('inspFormDesc').textContent = prof.formDesc;
+            document.getElementById('inspNextEvo').textContent = prof.nextEvoText;
             document.getElementById('inspSkills').textContent = prof.skills.length ? prof.skills.join(" • ") : "Unlocks at Lv.10, Lv.20 & Lv.50";
             document.getElementById('inspSynergy').textContent = room.synergy;
             document.getElementById('inspKills').textContent = ag.kills;
@@ -1019,16 +1152,20 @@
         function openHireModal() {
             document.getElementById('hireRoomSelect').innerHTML = ROOMS.map(r => `<option value="${r.id}">${r.name} (${r.synergy})</option>`).join('');
             document.getElementById('rosterPresetSelect').value = "";
+            document.getElementById('hirePathSelect').value = "creator";
             document.getElementById('hireModal').classList.remove('hidden');
         }
         function closeHireModal() { document.getElementById('hireModal').classList.add('hidden'); }
         function applyRosterPreset() {
             const val = document.getElementById('rosterPresetSelect').value;
             if (!val) return;
-            const [name, role, av, roomId] = val.split("|");
+            const [name, role, av, roomId, pathKey] = val.split("|");
             document.getElementById('hireName').value = name;
             document.getElementById('hireRole').value = role;
             document.getElementById('hireRoomSelect').value = roomId;
+            if (pathKey && ROLE_PATHS[pathKey]) {
+                document.getElementById('hirePathSelect').value = pathKey;
+            }
             selectedHireAvatar = av;
         }
         function pickAvatar(emoji, btn) {
@@ -1040,17 +1177,18 @@
             if (credits < 60) { showToast("Need 60 Credits to hire an agent!"); return; }
             const name = document.getElementById('hireName').value.trim();
             if (!name) { showToast("Enter an agent name!"); return; }
-            const role = document.getElementById('hireRole').value.trim() || "PHX Defender";
+            const role = document.getElementById('hireRole').value.trim() || "PHX Creator";
             const room = parseInt(document.getElementById('hireRoomSelect').value, 10);
+            const pathKey = document.getElementById('hirePathSelect').value || inferPathFromRole(role);
 
             credits -= 60;
             updateHud();
 
             const newAgent = createAgentInstance({
                 id: "hired_" + Date.now(),
-                room, name, role,
+                room, name, role, pathKey,
                 avatar: selectedHireAvatar,
-                specialty: `${role} assigned to ${ROOMS[room].name}.`
+                specialty: `${role} on ${ROLE_PATHS[pathKey].pathName}.`
             });
             agents.push(newAgent);
             recomputePositions();
@@ -1058,7 +1196,7 @@
             closeHireModal();
             selectAgent(newAgent.id);
             playTone(523, 0.1, "triangle", 0.04);
-            logActivity("HR", `Hired ${name} into ${ROOMS[room].name}!`, "text-emerald-400 font-bold");
+            logActivity("HR", `Hired ${name} (${ROLE_PATHS[pathKey].pathName}) into ${ROOMS[room].name}!`, "text-emerald-400 font-bold");
         }
 
         function restartGame() {
