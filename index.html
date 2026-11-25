@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phoenix HQ Defense — 2D Characters & Ascend Edition</title>
+    <title>Phoenix HQ Defense — Role Weapons, 2D Characters & Ascend</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
@@ -67,9 +67,9 @@
                     </div>
                     <div>
                         <h1 class="text-sm sm:text-lg font-black tracking-wider text-white">
-                            PHOENIX HQ DEFENSE <span class="text-phx-orange">//</span> <span class="text-gray-300 text-xs sm:text-sm font-bold">2D CHARACTERS & ASCEND</span>
+                            PHOENIX HQ DEFENSE <span class="text-phx-orange">//</span> <span class="text-gray-300 text-xs sm:text-sm font-bold">ROLE WEAPONS & ASCEND</span>
                         </h1>
-                        <p class="text-[11px] font-mono text-gray-400">2D Agent Sprites • Role Evolution Paths (Lv.10/20/50) • Ascend at Lv.99</p>
+                        <p class="text-[11px] font-mono text-gray-400">Unique 2D Weapons per Role • 2D Agent Sprites • Role Evolution Paths • Ascend at Lv.99</p>
                     </div>
                 </div>
 
@@ -135,11 +135,12 @@
         <!-- LEFT 8 COLS: 2D FLOORPLAN ARENA -->
         <section class="xl:col-span-8 glass-panel rounded-2xl p-3 flex flex-col min-h-[560px] lg:min-h-[650px] relative">
             <div class="flex flex-wrap items-center justify-between gap-2 px-2 pb-2 text-[11px] font-mono text-gray-400">
-                <span class="text-white font-bold">🏢 PHOENIX HQ ARENA (2D CHARACTER SPRITES & ASCENSION)</span>
+                <span class="text-white font-bold">🏢 PHOENIX HQ ARENA (ROLE WEAPONS, 2D SPRITES & ASCENSION)</span>
                 <div class="flex items-center gap-3">
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-phx-orange"></span> 2D Agent</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-300"></span> Ascended Halo</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span> Enemy / Boss</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-phx-orange"></span> Ignis Sword</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-400"></span> Tempest Lance</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-fuchsia-400"></span> Aether Staff</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Shadow Blade</span>
                 </div>
             </div>
 
@@ -151,7 +152,7 @@
         <!-- RIGHT 4 COLS: INSPECTOR, LOG & RESET -->
         <aside class="xl:col-span-4 flex flex-col gap-4">
 
-            <!-- 1. Agent Inspector with 2D Sprite Preview & Ascend -->
+            <!-- 1. Agent Inspector with 2D Sprite Preview, Role Weapon & Ascend -->
             <div class="glass-panel rounded-2xl p-4 border border-phx-orange/30">
                 <div class="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
                     <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-phx-orange">🧬 2D AGENT INSPECTOR</span>
@@ -159,7 +160,7 @@
                 </div>
 
                 <div class="flex items-center gap-3 mb-2.5">
-                    <canvas id="inspSpriteCanvas" width="64" height="64" class="w-16 h-16 rounded-2xl bg-black/60 border border-phx-orange/40 shrink-0"></canvas>
+                    <canvas id="inspSpriteCanvas" width="72" height="72" class="w-[72px] h-[72px] rounded-2xl bg-black/60 border border-phx-orange/40 shrink-0"></canvas>
                     <div class="min-w-0 flex-grow">
                         <div class="flex items-center gap-1.5">
                             <h2 id="inspName" class="text-sm font-black text-white truncate">Chief Orchestrator</h2>
@@ -170,10 +171,16 @@
                     </div>
                 </div>
 
-                <!-- Role Path Pill -->
-                <div class="mb-2 px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/10 font-mono text-[10px] flex items-center justify-between">
-                    <span class="text-gray-400">ROLE PATH:</span>
-                    <span id="inspPathName" class="font-bold text-amber-300">IGNIS SOVEREIGN PATH</span>
+                <!-- Role Path & Weapon Pills -->
+                <div class="mb-2 px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/10 font-mono text-[10px] space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">ROLE PATH:</span>
+                        <span id="inspPathName" class="font-bold text-amber-300">IGNIS SOVEREIGN PATH</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-gray-400">WEAPON:</span>
+                        <span id="inspWeaponName" class="font-bold text-orange-400">🔥 Ignis Greatsword</span>
+                    </div>
                 </div>
 
                 <!-- Evolution Stage Ladder -->
@@ -195,8 +202,8 @@
                 </div>
 
                 <div class="bg-black/45 rounded-xl p-2.5 border border-white/5 font-mono text-[11px] space-y-1.5 mb-3">
-                    <div><span class="text-gray-500">2D RIG:</span> <span id="inspFormDesc" class="text-amber-300">2D Rookie Character</span></div>
-                    <div><span class="text-gray-500">ASCEND BONUS:</span> <span id="inspAscBonus" class="text-amber-300">+0% DMG / +0% XP (Max Lv.99 to Ascend)</span></div>
+                    <div><span class="text-gray-500">2D RIG:</span> <span id="inspFormDesc" class="text-amber-300">2D Cadet Rig</span></div>
+                    <div><span class="text-gray-500">ASCEND BONUS:</span> <span id="inspAscBonus" class="text-amber-300">+0% DMG / +0% XP</span></div>
                     <div><span class="text-gray-500">NEXT EVO:</span> <span id="inspNextEvo" class="text-fuchsia-300">Ignis Vanguard (Lv.10)</span></div>
                     <div><span class="text-gray-500">SKILLS:</span> <span id="inspSkills" class="text-cyan-300">Unlocks at Lv.10, Lv.20 & Lv.50</span></div>
                     <div><span class="text-gray-500">KILLS:</span> <span id="inspKills" class="text-emerald-400">0</span></div>
@@ -251,15 +258,15 @@
                     <label class="block text-gray-400 font-mono mb-1">Quick PHX Roster Preset:</label>
                     <select id="rosterPresetSelect" onchange="applyRosterPreset()" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
                         <option value="">-- Custom Agent --</option>
-                        <option value="Kill3rGuy94|👑 Leader & Founder|🔥|0|command">Kill3rGuy94 (Command HQ • Ignis Path)</option>
-                        <option value="YipYipMan_|⭐ Streamers Manager|⚡|4|command">YipYipMan_ (Esports Ops • Ignis Path)</option>
-                        <option value="catgamer_tv|🎮 Creator & Media|🐱|5|creator">catgamer_tv (Media Studio • Aether Path)</option>
-                        <option value="CreepyPuppet_Tv|🎭 Creator & Bot Ops|🎭|2|tech">CreepyPuppet_Tv (Discord Bot • Shadow Path)</option>
-                        <option value="FenChris|🐺 Esports & AION2|🐺|3|esports">FenChris (IT & DevOps • Tempest Path)</option>
-                        <option value="Ghost_R4in|👻 Creator & QA|👻|7|tech">Ghost_R4in (QA & Deploy • Shadow Path)</option>
-                        <option value="demon_gekkouga|🥷 Esports Striker|🥷|4|esports">demon_gekkouga (Esports Ops • Tempest Path)</option>
-                        <option value="YioGki|🎯 Creator & Growth|🎯|6|creator">YioGki (Growth & Biz • Aether Path)</option>
-                        <option value="VanessaMermaid|🧜‍♀️ Creator & Web UI|🧜‍♀️|1|creator">VanessaMermaid (Web & UI • Aether Path)</option>
+                        <option value="Kill3rGuy94|👑 Leader & Founder|🔥|0|command">Kill3rGuy94 (Command HQ • Ignis Sword)</option>
+                        <option value="YipYipMan_|⭐ Streamers Manager|⚡|4|command">YipYipMan_ (Esports Ops • Ignis Sword)</option>
+                        <option value="catgamer_tv|🎮 Creator & Media|🐱|5|creator">catgamer_tv (Media Studio • Aether Staff)</option>
+                        <option value="CreepyPuppet_Tv|🎭 Creator & Bot Ops|🎭|2|tech">CreepyPuppet_Tv (Discord Bot • Shadow Blade)</option>
+                        <option value="FenChris|🐺 Esports & AION2|🐺|3|esports">FenChris (IT & DevOps • Tempest Lance)</option>
+                        <option value="Ghost_R4in|👻 Creator & QA|👻|7|tech">Ghost_R4in (QA & Deploy • Shadow Blade)</option>
+                        <option value="demon_gekkouga|🥷 Esports Striker|🥷|4|esports">demon_gekkouga (Esports Ops • Tempest Lance)</option>
+                        <option value="YioGki|🎯 Creator & Growth|🎯|6|creator">YioGki (Growth & Biz • Aether Staff)</option>
+                        <option value="VanessaMermaid|🧜‍♀️ Creator & Web UI|🧜‍♀️|1|creator">VanessaMermaid (Web & UI • Aether Staff)</option>
                     </select>
                 </div>
                 <div>
@@ -271,12 +278,12 @@
                     <input id="hireRole" type="text" placeholder="e.g. Esports Striker / Creator / DevOps" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
                 </div>
                 <div>
-                    <label class="block text-gray-400 font-mono mb-1">Role Evolution Path:</label>
+                    <label class="block text-gray-400 font-mono mb-1">Role Evolution Path & Weapon:</label>
                     <select id="hirePathSelect" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
-                        <option value="command">🔥 Ignis Sovereign (Leader / Manager / Command)</option>
-                        <option value="esports">⚡ Tempest Striker (Esports / Pro / Competitive)</option>
-                        <option value="creator">✨ Aether Prism (Creator / Streamer / Media / UI)</option>
-                        <option value="tech">🌑 Shadow Core (IT / DevOps / Bot / QA / Growth)</option>
+                        <option value="command">🔥 Ignis Sovereign (Ignis Greatsword • Command)</option>
+                        <option value="esports">⚡ Tempest Striker (Tempest Lance • Esports)</option>
+                        <option value="creator">✨ Aether Prism (Aether Prism Staff • Creator)</option>
+                        <option value="tech">🌑 Shadow Core (Shadow Twin-Blade • Tech/Ops)</option>
                     </select>
                 </div>
                 <div>
@@ -307,7 +314,7 @@
     <div id="toast" class="fixed bottom-4 right-4 z-50 hidden px-4 py-2.5 rounded-xl bg-phx-panel border border-phx-orange text-white text-xs font-bold shadow-2xl"></div>
 
     <script>
-        const STORAGE_BEST_KEY = 'phx_hq_defense_best_v4';
+        const STORAGE_BEST_KEY = 'phx_hq_defense_best_v5';
         const MAX_LEVEL = 99;
 
         const ROOMS = [
@@ -324,9 +331,13 @@
         const ROLE_PATHS = {
             command: {
                 pathName: "IGNIS SOVEREIGN PATH",
+                weaponType: "sword",
+                weaponLabel: "🔥 Ignis Greatsword",
+                weaponBladeColor: "#fb923c",
+                weaponGlowColor: "#ff8c00",
                 accent: "#ff8c00",
                 stages: {
-                    0: { formName: "INITIATE", rigStyle: "cadet", icon: null, desc: "2D Cadet Rig • Single Laser Bolt", suit: "#334155", trim: "#ff8c00", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 1.0, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
+                    0: { formName: "INITIATE", rigStyle: "cadet", icon: null, desc: "2D Cadet Rig • Ignis Blade", suit: "#334155", trim: "#ff8c00", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 1.0, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
                     1: { formName: "IGNIS VANGUARD", rigStyle: "vanguard", icon: "🛡️", desc: "2D Armored Vanguard • Twin Volley", suit: "#7c2d12", trim: "#ff8c00", aura: "#ff8c00", sparks: 1, dmgMult: 1.15, cdMult: 0.9, xpBonus: 1.05, novaEvery: 0, extraShots: 0, skill: "🔥 Ember Volley" },
                     2: { formName: "PYRE WARLORD", rigStyle: "warlord", icon: "⚔️", desc: "2D Blade Warlord • +35% DMG & Fast Reload", suit: "#881337", trim: "#ff3b30", aura: "#ff3b30", sparks: 2, dmgMult: 1.35, cdMult: 0.72, xpBonus: 1.1, novaEvery: 0, extraShots: 0, skill: "⚡ Overclocked Burst" },
                     3: { formName: "PHOENIX SOVEREIGN", rigStyle: "sovereign", icon: "👑", desc: "2D Winged Sovereign • Phoenix Nova every 4th shot", suit: "#78350f", trim: "#facc15", aura: "#facc15", sparks: 3, dmgMult: 1.6, cdMult: 0.56, xpBonus: 1.2, novaEvery: 4, extraShots: 0, skill: "👑 Phoenix Nova" }
@@ -334,9 +345,13 @@
             },
             esports: {
                 pathName: "TEMPEST STRIKER PATH",
+                weaponType: "lance",
+                weaponLabel: "⚡ Tempest Storm Lance",
+                weaponBladeColor: "#7dd3fc",
+                weaponGlowColor: "#38bdf8",
                 accent: "#38bdf8",
                 stages: {
-                    0: { formName: "ROOKIE SCOUT", rigStyle: "cadet", icon: null, desc: "2D Scout Rig • Rapid Single Bolt", suit: "#1e3a5f", trim: "#38bdf8", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 0.95, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
+                    0: { formName: "ROOKIE SCOUT", rigStyle: "cadet", icon: null, desc: "2D Scout Rig • Storm Lance", suit: "#1e3a5f", trim: "#38bdf8", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 0.95, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
                     1: { formName: "TEMPEST AEGIS", rigStyle: "vanguard", icon: "⚡", desc: "2D Storm Striker • High-Velocity Twin Bolt", suit: "#0c4a6e", trim: "#38bdf8", aura: "#38bdf8", sparks: 1, dmgMult: 1.12, cdMult: 0.82, xpBonus: 1.0, novaEvery: 0, extraShots: 0, skill: "⚡ Storm Twin-Bolt" },
                     2: { formName: "STORM DUELIST", rigStyle: "warlord", icon: "🗡️", desc: "2D Duelist Rig • Triple Bolt Salvo", suit: "#1e3a8a", trim: "#60a5fa", aura: "#60a5fa", sparks: 2, dmgMult: 1.28, cdMult: 0.66, xpBonus: 1.05, novaEvery: 0, extraShots: 1, skill: "🌪️ Triple Salvo" },
                     3: { formName: "THUNDER PARAGON", rigStyle: "sovereign", icon: "🌩️", desc: "2D Winged Paragon • Triple Salvo + Shock Nova", suit: "#172554", trim: "#22d3ee", aura: "#22d3ee", sparks: 3, dmgMult: 1.5, cdMult: 0.5, xpBonus: 1.1, novaEvery: 5, extraShots: 1, skill: "🌩️ Thunder Nova" }
@@ -344,9 +359,13 @@
             },
             creator: {
                 pathName: "AETHER PRISM PATH",
+                weaponType: "staff",
+                weaponLabel: "✨ Aether Prism Staff",
+                weaponBladeColor: "#f0abfc",
+                weaponGlowColor: "#e879f9",
                 accent: "#e879f9",
                 stages: {
-                    0: { formName: "NOVICE CREATOR", rigStyle: "cadet", icon: null, desc: "2D Creator Rig • Focused Beam Bolt", suit: "#3b1d5e", trim: "#e879f9", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 1.0, xpBonus: 1.1, novaEvery: 0, extraShots: 0 },
+                    0: { formName: "NOVICE CREATOR", rigStyle: "cadet", icon: null, desc: "2D Creator Rig • Prism Staff", suit: "#3b1d5e", trim: "#e879f9", aura: null, sparks: 0, dmgMult: 1.0, cdMult: 1.0, xpBonus: 1.1, novaEvery: 0, extraShots: 0 },
                     1: { formName: "AETHER WEAVER", rigStyle: "vanguard", icon: "✨", desc: "2D Prism Weaver • +20% XP & Twin Bolt", suit: "#581c87", trim: "#e879f9", aura: "#e879f9", sparks: 1, dmgMult: 1.1, cdMult: 0.88, xpBonus: 1.2, novaEvery: 0, extraShots: 0, skill: "✨ Prism Focus" },
                     2: { formName: "PRISM ARCHITECT", rigStyle: "warlord", icon: "💎", desc: "2D Prism Architect • +35% XP & Fast Shot", suit: "#701a75", trim: "#f472b6", aura: "#f472b6", sparks: 2, dmgMult: 1.25, cdMult: 0.72, xpBonus: 1.35, novaEvery: 0, extraShots: 0, skill: "💎 Radiant Burst" },
                     3: { formName: "ASTRAL VIRTUOSO", rigStyle: "sovereign", icon: "🌟", desc: "2D Winged Virtuoso • Solar Nova every 4th shot", suit: "#4a044e", trim: "#f0abfc", aura: "#f0abfc", sparks: 3, dmgMult: 1.48, cdMult: 0.55, xpBonus: 1.5, novaEvery: 4, extraShots: 0, skill: "🌟 Solar Nova" }
@@ -354,9 +373,13 @@
             },
             tech: {
                 pathName: "SHADOW CORE PATH",
+                weaponType: "blade",
+                weaponLabel: "🌑 Shadow Twin-Blade",
+                weaponBladeColor: "#34d399",
+                weaponGlowColor: "#10b981",
                 accent: "#10b981",
                 stages: {
-                    0: { formName: "UNIT-01 INITIATE", rigStyle: "cadet", icon: null, desc: "2D Tactical Operator • Precision Pulse Bolt", suit: "#134e4a", trim: "#10b981", aura: null, sparks: 0, dmgMult: 1.05, cdMult: 1.0, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
+                    0: { formName: "UNIT-01 INITIATE", rigStyle: "cadet", icon: null, desc: "2D Tactical Operator • Shadow Blade", suit: "#134e4a", trim: "#10b981", aura: null, sparks: 0, dmgMult: 1.05, cdMult: 1.0, xpBonus: 1.0, novaEvery: 0, extraShots: 0 },
                     1: { formName: "SHADOW SENTINEL", rigStyle: "vanguard", icon: "🛡️", desc: "2D Shadow Sentinel • Heavy Twin Pulse", suit: "#065f46", trim: "#10b981", aura: "#10b981", sparks: 1, dmgMult: 1.2, cdMult: 0.88, xpBonus: 1.05, novaEvery: 0, extraShots: 0, skill: "🛡️ Firewall Bolt" },
                     2: { formName: "VOID SABOTEUR", rigStyle: "warlord", icon: "🕶️", desc: "2D Void Saboteur • High-Impact Piercing Shot", suit: "#064e3b", trim: "#34d399", aura: "#34d399", sparks: 2, dmgMult: 1.42, cdMult: 0.74, xpBonus: 1.1, novaEvery: 0, extraShots: 0, skill: "🕶️ Void Pierce" },
                     3: { formName: "ABYSSAL OVERLORD", rigStyle: "sovereign", icon: "🌌", desc: "2D Winged Overlord • Rift Nova every 4th shot", suit: "#042f2e", trim: "#2dd4bf", aura: "#2dd4bf", sparks: 3, dmgMult: 1.68, cdMult: 0.58, xpBonus: 1.15, novaEvery: 4, extraShots: 0, skill: "🌌 Rift Nova" }
@@ -466,6 +489,8 @@
                 kills: 0,
                 shotsFired: 0,
                 cooldown: Math.random() * 15,
+                aimAngle: 0,
+                recoilTimer: 0,
                 x: 0,
                 y: 0
             };
@@ -507,7 +532,12 @@
             return {
                 tier,
                 asc,
+                pathKey: ag.pathKey,
                 pathName: pathObj.pathName,
+                weaponType: pathObj.weaponType,
+                weaponLabel: pathObj.weaponLabel,
+                weaponBladeColor: pathObj.weaponBladeColor,
+                weaponGlowColor: asc > 0 ? "#fde047" : pathObj.weaponGlowColor,
                 stages: pathObj.stages,
                 formName: stg.formName,
                 rigStyle: stg.rigStyle,
@@ -865,10 +895,9 @@
             }
 
             agents.forEach(ag => {
-                if (ag.cooldown > 0) { ag.cooldown--; return; }
+                if (ag.recoilTimer > 0) ag.recoilTimer--;
                 if (enemies.length === 0) return;
 
-                const prof = getAgentProfile(ag);
                 let target = enemies[0];
                 let bestD = Math.hypot(target.x - ag.x, target.y - ag.y);
                 enemies.forEach(e => {
@@ -876,13 +905,25 @@
                     if (d < bestD) { bestD = d; target = e; }
                 });
 
+                // Smoothly aim weapon toward nearest enemy
+                ag.aimAngle = Math.atan2(target.y - (ag.y - 2), target.x - ag.x);
+
+                if (ag.cooldown > 0) { ag.cooldown--; return; }
+
+                const prof = getAgentProfile(ag);
                 ag.shotsFired += 1;
+                ag.recoilTimer = 7;
                 const isNovaShot = prof.novaEvery > 0 && (ag.shotsFired % prof.novaEvery === 0);
 
                 projectiles.push({
-                    x: ag.x, y: ag.y - 4, targetId: target.id,
-                    damage: prof.effectiveDamage, ownerId: ag.id, speed: 6.8,
-                    isNova: isNovaShot, novaColor: prof.auraColor || "#facc15"
+                    x: ag.x + Math.cos(ag.aimAngle) * 10,
+                    y: ag.y - 2 + Math.sin(ag.aimAngle) * 10,
+                    targetId: target.id,
+                    damage: prof.effectiveDamage,
+                    ownerId: ag.id,
+                    speed: 6.8,
+                    isNova: isNovaShot,
+                    novaColor: prof.weaponGlowColor
                 });
 
                 const totalBonusBolts = (prof.tier >= 1 ? 1 : 0) + prof.extraShots;
@@ -891,7 +932,7 @@
                     projectiles.push({
                         x: ag.x + (b + 1) * 4, y: ag.y - 4 - (b + 1) * 2, targetId: altTarget.id,
                         damage: Math.round(prof.effectiveDamage * 0.65), ownerId: ag.id, speed: 7.2,
-                        isNova: false, novaColor: prof.auraColor || "#06b6d4"
+                        isNova: false, novaColor: prof.weaponGlowColor
                     });
                 }
 
@@ -931,8 +972,103 @@
             }
         }
 
-        // Draws an articulated 2D character sprite (head, visor/hair, wings/pauldrons, torso, arms, legs)
-        function draw2DCharacter(targetCtx, cx, cy, prof, scale = 1, animPhase = 0, selected = false) {
+        // Draws the role-specific 2D weapon in the agent's hand
+        function drawRoleWeapon(targetCtx, prof, aimAngle, recoilOffset) {
+            targetCtx.save();
+            targetCtx.translate(4, -1 - recoilOffset);
+            targetCtx.rotate(aimAngle);
+
+            const lenScale = 1 + prof.tier * 0.12 + (prof.asc || 0) * 0.06;
+            targetCtx.scale(lenScale, lenScale);
+
+            if (prof.weaponType === "sword") {
+                // Ignis Greatsword: hilt + crossguard + fiery blade
+                targetCtx.strokeStyle = "#92400e";
+                targetCtx.lineWidth = 2.4;
+                targetCtx.beginPath();
+                targetCtx.moveTo(-4, 0);
+                targetCtx.lineTo(1, 0);
+                targetCtx.stroke();
+
+                targetCtx.strokeStyle = "#facc15";
+                targetCtx.lineWidth = 2.4;
+                targetCtx.beginPath();
+                targetCtx.moveTo(1, -4.5);
+                targetCtx.lineTo(1, 4.5);
+                targetCtx.stroke();
+
+                targetCtx.fillStyle = prof.weaponBladeColor;
+                targetCtx.shadowColor = prof.weaponGlowColor;
+                targetCtx.shadowBlur = 7;
+                targetCtx.beginPath();
+                targetCtx.moveTo(1, -2.5);
+                targetCtx.lineTo(16, 0);
+                targetCtx.lineTo(1, 2.5);
+                targetCtx.closePath();
+                targetCtx.fill();
+            } else if (prof.weaponType === "lance") {
+                // Tempest Storm Lance: long shaft + twin storm prongs
+                targetCtx.strokeStyle = "#e2e8f0";
+                targetCtx.lineWidth = 2;
+                targetCtx.beginPath();
+                targetCtx.moveTo(-7, 0);
+                targetCtx.lineTo(13, 0);
+                targetCtx.stroke();
+
+                targetCtx.fillStyle = prof.weaponBladeColor;
+                targetCtx.shadowColor = prof.weaponGlowColor;
+                targetCtx.shadowBlur = 8;
+                targetCtx.beginPath();
+                targetCtx.moveTo(12, -3.5);
+                targetCtx.lineTo(20, 0);
+                targetCtx.lineTo(12, 3.5);
+                targetCtx.lineTo(14.5, 0);
+                targetCtx.closePath();
+                targetCtx.fill();
+            } else if (prof.weaponType === "staff") {
+                // Aether Prism Staff: staff + floating prism crystal at tip
+                targetCtx.strokeStyle = "#c084fc";
+                targetCtx.lineWidth = 2.2;
+                targetCtx.beginPath();
+                targetCtx.moveTo(-5, 0);
+                targetCtx.lineTo(12, 0);
+                targetCtx.stroke();
+
+                targetCtx.fillStyle = prof.weaponBladeColor;
+                targetCtx.shadowColor = prof.weaponGlowColor;
+                targetCtx.shadowBlur = 9;
+                targetCtx.beginPath();
+                targetCtx.moveTo(12, -5);
+                targetCtx.lineTo(17.5, 0);
+                targetCtx.lineTo(12, 5);
+                targetCtx.lineTo(9.5, 0);
+                targetCtx.closePath();
+                targetCtx.fill();
+            } else {
+                // Shadow Twin-Blade: curved stealth blade
+                targetCtx.strokeStyle = "#334155";
+                targetCtx.lineWidth = 2.4;
+                targetCtx.beginPath();
+                targetCtx.moveTo(-3, 0);
+                targetCtx.lineTo(2, 0);
+                targetCtx.stroke();
+
+                targetCtx.fillStyle = prof.weaponBladeColor;
+                targetCtx.shadowColor = prof.weaponGlowColor;
+                targetCtx.shadowBlur = 7;
+                targetCtx.beginPath();
+                targetCtx.moveTo(2, -2.5);
+                targetCtx.quadraticCurveTo(11, -3.5, 16, 1.5);
+                targetCtx.lineTo(2, 2.2);
+                targetCtx.closePath();
+                targetCtx.fill();
+            }
+
+            targetCtx.shadowBlur = 0;
+            targetCtx.restore();
+        }
+
+        function draw2DCharacter(targetCtx, cx, cy, prof, scale = 1, animPhase = 0, selected = false, aimAngle = -0.35, recoil = 0) {
             targetCtx.save();
             targetCtx.translate(cx, cy);
             targetCtx.scale(scale, scale);
@@ -940,7 +1076,6 @@
             const bob = Math.sin(animPhase * 2.2) * 1.4;
             const swing = Math.sin(animPhase * 3.5) * 3.2;
 
-            // Selection ring under character
             if (selected) {
                 targetCtx.strokeStyle = "#ffffff";
                 targetCtx.lineWidth = 1.6;
@@ -949,7 +1084,6 @@
                 targetCtx.stroke();
             }
 
-            // Ascension golden halo behind character
             if (prof.asc > 0) {
                 targetCtx.strokeStyle = "#fde047";
                 targetCtx.lineWidth = 2;
@@ -958,18 +1092,16 @@
                 targetCtx.stroke();
             }
 
-            // Wings for Sovereign / Stage 3
             if (prof.rigStyle === "sovereign" || prof.asc > 0) {
                 targetCtx.fillStyle = prof.trimColor;
                 targetCtx.globalAlpha = 0.75;
-                // Left wing
                 targetCtx.beginPath();
                 targetCtx.moveTo(-4, -2 + bob);
                 targetCtx.lineTo(-17, -11 + bob * 0.6);
                 targetCtx.lineTo(-11, 3 + bob);
                 targetCtx.closePath();
                 targetCtx.fill();
-                // Right wing
+
                 targetCtx.beginPath();
                 targetCtx.moveTo(4, -2 + bob);
                 targetCtx.lineTo(17, -11 + bob * 0.6);
@@ -990,13 +1122,13 @@
             targetCtx.lineTo(4.5 + swing * 0.35, 11);
             targetCtx.stroke();
 
-            // Torso / Tunic / Armor
+            // Torso
             targetCtx.fillStyle = prof.suitColor;
             targetCtx.strokeStyle = prof.trimColor;
             targetCtx.lineWidth = 1.8;
             roundRect(targetCtx, -6.5, -4 + bob, 13, 9.5, 3, true, true);
 
-            // Pauldrons / Shoulder guards for Vanguard / Warlord / Sovereign
+            // Pauldrons
             if (prof.tier >= 1) {
                 targetCtx.fillStyle = prof.trimColor;
                 targetCtx.beginPath();
@@ -1005,14 +1137,23 @@
                 targetCtx.fill();
             }
 
-            // Arms
+            // Left arm
             targetCtx.strokeStyle = prof.trimColor;
             targetCtx.lineWidth = 2.2;
             targetCtx.beginPath();
             targetCtx.moveTo(-6.5, -2 + bob);
             targetCtx.lineTo(-10.5, 2 + bob - swing * 0.4);
+            targetCtx.stroke();
+
+            // Role-specific weapon in right hand
+            drawRoleWeapon(targetCtx, prof, aimAngle, recoil * 0.4);
+
+            // Right arm holding weapon
+            targetCtx.strokeStyle = prof.trimColor;
+            targetCtx.lineWidth = 2.2;
+            targetCtx.beginPath();
             targetCtx.moveTo(6.5, -2 + bob);
-            targetCtx.lineTo(10.5, 2 + bob + swing * 0.4);
+            targetCtx.lineTo(6.5 + Math.cos(aimAngle) * 5, -2 + bob + Math.sin(aimAngle) * 5 - recoil * 0.3);
             targetCtx.stroke();
 
             // Head
@@ -1029,7 +1170,6 @@
             targetCtx.fillRect(-3.2, -11.2 + bob, 2, 2);
             targetCtx.fillRect(1.2, -11.2 + bob, 2, 2);
 
-            // Crown / Plume on higher tiers
             if (prof.tier >= 2) {
                 targetCtx.fillStyle = prof.trimColor;
                 targetCtx.beginPath();
@@ -1084,7 +1224,7 @@
             ctx.textAlign = "left";
             ctx.restore();
 
-            // 2D Characters
+            // 2D Characters with Role Weapons
             agents.forEach((ag, idx) => {
                 const prof = getAgentProfile(ag);
                 const charScale = 1.05 + prof.tier * 0.1 + (prof.asc || 0) * 0.05;
@@ -1099,9 +1239,8 @@
                     ctx.fill();
                 }
 
-                draw2DCharacter(ctx, ag.x, ag.y, prof, charScale, tickTime + idx * 0.9, ag.id === selectedAgentId);
+                draw2DCharacter(ctx, ag.x, ag.y, prof, charScale, tickTime + idx * 0.9, ag.id === selectedAgentId, ag.aimAngle, ag.recoilTimer);
 
-                // Small level / asc tag below 2D sprite
                 ctx.font = "bold 8px 'JetBrains Mono', monospace";
                 ctx.textAlign = "center";
                 ctx.fillStyle = prof.asc > 0 ? "#fde047" : "#cbd5e1";
@@ -1161,7 +1300,7 @@
             const pCanvas = document.getElementById('inspSpriteCanvas');
             const pCtx = pCanvas.getContext('2d');
             pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
-            draw2DCharacter(pCtx, 32, 36, prof, 1.55, tickTime, false);
+            draw2DCharacter(pCtx, 32, 42, prof, 1.45, tickTime, false, -0.35, ag.recoilTimer);
         }
 
         function roundRect(ctx, x, y, w, h, r, fill, stroke) {
@@ -1249,6 +1388,8 @@
             document.getElementById('inspAscBadge').textContent = `ASC ${ag.ascensions || 0}`;
             document.getElementById('inspPathName').textContent = prof.pathName;
             document.getElementById('inspPathName').style.color = prof.auraColor || ROLE_PATHS[ag.pathKey].accent;
+            document.getElementById('inspWeaponName').textContent = prof.weaponLabel;
+            document.getElementById('inspWeaponName').style.color = prof.weaponBladeColor;
             document.getElementById('inspEvoBadge').textContent = `${prof.formName} • LV.${ag.level}`;
             document.getElementById('inspName').textContent = ag.name;
             document.getElementById('inspOffice').textContent = room.name;
@@ -1303,7 +1444,7 @@
                 id: "hired_" + Date.now(),
                 room, name, role, pathKey,
                 avatar: selectedHireAvatar,
-                specialty: `${role} on ${ROLE_PATHS[pathKey].pathName}.`
+                specialty: `${role} armed with ${ROLE_PATHS[pathKey].weaponLabel}.`
             });
             agents.push(newAgent);
             recomputePositions();
@@ -1311,7 +1452,7 @@
             closeHireModal();
             selectAgent(newAgent.id);
             playTone(523, 0.1, "triangle", 0.04);
-            logActivity("HR", `Hired ${name} (${ROLE_PATHS[pathKey].pathName}) into ${ROOMS[room].name}!`, "text-emerald-400 font-bold");
+            logActivity("HR", `Hired ${name} with ${ROLE_PATHS[pathKey].weaponLabel} in ${ROOMS[room].name}!`, "text-emerald-400 font-bold");
         }
 
         function restartGame() {
