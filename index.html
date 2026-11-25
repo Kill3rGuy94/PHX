@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phoenix HQ Defense — Full Role Perks, Room Reassign, Enemies & Upgrade Cards</title>
+    <title>Phoenix HQ Defense — Custom Environments & Worlds</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <script>
@@ -67,9 +67,9 @@
                     </div>
                     <div>
                         <h1 class="text-sm sm:text-lg font-black tracking-wider text-white">
-                            PHOENIX HQ DEFENSE <span class="text-phx-orange">//</span> <span class="text-gray-300 text-xs sm:text-sm font-bold">COMPLETE EDITION</span>
+                            PHOENIX HQ DEFENSE <span class="text-phx-orange">//</span> <span class="text-gray-300 text-xs sm:text-sm font-bold">WORLDS EDITION</span>
                         </h1>
-                        <p class="text-[11px] font-mono text-gray-400">Role Perks • Room Reassign • Enemy Types & Bosses • Wave Upgrade Cards • Ascend</p>
+                        <p class="text-[11px] font-mono text-gray-400">Volcanic Citadel • Cyber Neon Grid • Orbital Station • Role Perks • Bosses</p>
                     </div>
                 </div>
 
@@ -91,8 +91,13 @@
                     </div>
                 </div>
 
-                <!-- Speed, Sound, Cards & Hire -->
+                <!-- Environment Switcher & Controls -->
                 <div class="flex flex-wrap items-center gap-1.5">
+                    <select id="envSelect" onchange="changeEnvironment(this.value)" class="px-2.5 py-2 rounded-xl bg-phx-input border border-phx-orange/40 text-xs font-mono font-bold text-amber-300 focus:outline-none cursor-pointer">
+                        <option value="volcanic">🌋 Volcanic Citadel</option>
+                        <option value="cyber">🌃 Cyber Neon Grid</option>
+                        <option value="orbital">🛸 Orbital Station</option>
+                    </select>
                     <button id="speedBtn" onclick="toggleSpeed()" class="px-2.5 py-2 rounded-xl bg-phx-input hover:bg-white/10 border border-white/10 text-xs font-mono font-bold text-white cursor-pointer">
                         1x Speed
                     </button>
@@ -138,7 +143,7 @@
         <!-- LEFT 8 COLS: 2D FLOORPLAN ARENA -->
         <section class="xl:col-span-8 glass-panel rounded-2xl p-3 flex flex-col min-h-[560px] lg:min-h-[650px] relative">
             <div class="flex flex-wrap items-center justify-between gap-2 px-2 pb-2 text-[11px] font-mono text-gray-400">
-                <span class="text-white font-bold">🏢 PHOENIX HQ ARENA</span>
+                <span id="arenaTitleLabel" class="text-white font-bold">🌋 VOLCANIC PHOENIX CITADEL</span>
                 <div class="flex items-center gap-3">
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-phx-orange"></span> Ignis (+Room DMG)</span>
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-sky-400"></span> Tempest (Chain)</span>
@@ -155,7 +160,7 @@
         <!-- RIGHT 4 COLS: INSPECTOR, LOG & RESET -->
         <aside class="xl:col-span-4 flex flex-col gap-4">
 
-            <!-- 1. Agent Inspector with Room Reassign, Role Perks & Ascend -->
+            <!-- 1. Agent Inspector -->
             <div class="glass-panel rounded-2xl p-4 border border-phx-orange/30">
                 <div class="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
                     <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-phx-orange">🧬 2D AGENT INSPECTOR</span>
@@ -177,7 +182,6 @@
                     </div>
                 </div>
 
-                <!-- Role Path, Weapon & Perk -->
                 <div class="mb-2 px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/10 font-mono text-[10px] space-y-1">
                     <div class="flex items-center justify-between">
                         <span class="text-gray-400">ROLE PATH:</span>
@@ -189,11 +193,10 @@
                     </div>
                     <div class="flex items-center justify-between">
                         <span class="text-gray-400">ROLE PERK:</span>
-                        <span id="inspRolePerk" class="font-bold text-emerald-300">+12% Room DMG</span>
+                        <span id="inspRolePerk" class="font-bold text-emerald-300">+12% Room DMG Buff</span>
                     </div>
                 </div>
 
-                <!-- Evolution Stage Ladder -->
                 <div class="grid grid-cols-4 gap-1 text-center font-mono text-[9px] mb-2.5">
                     <div id="stage-0" class="py-1 rounded bg-white/10 border border-white/15 text-white font-bold">Lv.1<br>BASE</div>
                     <div id="stage-1" class="py-1 rounded bg-black/40 border border-white/10 text-gray-500">Lv.10<br>STAGE I</div>
@@ -214,7 +217,6 @@
                 <div class="bg-black/45 rounded-xl p-2.5 border border-white/5 font-mono text-[11px] space-y-1 mb-3">
                     <div><span class="text-gray-500">ASCEND BONUS:</span> <span id="inspAscBonus" class="text-amber-300">+0% DMG / +0% XP</span></div>
                     <div><span class="text-gray-500">NEXT EVO:</span> <span id="inspNextEvo" class="text-fuchsia-300">Ignis Vanguard (Lv.10)</span></div>
-                    <div><span class="text-gray-500">SKILLS:</span> <span id="inspSkills" class="text-cyan-300">Unlocks at Lv.10, Lv.20 & Lv.50</span></div>
                     <div><span class="text-gray-500">KILLS:</span> <span id="inspKills" class="text-emerald-400">0</span></div>
                 </div>
 
@@ -267,15 +269,15 @@
                     <label class="block text-gray-400 font-mono mb-1">Quick PHX Roster Preset:</label>
                     <select id="rosterPresetSelect" onchange="applyRosterPreset()" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none">
                         <option value="">-- Custom Agent --</option>
-                        <option value="Kill3rGuy94|👑 Leader & Founder|🔥|0|command">Kill3rGuy94 (Command HQ • Ignis Sword)</option>
-                        <option value="YipYipMan_|⭐ Streamers Manager|⚡|4|command">YipYipMan_ (Esports Ops • Ignis Sword)</option>
-                        <option value="catgamer_tv|🎮 Creator & Media|🐱|5|creator">catgamer_tv (Media Studio • Aether Staff)</option>
-                        <option value="CreepyPuppet_Tv|🎭 Creator & Bot Ops|🎭|2|tech">CreepyPuppet_Tv (Discord Bot • Shadow Blade)</option>
-                        <option value="FenChris|🐺 Esports & AION2|🐺|3|esports">FenChris (IT & DevOps • Tempest Lance)</option>
-                        <option value="Ghost_R4in|👻 Creator & QA|👻|7|tech">Ghost_R4in (QA & Deploy • Shadow Blade)</option>
-                        <option value="demon_gekkouga|🥷 Esports Striker|🥷|4|esports">demon_gekkouga (Esports Ops • Tempest Lance)</option>
-                        <option value="YioGki|🎯 Creator & Growth|🎯|6|creator">YioGki (Growth & Biz • Aether Staff)</option>
-                        <option value="VanessaMermaid|🧜‍♀️ Creator & Web UI|🧜‍♀️|1|creator">VanessaMermaid (Web & UI • Aether Staff)</option>
+                        <option value="Kill3rGuy94|👑 Leader & Founder|🔥|0|command">Kill3rGuy94 (Zone 1 • Ignis Sword)</option>
+                        <option value="YipYipMan_|⭐ Streamers Manager|⚡|4|command">YipYipMan_ (Zone 5 • Ignis Sword)</option>
+                        <option value="catgamer_tv|🎮 Creator & Media|🐱|5|creator">catgamer_tv (Zone 6 • Aether Staff)</option>
+                        <option value="CreepyPuppet_Tv|🎭 Creator & Bot Ops|🎭|2|tech">CreepyPuppet_Tv (Zone 3 • Shadow Blade)</option>
+                        <option value="FenChris|🐺 Esports & AION2|🐺|3|esports">FenChris (Zone 4 • Tempest Lance)</option>
+                        <option value="Ghost_R4in|👻 Creator & QA|👻|7|tech">Ghost_R4in (Zone 8 • Shadow Blade)</option>
+                        <option value="demon_gekkouga|🥷 Esports Striker|🥷|4|esports">demon_gekkouga (Zone 5 • Tempest Lance)</option>
+                        <option value="YioGki|🎯 Creator & Growth|🎯|6|creator">YioGki (Zone 7 • Aether Staff)</option>
+                        <option value="VanessaMermaid|🧜‍♀️ Creator & Web UI|🧜‍♀️|1|creator">VanessaMermaid (Zone 2 • Aether Staff)</option>
                     </select>
                 </div>
                 <div>
@@ -296,7 +298,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-gray-400 font-mono mb-1">Office Room (with Synergy):</label>
+                    <label class="block text-gray-400 font-mono mb-1">Zone:</label>
                     <select id="hireRoomSelect" class="w-full px-3 py-2 rounded-xl bg-phx-input border border-white/15 text-white focus:border-phx-orange focus:outline-none"></select>
                 </div>
                 <div>
@@ -326,11 +328,10 @@
             <div class="flex items-center justify-between border-b border-white/10 pb-3">
                 <div>
                     <h3 id="cardsModalTitle" class="text-base font-black text-white">🃏 WAVE UPGRADE CARDS</h3>
-                    <p id="cardsModalSub" class="text-[11px] font-mono text-purple-300">Pick 1 tactical upgrade for your Phoenix HQ run</p>
+                    <p id="cardsModalSub" class="text-[11px] font-mono text-purple-300">Pick 1 tactical upgrade for your run</p>
                 </div>
                 <button onclick="closeUpgradeCardsModal()" class="text-gray-400 hover:text-white font-bold text-lg cursor-pointer">✕</button>
             </div>
-
             <div id="cardsGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
         </div>
     </div>
@@ -338,8 +339,58 @@
     <div id="toast" class="fixed bottom-4 right-4 z-50 hidden px-4 py-2.5 rounded-xl bg-phx-panel border border-phx-orange text-white text-xs font-bold shadow-2xl"></div>
 
     <script>
-        const STORAGE_BEST_KEY = 'phx_hq_defense_best_v6';
+        const STORAGE_BEST_KEY = 'phx_hq_defense_best_v8';
         const MAX_LEVEL = 99;
+
+        const ENVIRONMENTS = {
+            volcanic: {
+                label: "🌋 VOLCANIC PHOENIX CITADEL",
+                bgTop: "#1a0b08",
+                bgBottom: "#090608",
+                conduitColor: "rgba(255, 140, 0, 0.22)",
+                zoneFill: "rgba(38, 17, 13, 0.78)",
+                zoneBorder: "rgba(255, 140, 0, 0.36)",
+                coreBg: "rgba(255, 120, 0, 0.24)",
+                coreStroke: "#ff8c00",
+                coreName: "SUN ALTAR",
+                zones: [
+                    "1. Magma Command", "2. Ember Forge", "3. Ash Relay", "4. Obsidian Repair",
+                    "5. Pyre Arena", "6. Cinder Studio", "7. Basalt Vault", "8. Sulfur Gate"
+                ]
+            },
+            cyber: {
+                label: "🌃 CYBER NEON GRID",
+                bgTop: "#061322",
+                bgBottom: "#060813",
+                conduitColor: "rgba(34, 211, 238, 0.24)",
+                zoneFill: "rgba(11, 25, 44, 0.8)",
+                zoneBorder: "rgba(34, 211, 238, 0.38)",
+                coreBg: "rgba(6, 182, 212, 0.22)",
+                coreStroke: "#22d3ee",
+                coreName: "CYBER NEXUS",
+                zones: [
+                    "1. Grid Ops", "2. Holo UI", "3. Synth Node", "4. Firewall Bay",
+                    "5. Neon Stage", "6. Stream Deck", "7. Crypto Core", "8. Uplink Dock"
+                ]
+            },
+            orbital: {
+                label: "🛸 ORBITAL STATION DECK",
+                bgTop: "#0b1124",
+                bgBottom: "#05070e",
+                conduitColor: "rgba(168, 85, 247, 0.24)",
+                zoneFill: "rgba(18, 25, 46, 0.8)",
+                zoneBorder: "rgba(148, 163, 184, 0.34)",
+                coreBg: "rgba(168, 85, 247, 0.22)",
+                coreStroke: "#c084fc",
+                coreName: "REACTOR CORE",
+                zones: [
+                    "1. Bridge Deck", "2. Sensor Array", "3. Comms Pod", "4. Hull Repair",
+                    "5. Hangar Bay", "6. Holo Broadcast", "7. Cargo Hold", "8. Airlock Ring"
+                ]
+            }
+        };
+
+        let currentEnvKey = "volcanic";
 
         const ROOMS = [
             { id: 0, name: "1. Command HQ",   x: 20,  y: 20,  w: 225, h: 215, color: "#ff8c00", synergy: "+15% XP Gain", xpMult: 1.15, cdMult: 1.0, credMult: 1.0, regen: 0 },
@@ -416,12 +467,12 @@
         };
 
         const UPGRADE_CARD_POOL = [
-            { id: "dmg20", icon: "⚔️", title: "Forge Overclock", desc: "+20% Weapon DMG for all agents", cost: 0, apply: () => { runBuffs.dmgMult += 0.2; } },
-            { id: "xp25",  icon: "📈", title: "Neural Stream", desc: "+25% XP Gain for all agents", cost: 0, apply: () => { runBuffs.xpMult += 0.25; } },
-            { id: "cr25",  icon: "💰", title: "Treasury Surge", desc: "+25% Credits from defeated enemies", cost: 0, apply: () => { runBuffs.credMult += 0.25; } },
-            { id: "haste", icon: "⚡", title: "Rapid Triggers", desc: "+15% Attack Speed across HQ", cost: 0, apply: () => { runBuffs.spdMult = Math.max(0.55, runBuffs.spdMult * 0.85); } },
-            { id: "pulse", icon: "🛡️", title: "Heavy Firewall", desc: "+45 Firewall Pulse DMG & +15% Core HP", cost: 0, apply: () => { runBuffs.pulseBonus += 45; coreHp = Math.min(100, coreHp + 15); updateHud(); } },
-            { id: "nova",  icon: "🌟", title: "Nova Resonance", desc: "+25% Nova & Chain Lightning damage", cost: 0, apply: () => { runBuffs.perkMult += 0.25; } }
+            { id: "dmg20", icon: "⚔️", title: "Forge Overclock", desc: "+20% Weapon DMG for all agents", apply: () => { runBuffs.dmgMult += 0.2; } },
+            { id: "xp25",  icon: "📈", title: "Neural Stream", desc: "+25% XP Gain for all agents", apply: () => { runBuffs.xpMult += 0.25; } },
+            { id: "cr25",  icon: "💰", title: "Treasury Surge", desc: "+25% Credits from defeated enemies", apply: () => { runBuffs.credMult += 0.25; } },
+            { id: "haste", icon: "⚡", title: "Rapid Triggers", desc: "+15% Attack Speed across HQ", apply: () => { runBuffs.spdMult = Math.max(0.55, runBuffs.spdMult * 0.85); } },
+            { id: "pulse", icon: "🛡️", title: "Heavy Firewall", desc: "+45 Firewall Pulse DMG & +15% Core HP", apply: () => { runBuffs.pulseBonus += 45; coreHp = Math.min(100, coreHp + 15); updateHud(); } },
+            { id: "nova",  icon: "🌟", title: "Nova Resonance", desc: "+25% Nova & Chain Lightning damage", apply: () => { runBuffs.perkMult += 0.25; } }
         ];
 
         function inferPathFromRole(roleText = "") {
@@ -498,6 +549,13 @@
             perkMult: 1.0
         };
 
+        function changeEnvironment(envKey) {
+            if (!ENVIRONMENTS[envKey]) return;
+            currentEnvKey = envKey;
+            document.getElementById('arenaTitleLabel').textContent = ENVIRONMENTS[envKey].label;
+            showToast(`Switched to ${ENVIRONMENTS[envKey].label}`);
+        }
+
         function loadBestRecord() {
             try {
                 const raw = JSON.parse(localStorage.getItem(STORAGE_BEST_KEY) || "null");
@@ -567,12 +625,6 @@
             if (lvl >= 50) tier = 3;
 
             const stg = pathObj.stages[tier];
-            const skills = [];
-            for (let t = 1; t <= tier; t++) {
-                if (pathObj.stages[t].skill) skills.push(pathObj.stages[t].skill);
-            }
-            if (asc > 0) skills.push(`✨ Ascended x${asc}`);
-
             const ascDmgMult = 1 + asc * 0.25;
             const ascXpMult = 1 + asc * 0.15;
 
@@ -607,7 +659,6 @@
                 ringColor: room.color,
                 auraColor: asc > 0 ? "#facc15" : stg.aura,
                 sparks: stg.sparks,
-                skills,
                 xpBonus: stg.xpBonus * ascXpMult * runBuffs.xpMult * roomBuffs.roomXpMult,
                 credBonus: runBuffs.credMult * roomBuffs.roomCredMult,
                 ascDmgPct: Math.round((ascDmgMult - 1) * 100),
@@ -627,12 +678,10 @@
                     spawnBurst(ag.x, ag.y, prof.auraColor || "#ff8c00", 28);
                     playTone(740, 0.18, "triangle", 0.06);
                     logActivity("ROLE EVO", `${ag.name} evolved into ${prof.formName} at Lv.${m}!`, "text-amber-300 font-bold");
-                    showToast(`🧬 ${ag.name} evolved into ${prof.formName}!`);
                 }
             });
             if (oldLevel < MAX_LEVEL && newLevel >= MAX_LEVEL) {
                 logActivity("MAX LV", `${ag.name} hit Lv.${MAX_LEVEL}! Ready to ASCEND!`, "text-yellow-300 font-bold");
-                showToast(`✨ ${ag.name} reached Lv.${MAX_LEVEL} — Ready to Ascend!`);
             }
         }
 
@@ -659,7 +708,6 @@
             if (leveledUp) {
                 spawnBurst(ag.x, ag.y, "#10b981", 12);
                 playTone(587, 0.11, "sine", 0.05);
-                logActivity("LVL UP", `${ag.name} reached Lv.${ag.level}!`, "text-emerald-400 font-bold");
                 checkMilestones(ag, oldLvl, ag.level);
             }
 
@@ -692,7 +740,7 @@
             ag.room = newRoom;
             recomputePositions();
             spawnBurst(ag.x, ag.y, ROOMS[newRoom].color, 14);
-            logActivity("MOVE", `${ag.name} moved to ${ROOMS[newRoom].name}!`, "text-cyan-300");
+            logActivity("MOVE", `${ag.name} moved to Zone ${newRoom + 1}!`, "text-cyan-300");
             refreshInspector();
         }
 
@@ -747,7 +795,6 @@
             }
         }
 
-        // Distinct enemy archetypes: RUNNER, ARMORED, BREACH, BOSS
         function spawnEnemy() {
             const isBoss = (wave % 5 === 0) && (enemies.filter(e => e.isBoss).length === 0);
             const scaleHp = (1 + (wave - 1) * 0.35) * currentMutator.hpMult;
@@ -873,9 +920,8 @@
         function applyRoleOnHitPerks(killerAgent, hitEnemy, dmg) {
             if (!killerAgent) return;
             if (killerAgent.pathKey === "tech") {
-                hitEnemy.slowTimer = 90; // slows enemy for 1.5s
+                hitEnemy.slowTimer = 90;
             } else if (killerAgent.pathKey === "esports") {
-                // Chain lightning to closest other enemy within 130px
                 let chainTarget = null;
                 let bestD = 130;
                 enemies.forEach(other => {
@@ -925,7 +971,7 @@
             const modal = document.getElementById('cardsModal');
             const grid = document.getElementById('cardsGrid');
             document.getElementById('cardsModalTitle').textContent = fromWaveClear
-                ? `🃏 WAVE ${wave - 1} CLEARED — PICK AN UPGRADE CARD!`
+                ? `🃏 WAVE ${wave} CLEARED — PICK AN UPGRADE CARD!`
                 : "🃏 TACTICAL UPGRADE CARDS";
             document.getElementById('cardsModalSub').textContent = fromWaveClear
                 ? "Free Wave Clear Reward — Choose 1 card"
@@ -1043,12 +1089,8 @@
                     spawnCooldown = Math.max(18, 60 - wave * 4);
                 }
             } else if (enemies.length === 0 && !pendingWaveCardPick) {
-                if (wave >= 1) {
-                    pendingWaveCardPick = true;
-                    openUpgradeCardsModal(true);
-                } else {
-                    startWave(wave + 1);
-                }
+                pendingWaveCardPick = true;
+                openUpgradeCardsModal(true);
             }
 
             for (let i = enemies.length - 1; i >= 0; i--) {
@@ -1069,7 +1111,7 @@
                         gameOver = true;
                         saveBestRecord();
                         document.getElementById('gameStatusBanner').textContent = "CORE BREACHED — Click 'Next Wave' or 'New Run'!";
-                        logActivity("ALERT", "Phoenix Core breached!", "text-red-400 font-bold");
+                        logActivity("ALERT", "Core breached!", "text-red-400 font-bold");
                     }
                 }
             }
@@ -1086,7 +1128,6 @@
                 });
 
                 ag.aimAngle = Math.atan2(target.y - (ag.y - 2), target.x - ag.x);
-
                 if (ag.cooldown > 0) { ag.cooldown--; return; }
 
                 const prof = getAgentProfile(ag);
@@ -1166,67 +1207,27 @@
             targetCtx.scale(lenScale, lenScale);
 
             if (prof.weaponType === "sword") {
-                targetCtx.strokeStyle = "#92400e";
-                targetCtx.lineWidth = 2.4;
-                targetCtx.beginPath();
-                targetCtx.moveTo(-4, 0); targetCtx.lineTo(1, 0);
-                targetCtx.stroke();
-
-                targetCtx.strokeStyle = "#facc15";
-                targetCtx.lineWidth = 2.4;
-                targetCtx.beginPath();
-                targetCtx.moveTo(1, -4.5); targetCtx.lineTo(1, 4.5);
-                targetCtx.stroke();
-
-                targetCtx.fillStyle = prof.weaponBladeColor;
-                targetCtx.shadowColor = prof.weaponGlowColor;
-                targetCtx.shadowBlur = 7;
-                targetCtx.beginPath();
-                targetCtx.moveTo(1, -2.5); targetCtx.lineTo(16, 0); targetCtx.lineTo(1, 2.5);
-                targetCtx.closePath();
-                targetCtx.fill();
+                targetCtx.strokeStyle = "#92400e"; targetCtx.lineWidth = 2.4;
+                targetCtx.beginPath(); targetCtx.moveTo(-4, 0); targetCtx.lineTo(1, 0); targetCtx.stroke();
+                targetCtx.strokeStyle = "#facc15"; targetCtx.lineWidth = 2.4;
+                targetCtx.beginPath(); targetCtx.moveTo(1, -4.5); targetCtx.lineTo(1, 4.5); targetCtx.stroke();
+                targetCtx.fillStyle = prof.weaponBladeColor; targetCtx.shadowColor = prof.weaponGlowColor; targetCtx.shadowBlur = 7;
+                targetCtx.beginPath(); targetCtx.moveTo(1, -2.5); targetCtx.lineTo(16, 0); targetCtx.lineTo(1, 2.5); targetCtx.closePath(); targetCtx.fill();
             } else if (prof.weaponType === "lance") {
-                targetCtx.strokeStyle = "#e2e8f0";
-                targetCtx.lineWidth = 2;
-                targetCtx.beginPath();
-                targetCtx.moveTo(-7, 0); targetCtx.lineTo(13, 0);
-                targetCtx.stroke();
-
-                targetCtx.fillStyle = prof.weaponBladeColor;
-                targetCtx.shadowColor = prof.weaponGlowColor;
-                targetCtx.shadowBlur = 8;
-                targetCtx.beginPath();
-                targetCtx.moveTo(12, -3.5); targetCtx.lineTo(20, 0); targetCtx.lineTo(12, 3.5); targetCtx.lineTo(14.5, 0);
-                targetCtx.closePath();
-                targetCtx.fill();
+                targetCtx.strokeStyle = "#e2e8f0"; targetCtx.lineWidth = 2;
+                targetCtx.beginPath(); targetCtx.moveTo(-7, 0); targetCtx.lineTo(13, 0); targetCtx.stroke();
+                targetCtx.fillStyle = prof.weaponBladeColor; targetCtx.shadowColor = prof.weaponGlowColor; targetCtx.shadowBlur = 8;
+                targetCtx.beginPath(); targetCtx.moveTo(12, -3.5); targetCtx.lineTo(20, 0); targetCtx.lineTo(12, 3.5); targetCtx.lineTo(14.5, 0); targetCtx.closePath(); targetCtx.fill();
             } else if (prof.weaponType === "staff") {
-                targetCtx.strokeStyle = "#c084fc";
-                targetCtx.lineWidth = 2.2;
-                targetCtx.beginPath();
-                targetCtx.moveTo(-5, 0); targetCtx.lineTo(12, 0);
-                targetCtx.stroke();
-
-                targetCtx.fillStyle = prof.weaponBladeColor;
-                targetCtx.shadowColor = prof.weaponGlowColor;
-                targetCtx.shadowBlur = 9;
-                targetCtx.beginPath();
-                targetCtx.moveTo(12, -5); targetCtx.lineTo(17.5, 0); targetCtx.lineTo(12, 5); targetCtx.lineTo(9.5, 0);
-                targetCtx.closePath();
-                targetCtx.fill();
+                targetCtx.strokeStyle = "#c084fc"; targetCtx.lineWidth = 2.2;
+                targetCtx.beginPath(); targetCtx.moveTo(-5, 0); targetCtx.lineTo(12, 0); targetCtx.stroke();
+                targetCtx.fillStyle = prof.weaponBladeColor; targetCtx.shadowColor = prof.weaponGlowColor; targetCtx.shadowBlur = 9;
+                targetCtx.beginPath(); targetCtx.moveTo(12, -5); targetCtx.lineTo(17.5, 0); targetCtx.lineTo(12, 5); targetCtx.lineTo(9.5, 0); targetCtx.closePath(); targetCtx.fill();
             } else {
-                targetCtx.strokeStyle = "#334155";
-                targetCtx.lineWidth = 2.4;
-                targetCtx.beginPath();
-                targetCtx.moveTo(-3, 0); targetCtx.lineTo(2, 0);
-                targetCtx.stroke();
-
-                targetCtx.fillStyle = prof.weaponBladeColor;
-                targetCtx.shadowColor = prof.weaponGlowColor;
-                targetCtx.shadowBlur = 7;
-                targetCtx.beginPath();
-                targetCtx.moveTo(2, -2.5); targetCtx.quadraticCurveTo(11, -3.5, 16, 1.5); targetCtx.lineTo(2, 2.2);
-                targetCtx.closePath();
-                targetCtx.fill();
+                targetCtx.strokeStyle = "#334155"; targetCtx.lineWidth = 2.4;
+                targetCtx.beginPath(); targetCtx.moveTo(-3, 0); targetCtx.lineTo(2, 0); targetCtx.stroke();
+                targetCtx.fillStyle = prof.weaponBladeColor; targetCtx.shadowColor = prof.weaponGlowColor; targetCtx.shadowBlur = 7;
+                targetCtx.beginPath(); targetCtx.moveTo(2, -2.5); targetCtx.quadraticCurveTo(11, -3.5, 16, 1.5); targetCtx.lineTo(2, 2.2); targetCtx.closePath(); targetCtx.fill();
             }
 
             targetCtx.shadowBlur = 0;
@@ -1242,86 +1243,53 @@
             const swing = Math.sin(animPhase * 3.5) * 3.2;
 
             if (selected) {
-                targetCtx.strokeStyle = "#ffffff";
-                targetCtx.lineWidth = 1.6;
-                targetCtx.beginPath();
-                targetCtx.ellipse(0, 11, 13, 5, 0, 0, Math.PI * 2);
-                targetCtx.stroke();
+                targetCtx.strokeStyle = "#ffffff"; targetCtx.lineWidth = 1.6;
+                targetCtx.beginPath(); targetCtx.ellipse(0, 11, 13, 5, 0, 0, Math.PI * 2); targetCtx.stroke();
             }
 
             if (prof.asc > 0) {
-                targetCtx.strokeStyle = "#fde047";
-                targetCtx.lineWidth = 2;
-                targetCtx.beginPath();
-                targetCtx.arc(0, -13 + bob, 8.5, 0, Math.PI * 2);
-                targetCtx.stroke();
+                targetCtx.strokeStyle = "#fde047"; targetCtx.lineWidth = 2;
+                targetCtx.beginPath(); targetCtx.arc(0, -13 + bob, 8.5, 0, Math.PI * 2); targetCtx.stroke();
             }
 
             if (prof.rigStyle === "sovereign" || prof.asc > 0) {
-                targetCtx.fillStyle = prof.trimColor;
-                targetCtx.globalAlpha = 0.75;
-                targetCtx.beginPath();
-                targetCtx.moveTo(-4, -2 + bob); targetCtx.lineTo(-17, -11 + bob * 0.6); targetCtx.lineTo(-11, 3 + bob);
-                targetCtx.closePath(); targetCtx.fill();
-
-                targetCtx.beginPath();
-                targetCtx.moveTo(4, -2 + bob); targetCtx.lineTo(17, -11 + bob * 0.6); targetCtx.lineTo(11, 3 + bob);
-                targetCtx.closePath(); targetCtx.fill();
+                targetCtx.fillStyle = prof.trimColor; targetCtx.globalAlpha = 0.75;
+                targetCtx.beginPath(); targetCtx.moveTo(-4, -2 + bob); targetCtx.lineTo(-17, -11 + bob * 0.6); targetCtx.lineTo(-11, 3 + bob); targetCtx.closePath(); targetCtx.fill();
+                targetCtx.beginPath(); targetCtx.moveTo(4, -2 + bob); targetCtx.lineTo(17, -11 + bob * 0.6); targetCtx.lineTo(11, 3 + bob); targetCtx.closePath(); targetCtx.fill();
                 targetCtx.globalAlpha = 1;
             }
 
-            targetCtx.strokeStyle = "#cbd5e1";
-            targetCtx.lineWidth = 2.4;
-            targetCtx.lineCap = "round";
+            targetCtx.strokeStyle = "#cbd5e1"; targetCtx.lineWidth = 2.4; targetCtx.lineCap = "round";
             targetCtx.beginPath();
             targetCtx.moveTo(-3.5, 4 + bob * 0.5); targetCtx.lineTo(-4.5 - swing * 0.35, 11);
             targetCtx.moveTo(3.5, 4 + bob * 0.5); targetCtx.lineTo(4.5 + swing * 0.35, 11);
             targetCtx.stroke();
 
-            targetCtx.fillStyle = prof.suitColor;
-            targetCtx.strokeStyle = prof.trimColor;
-            targetCtx.lineWidth = 1.8;
+            targetCtx.fillStyle = prof.suitColor; targetCtx.strokeStyle = prof.trimColor; targetCtx.lineWidth = 1.8;
             roundRect(targetCtx, -6.5, -4 + bob, 13, 9.5, 3, true, true);
 
             if (prof.tier >= 1) {
                 targetCtx.fillStyle = prof.trimColor;
-                targetCtx.beginPath();
-                targetCtx.arc(-7.5, -3 + bob, 3.2, 0, Math.PI * 2);
-                targetCtx.arc(7.5, -3 + bob, 3.2, 0, Math.PI * 2);
-                targetCtx.fill();
+                targetCtx.beginPath(); targetCtx.arc(-7.5, -3 + bob, 3.2, 0, Math.PI * 2); targetCtx.arc(7.5, -3 + bob, 3.2, 0, Math.PI * 2); targetCtx.fill();
             }
 
-            targetCtx.strokeStyle = prof.trimColor;
-            targetCtx.lineWidth = 2.2;
-            targetCtx.beginPath();
-            targetCtx.moveTo(-6.5, -2 + bob); targetCtx.lineTo(-10.5, 2 + bob - swing * 0.4);
-            targetCtx.stroke();
+            targetCtx.strokeStyle = prof.trimColor; targetCtx.lineWidth = 2.2;
+            targetCtx.beginPath(); targetCtx.moveTo(-6.5, -2 + bob); targetCtx.lineTo(-10.5, 2 + bob - swing * 0.4); targetCtx.stroke();
 
             drawRoleWeapon(targetCtx, prof, aimAngle, recoil * 0.4);
 
-            targetCtx.strokeStyle = prof.trimColor;
-            targetCtx.lineWidth = 2.2;
-            targetCtx.beginPath();
-            targetCtx.moveTo(6.5, -2 + bob);
-            targetCtx.lineTo(6.5 + Math.cos(aimAngle) * 5, -2 + bob + Math.sin(aimAngle) * 5 - recoil * 0.3);
-            targetCtx.stroke();
+            targetCtx.strokeStyle = prof.trimColor; targetCtx.lineWidth = 2.2;
+            targetCtx.beginPath(); targetCtx.moveTo(6.5, -2 + bob); targetCtx.lineTo(6.5 + Math.cos(aimAngle) * 5, -2 + bob + Math.sin(aimAngle) * 5 - recoil * 0.3); targetCtx.stroke();
 
-            targetCtx.fillStyle = "#fde68a";
-            targetCtx.strokeStyle = prof.trimColor;
-            targetCtx.lineWidth = 1.6;
-            targetCtx.beginPath();
-            targetCtx.arc(0, -10 + bob, 5.6, 0, Math.PI * 2);
-            targetCtx.fill(); targetCtx.stroke();
+            targetCtx.fillStyle = "#fde68a"; targetCtx.strokeStyle = prof.trimColor; targetCtx.lineWidth = 1.6;
+            targetCtx.beginPath(); targetCtx.arc(0, -10 + bob, 5.6, 0, Math.PI * 2); targetCtx.fill(); targetCtx.stroke();
 
             targetCtx.fillStyle = "#0f172a";
-            targetCtx.fillRect(-3.2, -11.2 + bob, 2, 2);
-            targetCtx.fillRect(1.2, -11.2 + bob, 2, 2);
+            targetCtx.fillRect(-3.2, -11.2 + bob, 2, 2); targetCtx.fillRect(1.2, -11.2 + bob, 2, 2);
 
             if (prof.tier >= 2) {
                 targetCtx.fillStyle = prof.trimColor;
-                targetCtx.beginPath();
-                targetCtx.moveTo(-4, -15 + bob); targetCtx.lineTo(0, -20 + bob); targetCtx.lineTo(4, -15 + bob);
-                targetCtx.closePath(); targetCtx.fill();
+                targetCtx.beginPath(); targetCtx.moveTo(-4, -15 + bob); targetCtx.lineTo(0, -20 + bob); targetCtx.lineTo(4, -15 + bob); targetCtx.closePath(); targetCtx.fill();
             }
 
             targetCtx.restore();
@@ -1329,39 +1297,85 @@
 
         function drawGame() {
             const w = canvas.width, h = canvas.height;
+            const env = ENVIRONMENTS[currentEnvKey] || ENVIRONMENTS.volcanic;
             ctx.clearRect(0, 0, w, h);
             ctx.save();
             ctx.scale(w / 1000, h / 640);
 
-            ctx.fillStyle = "#090b10";
+            // World Backdrop
+            const grad = ctx.createLinearGradient(0, 0, 0, 640);
+            grad.addColorStop(0, env.bgTop);
+            grad.addColorStop(1, env.bgBottom);
+            ctx.fillStyle = grad;
             ctx.fillRect(0, 0, 1000, 640);
 
+            // Environment-specific details
+            if (currentEnvKey === "cyber") {
+                ctx.strokeStyle = "rgba(34, 211, 238, 0.08)";
+                ctx.lineWidth = 1;
+                for (let gx = 0; gx <= 1000; gx += 40) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, 640); ctx.stroke(); }
+                for (let gy = 0; gy <= 640; gy += 40) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(1000, gy); ctx.stroke(); }
+            } else if (currentEnvKey === "orbital") {
+                for (let s = 0; s < 36; s++) {
+                    const sx = (s * 173 + 57) % 1000;
+                    const sy = (s * 97 + 31) % 640;
+                    ctx.fillStyle = "rgba(226, 232, 240, 0.45)";
+                    ctx.fillRect(sx, sy, 2, 2);
+                }
+            } else {
+                // Volcanic magma fissures
+                ctx.strokeStyle = "rgba(255, 85, 0, 0.14)";
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(0, 320); ctx.lineTo(240, 305); ctx.lineTo(465, 320);
+                ctx.moveTo(535, 320); ctx.lineTo(760, 335); ctx.lineTo(1000, 320);
+                ctx.stroke();
+            }
+
+            // Conduits connecting stations to Core
+            ctx.strokeStyle = env.conduitColor;
+            ctx.lineWidth = 3;
             ROOMS.forEach(room => {
-                ctx.fillStyle = "rgba(20, 23, 34, 0.9)";
-                ctx.strokeStyle = "rgba(255, 255, 255, 0.14)";
+                const cx = room.x + room.w / 2;
+                const cy = room.y + room.h / 2;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(CORE.x, CORE.y);
+                ctx.stroke();
+            });
+
+            // Station Zones & Consoles
+            ROOMS.forEach((room, idx) => {
+                ctx.fillStyle = env.zoneFill;
+                ctx.strokeStyle = env.zoneBorder;
                 ctx.lineWidth = 2;
                 roundRect(ctx, room.x, room.y, room.w, room.h, 14, true, true);
 
-                ctx.fillStyle = room.color + "28";
-                roundRect(ctx, room.x + 6, room.y + 6, room.w - 12, 24, 8, true, false);
+                // Desk / terminal accent bar inside station
+                ctx.fillStyle = room.color + "35";
+                roundRect(ctx, room.x + 8, room.y + 8, room.w - 16, 24, 8, true, false);
                 ctx.fillStyle = "#ffffff";
                 ctx.font = "bold 10.5px 'Inter', sans-serif";
-                ctx.fillText(room.name.toUpperCase(), room.x + 14, room.y + 22);
+                ctx.fillText((env.zones[idx] || room.name).toUpperCase(), room.x + 15, room.y + 24);
+
+                // Decorative console pad at bottom of station
+                ctx.fillStyle = "rgba(255,255,255,0.06)";
+                roundRect(ctx, room.x + 28, room.y + room.h - 22, room.w - 56, 10, 4, true, false);
             });
 
-            // Phoenix Core
+            // Core
             ctx.save();
-            ctx.fillStyle = coreHp > 35 ? "rgba(255, 140, 0, 0.18)" : "rgba(239, 68, 68, 0.25)";
-            ctx.strokeStyle = coreHp > 35 ? "#ff8c00" : "#ef4444";
-            ctx.lineWidth = 3;
+            ctx.fillStyle = env.coreBg;
+            ctx.strokeStyle = coreHp > 35 ? env.coreStroke : "#ef4444";
+            ctx.lineWidth = 3.5;
             ctx.beginPath();
-            ctx.arc(CORE.x, CORE.y, CORE.radius + Math.sin(tickTime * 3) * 2, 0, Math.PI * 2);
+            ctx.arc(CORE.x, CORE.y, CORE.radius + Math.sin(tickTime * 3) * 2.5, 0, Math.PI * 2);
             ctx.fill(); ctx.stroke();
 
             ctx.fillStyle = "#ffffff";
-            ctx.font = "bold 10px 'JetBrains Mono', monospace";
+            ctx.font = "bold 9.5px 'JetBrains Mono', monospace";
             ctx.textAlign = "center";
-            ctx.fillText("PHX CORE", CORE.x, CORE.y - 2);
+            ctx.fillText(env.coreName, CORE.x, CORE.y - 2);
             ctx.fillStyle = "#10b981";
             ctx.fillText(`${Math.max(0, Math.round(coreHp))}%`, CORE.x, CORE.y + 11);
             ctx.textAlign = "left";
@@ -1377,9 +1391,7 @@
                     const ox = ag.x + Math.cos(ang) * 18;
                     const oy = ag.y + Math.sin(ang) * 18;
                     ctx.fillStyle = prof.auraColor || "#ff8c00";
-                    ctx.beginPath();
-                    ctx.arc(ox, oy, 2.6, 0, Math.PI * 2);
-                    ctx.fill();
+                    ctx.beginPath(); ctx.arc(ox, oy, 2.6, 0, Math.PI * 2); ctx.fill();
                 }
 
                 draw2DCharacter(ctx, ag.x, ag.y, prof, charScale, tickTime + idx * 0.9, ag.id === selectedAgentId, ag.aimAngle, ag.recoilTimer);
@@ -1387,16 +1399,14 @@
                 ctx.font = "bold 8px 'JetBrains Mono', monospace";
                 ctx.textAlign = "center";
                 ctx.fillStyle = prof.asc > 0 ? "#fde047" : "#cbd5e1";
-                const tagText = prof.asc > 0 ? `A${prof.asc}•L${ag.level}` : `L${ag.level}`;
-                ctx.fillText(tagText, ag.x, ag.y + 21);
+                ctx.fillText(prof.asc > 0 ? `A${prof.asc}•L${ag.level}` : `L${ag.level}`, ag.x, ag.y + 21);
                 ctx.textAlign = "left";
             });
 
             // Chain Lightning Links
             lightningLinks.forEach(ln => {
                 ctx.save();
-                ctx.strokeStyle = ln.color;
-                ctx.lineWidth = 2.2;
+                ctx.strokeStyle = ln.color; ctx.lineWidth = 2.2;
                 ctx.globalAlpha = Math.max(0, ln.life / 10);
                 ctx.beginPath();
                 ctx.moveTo(ln.x1, ln.y1);
@@ -1412,14 +1422,11 @@
                 ctx.fillStyle = en.isBoss ? "#3b0712" : (en.slowTimer > 0 ? "#0c2d3a" : "#2a090d");
                 ctx.strokeStyle = en.isBoss ? "#facc15" : (en.slowTimer > 0 ? "#2dd4bf" : (en.kind === "armored" ? "#fb923c" : "#ef4444"));
                 ctx.lineWidth = en.isBoss || en.kind === "armored" ? 3 : 2;
-                ctx.beginPath();
-                ctx.arc(en.x, en.y, r, 0, Math.PI * 2);
-                ctx.fill(); ctx.stroke();
+                ctx.beginPath(); ctx.arc(en.x, en.y, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
 
                 const barW = en.isBoss ? 34 : 20;
                 const hpPct = Math.max(0, en.hp / en.maxHp);
-                ctx.fillStyle = "#111827";
-                ctx.fillRect(en.x - barW / 2, en.y - r - 8, barW, 4);
+                ctx.fillStyle = "#111827"; ctx.fillRect(en.x - barW / 2, en.y - r - 8, barW, 4);
                 ctx.fillStyle = en.isBoss ? "#facc15" : "#ef4444";
                 ctx.fillRect(en.x - barW / 2, en.y - r - 8, barW * hpPct, 4);
 
@@ -1435,9 +1442,7 @@
                 ctx.fillStyle = p.isNova ? p.novaColor : "#06b6d4";
                 ctx.shadowColor = p.isNova ? p.novaColor : "#06b6d4";
                 ctx.shadowBlur = p.isNova ? 12 : 8;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.isNova ? 5.5 : 4, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.isNova ? 5.5 : 4, 0, Math.PI * 2); ctx.fill();
                 ctx.shadowBlur = 0;
             });
 
@@ -1535,7 +1540,7 @@
             const ascBtn = document.getElementById('ascendBtn');
             if (ag.level >= MAX_LEVEL) {
                 ascBtn.disabled = false;
-                ascBtn.textContent = `✨ ASCEND TO ASC ${(ag.ascensions || 0) + 1} (Reset to Lv.1 + Permanent Buff)`;
+                ascBtn.textContent = `✨ ASCEND TO ASC ${(ag.ascensions || 0) + 1}`;
                 ascBtn.className = "w-full py-2 px-3 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-black text-xs shadow-[0_0_16px_rgba(250,204,21,0.5)] cursor-pointer";
             } else {
                 ascBtn.disabled = true;
@@ -1556,7 +1561,6 @@
             document.getElementById('inspXpBar').style.width = `${pct}%`;
             document.getElementById('inspAscBonus').textContent = `+${prof.ascDmgPct}% DMG / +${prof.ascXpPct}% XP`;
             document.getElementById('inspNextEvo').textContent = prof.nextEvoText;
-            document.getElementById('inspSkills').textContent = prof.skills.length ? prof.skills.join(" • ") : "Unlocks at Lv.10, Lv.20 & Lv.50";
             document.getElementById('inspKills').textContent = ag.kills;
 
             drawInspectorPreview(ag, prof);
@@ -1608,7 +1612,7 @@
             closeHireModal();
             selectAgent(newAgent.id);
             playTone(523, 0.1, "triangle", 0.04);
-            logActivity("HR", `Hired ${name} (${ROLE_PATHS[pathKey].weaponLabel}) in ${ROOMS[room].name}!`, "text-emerald-400 font-bold");
+            logActivity("HR", `Hired ${name} (${ROLE_PATHS[pathKey].weaponLabel}) in Zone ${room + 1}!`, "text-emerald-400 font-bold");
         }
 
         function restartGame() {
