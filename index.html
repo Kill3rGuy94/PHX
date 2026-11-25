@@ -69,7 +69,7 @@
                         <h1 class="text-sm sm:text-lg font-black tracking-wider text-white">
                             PHOENIX HQ DEFENSE <span class="text-phx-orange">//</span> <span class="text-gray-300 text-xs sm:text-sm font-bold">2D OFFICE ARCADE GAME</span>
                         </h1>
-                        <p class="text-[11px] font-mono text-gray-400">Defend the Phoenix Core • Agents evolve & unlock skills at Lv.10, Lv.20 & Lv.50</p>
+                        <p class="text-[11px] font-mono text-gray-400">Start with 1 Agent • Auto-XP Leveling • Evolve & Unlock Skills at Lv.10, Lv.20 & Lv.50</p>
                     </div>
                 </div>
 
@@ -77,6 +77,7 @@
                 <div class="flex flex-wrap items-center gap-2 font-mono text-[11px]">
                     <div class="px-2.5 py-1.5 rounded-lg bg-phx-input border border-white/10">
                         <span class="text-gray-400">WAVE:</span> <span id="wavePill" class="text-phx-orange font-bold">1</span>
+                        <span id="diffPill" class="ml-1 text-[10px] text-amber-300">(x1.0)</span>
                     </div>
                     <div class="px-2.5 py-1.5 rounded-lg bg-phx-input border border-white/10">
                         <span class="text-gray-400">SCORE:</span> <span id="scorePill" class="text-emerald-400 font-bold">0</span>
@@ -85,7 +86,7 @@
                         <span>CORE HP:</span> <span id="hpPill">100%</span>
                     </div>
                     <div class="px-2.5 py-1.5 rounded-lg bg-amber-950/50 border border-phx-orange/40 text-phx-orange font-bold">
-                        <span>CREDITS:</span> <span id="creditsPill">500</span>
+                        <span>CREDITS:</span> <span id="creditsPill">120</span>
                     </div>
                 </div>
 
@@ -101,7 +102,7 @@
                     </button>
                     <button onclick="openHireModal()"
                         class="px-3.5 py-2 rounded-xl bg-phx-orange hover:bg-amber-400 text-black font-black text-xs shadow-[0_0_15px_rgba(255,140,0,0.4)] transition flex items-center gap-1.5 cursor-pointer">
-                        <span>➕</span> <span>Hire Agent</span>
+                        <span>➕</span> <span>Hire Agent (60 cr)</span>
                     </button>
                 </div>
             </div>
@@ -116,12 +117,12 @@
             <div class="flex flex-wrap items-center justify-between gap-2 px-2 pb-2 text-[11px] font-mono text-gray-400">
                 <div class="flex items-center gap-3">
                     <span class="text-white font-bold">🏢 PHOENIX HQ ARENA</span>
-                    <span id="gameStatusBanner" class="text-phx-orange truncate max-w-[260px] sm:max-w-[440px]">Wave 1 Active — Agents auto-defending Phoenix Core!</span>
+                    <span id="gameStatusBanner" class="text-phx-orange truncate max-w-[260px] sm:max-w-[440px]">Wave 1 Active — Auto-XP leveling enabled!</span>
                 </div>
                 <div class="flex items-center gap-3">
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-phx-orange"></span> Evolved Agent</span>
                     <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-cyan-400"></span> Laser Packet</span>
-                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span> Raid Glitch</span>
+                    <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500"></span> Threat</span>
                 </div>
             </div>
 
@@ -133,14 +134,14 @@
         <!-- RIGHT 4 COLS: INSPECTOR, LOG & UPGRADES -->
         <aside class="xl:col-span-4 flex flex-col gap-4">
 
-            <!-- 1. Agent Inspector, Evolution Form & Skills -->
+            <!-- 1. Agent Inspector, Auto-XP, Evolution Form & Skills -->
             <div class="glass-panel rounded-2xl p-4 border border-phx-orange/30">
                 <div class="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
-                    <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-phx-orange">🪪 AGENT INSPECTOR & EVO</span>
-                    <span id="inspEvoBadge" class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/10 text-gray-200 border border-white/15">INITIATE FORM</span>
+                    <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-phx-orange">🪪 AGENT INSPECTOR & AUTO-XP</span>
+                    <span id="inspEvoBadge" class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white/10 text-gray-200 border border-white/15">INITIATE • LV.1</span>
                 </div>
 
-                <div class="flex items-center gap-3 mb-3">
+                <div class="flex items-center gap-3 mb-2.5">
                     <div id="inspColorDot" class="w-12 h-12 rounded-xl bg-phx-orange/20 border-2 border-phx-orange flex items-center justify-center text-2xl shrink-0 transition-all">
                         🧠
                     </div>
@@ -151,22 +152,27 @@
                     </div>
                 </div>
 
+                <!-- Auto XP Bar -->
+                <div class="mb-3">
+                    <div class="flex justify-between font-mono text-[10px] text-gray-400 mb-1">
+                        <span>AUTO-XP PROGRESS</span>
+                        <span id="inspXpText" class="text-emerald-400">0 / 40 XP</span>
+                    </div>
+                    <div class="w-full h-2 rounded-full bg-black/60 overflow-hidden border border-white/10">
+                        <div id="inspXpBar" class="h-full bg-gradient-to-r from-emerald-400 to-phx-orange transition-all duration-150" style="width: 0%;"></div>
+                    </div>
+                </div>
+
                 <div class="bg-black/45 rounded-xl p-2.5 border border-white/5 font-mono text-[11px] space-y-1.5 mb-3">
                     <div><span class="text-gray-500">FORM:</span> <span id="inspFormDesc" class="text-amber-300">Standard Agent Frame</span></div>
-                    <div><span class="text-gray-500">SKILLS:</span> <span id="inspSkills" class="text-cyan-300">None yet (Unlocks at Lv.10, 20, 50)</span></div>
+                    <div><span class="text-gray-500">SKILLS:</span> <span id="inspSkills" class="text-cyan-300">Unlocks at Lv.10, Lv.20 & Lv.50</span></div>
                     <div><span class="text-gray-500">KILLS:</span> <span id="inspKills" class="text-emerald-400">0</span></div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-2">
-                    <button onclick="upgradeSelectedAgent(1)"
-                        class="py-2 px-2.5 rounded-xl bg-phx-input hover:bg-phx-orange hover:text-black text-phx-orange border border-phx-orange/50 font-bold text-xs transition cursor-pointer">
-                        ⬆ +1 Lv (35 cr)
-                    </button>
-                    <button onclick="upgradeSelectedAgent(10)"
-                        class="py-2 px-2.5 rounded-xl bg-gradient-to-r from-phx-orange/20 to-phx-red/20 hover:from-phx-orange hover:to-phx-red hover:text-white text-amber-300 border border-phx-red/50 font-bold text-xs transition cursor-pointer">
-                        🔥 +10 Lv Boost (280 cr)
-                    </button>
-                </div>
+                <button onclick="upgradeSelectedAgent(10)"
+                    class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-phx-orange/20 to-phx-red/20 hover:from-phx-orange hover:to-phx-red hover:text-white text-amber-300 border border-phx-red/50 font-bold text-xs transition cursor-pointer">
+                    🔥 Field Boost +10 Lv (220 cr) — Auto-XP runs on its own!
+                </button>
             </div>
 
             <!-- 2. Live Combat & Evolution Log -->
@@ -174,7 +180,7 @@
                 <div class="flex items-center justify-between border-b border-white/10 pb-2 mb-2">
                     <div class="flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-phx-emerald animate-ping"></span>
-                        <h3 class="text-[11px] font-mono font-bold uppercase tracking-wider text-gray-200">COMBAT & EVO LOG</h3>
+                        <h3 class="text-[11px] font-mono font-bold uppercase tracking-wider text-gray-200">COMBAT, XP & EVO LOG</h3>
                     </div>
                     <button onclick="clearFeed()" class="text-[10px] font-mono text-gray-400 hover:text-white cursor-pointer">Clear</button>
                 </div>
@@ -233,7 +239,7 @@
             <div class="flex justify-end gap-2 pt-2">
                 <button onclick="closeHireModal()" class="px-4 py-2 rounded-xl bg-phx-input text-gray-300 font-bold text-xs cursor-pointer">Cancel</button>
                 <button onclick="confirmHireAgent()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-phx-orange to-phx-red text-white font-black text-xs shadow-lg cursor-pointer">
-                    Hire & Deploy Agent
+                    Hire & Deploy (60 cr)
                 </button>
             </div>
         </div>
@@ -243,7 +249,7 @@
     <div id="toast" class="fixed bottom-4 right-4 z-50 hidden px-4 py-2.5 rounded-xl bg-phx-panel border border-phx-orange text-white text-xs font-bold shadow-2xl"></div>
 
     <script>
-        const STORAGE_HIRED_KEY = 'phx_game_hired_agents_v2';
+        const STORAGE_HIRED_KEY = 'phx_game_hired_agents_v3';
 
         const ROOMS = [
             { id: 0, name: "1. Command HQ",   x: 20,  y: 20,  w: 225, h: 215, color: "#ff8c00" },
@@ -258,20 +264,15 @@
 
         const CORE = { x: 500, y: 320, radius: 34 };
 
-        const BASE_AGENTS = [
-            { id: "a1", room: 0, name: "Chief Orchestrator", role: "Director", avatar: "🧠", specialty: "Coordinates HQ defense and squad rotations." },
-            { id: "a2", room: 0, name: "Sprint Planner", role: "Strategist", avatar: "🗺️", specialty: "Tracks incoming waves and threat vectors." },
-            { id: "a3", room: 1, name: "UI/UX Architect", role: "Lead Designer", avatar: "📐", specialty: "Fires high-precision visual shockwaves." },
-            { id: "a4", room: 1, name: "SPA JS Engineer", role: "Frontend Dev", avatar: "⚙️", specialty: "Rapid-fire script bolts against glitches." },
-            { id: "a5", room: 2, name: "Discord.py Core", role: "Bot Architect", avatar: "🐍", specialty: "Deploys automated bot shield pulses." },
-            { id: "a6", room: 2, name: "Raid Sentinel", role: "Security Mod", avatar: "🚨", specialty: "Targets raid invaders with heavy bursts." },
-            { id: "a7", room: 3, name: "Docker 24/7 Ops", role: "DevOps Lead", avatar: "🐳", specialty: "Reinforces core stability and containers." },
-            { id: "a8", room: 3, name: "Vault Guardian", role: "SecOps", avatar: "🔐", specialty: "High-damage encryption blasts." },
-            { id: "a9", room: 4, name: "Bracket Director", role: "Tournament Lead", avatar: "🏆", specialty: "Eliminates bracket challengers swiftly." },
-            { id: "a10", room: 5, name: "Promo Artist", role: "Graphic Designer", avatar: "🖼️", specialty: "Blinding flash bursts on targets." },
-            { id: "a11", room: 6, name: "Community Lead", role: "Engagement", avatar: "💬", specialty: "Rallies team fire rate." },
-            { id: "a12", room: 7, name: "Bug Hunter", role: "QA Engineer", avatar: "🐞", specialty: "Patches and crushes incoming bugs." }
-        ];
+        // Start with ONLY 1 starter agent; hire more with Credits!
+        const STARTER_AGENT = {
+            id: "a1",
+            room: 0,
+            name: "Chief Orchestrator",
+            role: "Starter Commander",
+            avatar: "🧠",
+            specialty: "Solo starter defender — earns XP automatically on every kill."
+        };
 
         let agents = [];
         let enemies = [];
@@ -282,11 +283,15 @@
         let wave = 1;
         let score = 0;
         let coreHp = 100;
-        let credits = 500;
+        let credits = 120;
         let gameOver = false;
         let waveSpawnRemaining = 0;
         let spawnCooldown = 0;
         let tickTime = 0;
+
+        function getXpNeededForLevel(lvl) {
+            return Math.round(35 + lvl * 14);
+        }
 
         function getAgentProfile(ag) {
             const lvl = ag.level;
@@ -331,8 +336,8 @@
                 skills.push("👑 Phoenix Nova (AoE Blast + Bonus Credits)");
             }
 
-            const effectiveDamage = Math.round((20 + (lvl - 1) * 9) * dmgMult);
-            const cooldownFrames = Math.max(14, Math.round(48 * cdMult));
+            const effectiveDamage = Math.round((22 + (lvl - 1) * 9) * dmgMult);
+            const cooldownFrames = Math.max(14, Math.round(44 * cdMult));
 
             return {
                 tier,
@@ -349,14 +354,13 @@
         }
 
         function checkMilestones(ag, oldLevel, newLevel) {
-            const milestones = [10, 20, 50];
-            milestones.forEach(m => {
+            [10, 20, 50].forEach(m => {
                 if (oldLevel < m && newLevel >= m) {
                     const prof = getAgentProfile(ag);
-                    spawnBurst(ag.x, ag.y, prof.auraColor || "#ff8c00", 20);
+                    spawnBurst(ag.x, ag.y, prof.auraColor || "#ff8c00", 22);
                     logActivity(
                         "EVO",
-                        `${ag.name} reached Lv.${m} → ${prof.formName}! Unlocked: ${prof.skills[prof.skills.length - 1]}`,
+                        `${ag.name} hit Lv.${m} → ${prof.formName}! Unlocked: ${prof.skills[prof.skills.length - 1]}`,
                         "text-amber-300 font-bold"
                     );
                     showToast(`🔥 ${ag.name} evolved to ${prof.formName} (Lv.${m})!`);
@@ -364,15 +368,44 @@
             });
         }
 
-        function loadAgents() {
+        function grantXp(ag, amount) {
+            if (!ag || ag.level >= 99) return;
+            ag.xp += amount;
+            const oldLvl = ag.level;
+            let leveledUp = false;
+
+            while (ag.xp >= ag.xpToNext && ag.level < 99) {
+                ag.xp -= ag.xpToNext;
+                ag.level += 1;
+                ag.xpToNext = getXpNeededForLevel(ag.level);
+                leveledUp = true;
+            }
+
+            if (leveledUp) {
+                spawnBurst(ag.x, ag.y, "#10b981", 12);
+                logActivity("LVL UP", `${ag.name} auto-leveled to Lv.${ag.level}!`, "text-emerald-400 font-bold");
+                checkMilestones(ag, oldLvl, ag.level);
+            }
+
+            if (ag.id === selectedAgentId) {
+                refreshInspector();
+            }
+        }
+
+        function loadAgents(resetHired = false) {
+            if (resetHired) {
+                localStorage.removeItem(STORAGE_HIRED_KEY);
+            }
             let hired = [];
             try { hired = JSON.parse(localStorage.getItem(STORAGE_HIRED_KEY) || "[]"); } catch (e) {}
-            agents = [...BASE_AGENTS, ...hired].map(cfg => ({
+            agents = [STARTER_AGENT, ...hired].map(cfg => ({
                 ...cfg,
                 level: 1,
+                xp: 0,
+                xpToNext: getXpNeededForLevel(1),
                 kills: 0,
                 shotsFired: 0,
-                cooldown: Math.random() * 40,
+                cooldown: Math.random() * 20,
                 x: 0,
                 y: 0
             }));
@@ -394,13 +427,22 @@
             });
         }
 
+        function getWaveScaling(wNum) {
+            const hpMult = 1 + (wNum - 1) * 0.35;
+            const speedMult = 1 + Math.min((wNum - 1) * 0.08, 1.3);
+            const coreDmg = Math.min(25, 7 + Math.floor((wNum - 1) * 1.5));
+            return { hpMult, speedMult, coreDmg };
+        }
+
         function startWave(wNum) {
             wave = wNum;
+            const scale = getWaveScaling(wave);
             waveSpawnRemaining = 5 + wave * 3;
-            spawnCooldown = 15;
+            spawnCooldown = 12;
             document.getElementById('wavePill').textContent = wave;
-            document.getElementById('gameStatusBanner').textContent = `Wave ${wave} Incoming — ${waveSpawnRemaining} Raid Glitches spawning!`;
-            logActivity("WAVE", `Wave ${wave} started (${waveSpawnRemaining} enemies)!`, "text-phx-orange font-bold");
+            document.getElementById('diffPill').textContent = `(HP x${scale.hpMult.toFixed(1)} • SPD x${scale.speedMult.toFixed(1)})`;
+            document.getElementById('gameStatusBanner').textContent = `Wave ${wave} — Difficulty scaling active (${waveSpawnRemaining} threats)!`;
+            logActivity("WAVE", `Wave ${wave} started! Threat HP x${scale.hpMult.toFixed(1)}, Speed x${scale.speedMult.toFixed(1)}`, "text-phx-orange font-bold");
         }
 
         function spawnWaveNow() {
@@ -409,11 +451,12 @@
                 startWave(wave + 1);
             } else {
                 waveSpawnRemaining += 4;
-                showToast("Reinforced wave spawned!");
+                showToast("Extra wave threats incoming!");
             }
         }
 
         function spawnEnemy() {
+            const scale = getWaveScaling(wave);
             const side = Math.floor(Math.random() * 4);
             let ex = 0, ey = 0;
             if (side === 0) { ex = 40 + Math.random() * 920; ey = 10; }
@@ -421,16 +464,26 @@
             else if (side === 2) { ex = 10; ey = 40 + Math.random() * 560; }
             else { ex = 990; ey = 40 + Math.random() * 560; }
 
-            const maxHp = 45 + wave * 18;
+            const baseHp = 34 + wave * 12;
+            const maxHp = Math.round(baseHp * scale.hpMult);
+            const speed = (0.78 * scale.speedMult);
+
+            let label = "BUG";
+            if (wave >= 8) label = "OVERLORD";
+            else if (wave >= 4) label = Math.random() > 0.45 ? "BREACH" : "RAID";
+            else label = Math.random() > 0.5 ? "RAID" : "BUG";
+
             enemies.push({
                 id: "e_" + Math.random().toString(36).slice(2, 7),
                 x: ex,
                 y: ey,
                 hp: maxHp,
                 maxHp,
-                speed: 0.85 + Math.min(wave * 0.08, 1.2),
-                reward: 15 + wave * 3,
-                label: Math.random() > 0.5 ? "RAID" : "BUG"
+                speed,
+                coreDmg: scale.coreDmg,
+                xpReward: 18 + wave * 5,
+                creditReward: 14 + wave * 3,
+                label
             });
         }
 
@@ -439,15 +492,16 @@
             if (credits < 30) { showToast("Need 30 Credits for Firewall Pulse!"); return; }
             credits -= 30;
             updateHud();
-            logActivity("PULSE", "Firewall Pulse fired — damaging all active glitches!", "text-cyan-400 font-bold");
+            logActivity("PULSE", "Firewall Pulse fired across the HQ!", "text-cyan-400 font-bold");
 
+            const primaryAgent = agents[0];
             enemies.forEach(en => {
                 en.hp -= 45;
                 spawnBurst(en.x, en.y, "#06b6d4", 8);
             });
             enemies = enemies.filter(en => {
                 if (en.hp <= 0) {
-                    onEnemyDestroyed(en, agents[0], false);
+                    onEnemyDestroyed(en, primaryAgent, false);
                     return false;
                 }
                 return true;
@@ -465,14 +519,16 @@
         function upgradeSelectedAgent(levelsToAdd) {
             const ag = agents.find(a => a.id === selectedAgentId);
             if (!ag) return;
-            const cost = levelsToAdd === 10 ? 280 : 35;
-            if (credits < cost) { showToast(`Need ${cost} Credits!`); return; }
+            const cost = 220;
+            if (credits < cost) { showToast(`Need ${cost} Credits for +10 Lv Field Boost!`); return; }
             credits -= cost;
             const oldLvl = ag.level;
             ag.level = Math.min(99, ag.level + levelsToAdd);
+            ag.xp = 0;
+            ag.xpToNext = getXpNeededForLevel(ag.level);
             updateHud();
             checkMilestones(ag, oldLvl, ag.level);
-            selectAgent(ag.id);
+            refreshInspector();
         }
 
         function triggerPhoenixNova(centerX, centerY, dmg, killerAgent) {
@@ -490,17 +546,19 @@
         }
 
         function onEnemyDestroyed(en, killerAgent, bonusNova = false) {
-            score += en.reward * 10;
-            credits += en.reward + (bonusNova ? 5 : 0);
-            if (killerAgent) killerAgent.kills += 1;
+            score += en.creditReward * 10;
+            credits += en.creditReward + (bonusNova ? 5 : 0);
+            if (killerAgent) {
+                killerAgent.kills += 1;
+                grantXp(killerAgent, en.xpReward);
+            }
             spawnBurst(en.x, en.y, "#ff8c00", 12);
             logActivity(
                 killerAgent ? killerAgent.name : "HQ",
-                `Destroyed ${en.label} (+${en.reward + (bonusNova ? 5 : 0)} cr)`,
+                `Defeated ${en.label} (+${en.xpReward} XP, +${en.creditReward + (bonusNova ? 5 : 0)} cr)`,
                 "text-emerald-400"
             );
             updateHud();
-            if (killerAgent && killerAgent.id === selectedAgentId) selectAgent(killerAgent.id);
         }
 
         function spawnBurst(x, y, color, count) {
@@ -544,7 +602,7 @@
                 if (spawnCooldown <= 0) {
                     spawnEnemy();
                     waveSpawnRemaining--;
-                    spawnCooldown = Math.max(24, 65 - wave * 4);
+                    spawnCooldown = Math.max(18, 62 - wave * 4);
                 }
             } else if (enemies.length === 0) {
                 startWave(wave + 1);
@@ -560,7 +618,7 @@
                     en.y += (dy / dist) * en.speed;
                 }
                 if (dist <= CORE.radius + 10) {
-                    coreHp -= 8;
+                    coreHp -= en.coreDmg;
                     spawnBurst(en.x, en.y, "#ef4444", 10);
                     enemies.splice(i, 1);
                     updateHud();
@@ -597,7 +655,6 @@
                     isNova: isNovaShot
                 });
 
-                // Lv.10+ Skill: Ember Volley fires extra bolt at secondary enemy
                 if (prof.tier >= 1 && enemies.length > 1) {
                     const altTarget = enemies.find(e => e.id !== target.id) || target;
                     projectiles.push({
@@ -697,7 +754,7 @@
             ctx.textAlign = "left";
             ctx.restore();
 
-            // Agents with Evolution Form & Orbiting Sparks
+            // Agents
             agents.forEach(ag => {
                 const prof = getAgentProfile(ag);
                 const radius = 11.5 + prof.tier * 1.3;
@@ -726,7 +783,6 @@
                 ctx.fill();
                 ctx.stroke();
 
-                // Orbiting evolution flames/sparks
                 for (let s = 0; s < prof.sparks; s++) {
                     const ang = tickTime * (1.8 + prof.tier * 0.4) + (Math.PI * 2 * s) / prof.sparks;
                     const ox = ag.x + Math.cos(ang) * (radius + 6);
@@ -756,7 +812,7 @@
                 ctx.stroke();
 
                 ctx.fillStyle = "#fca5a5";
-                ctx.font = "bold 8px 'JetBrains Mono', monospace";
+                ctx.font = "bold 7.5px 'JetBrains Mono', monospace";
                 ctx.textAlign = "center";
                 ctx.fillText(en.label, en.x, en.y + 3);
                 ctx.textAlign = "left";
@@ -814,7 +870,7 @@
                     if (enemies[i].hp <= 0) {
                         const dead = enemies[i];
                         enemies.splice(i, 1);
-                        onEnemyDestroyed(dead, agents.find(a => a.id === selectedAgentId), false);
+                        onEnemyDestroyed(dead, agents.find(a => a.id === selectedAgentId) || agents[0], false);
                     }
                     return;
                 }
@@ -830,9 +886,14 @@
 
         function selectAgent(id) {
             selectedAgentId = id;
-            const ag = agents.find(a => a.id === id);
+            refreshInspector();
+        }
+
+        function refreshInspector() {
+            const ag = agents.find(a => a.id === selectedAgentId) || agents[0];
             if (!ag) return;
             const prof = getAgentProfile(ag);
+            const pct = Math.min(100, Math.round((ag.xp / ag.xpToNext) * 100));
 
             const dot = document.getElementById('inspColorDot');
             dot.textContent = ag.avatar;
@@ -842,8 +903,10 @@
             document.getElementById('inspName').textContent = ag.name;
             document.getElementById('inspOffice').textContent = ROOMS[ag.room].name;
             document.getElementById('inspRole').textContent = `${ag.role} • Lv.${ag.level} (${prof.effectiveDamage} DMG)`;
+            document.getElementById('inspXpText').textContent = `${ag.xp} / ${ag.xpToNext} XP`;
+            document.getElementById('inspXpBar').style.width = `${pct}%`;
             document.getElementById('inspFormDesc').textContent = prof.formDesc;
-            document.getElementById('inspSkills').textContent = prof.skills.length ? prof.skills.join(" • ") : "None yet (Unlocks at Lv.10, 20, 50)";
+            document.getElementById('inspSkills').textContent = prof.skills.length ? prof.skills.join(" • ") : "Unlocks at Lv.10, Lv.20 & Lv.50";
             document.getElementById('inspKills').textContent = ag.kills;
         }
 
@@ -871,14 +934,14 @@
                 id: "hired_" + Date.now(),
                 room, name, role,
                 avatar: selectedHireAvatar,
-                specialty: `Custom hired ${role} defending ${ROOMS[room].name}.`
+                specialty: `Hired ${role} defending ${ROOMS[room].name}.`
             };
             let hired = [];
             try { hired = JSON.parse(localStorage.getItem(STORAGE_HIRED_KEY) || "[]"); } catch (e) {}
             hired.push(newCfg);
             localStorage.setItem(STORAGE_HIRED_KEY, JSON.stringify(hired));
 
-            loadAgents();
+            loadAgents(false);
             closeHireModal();
             selectAgent(newCfg.id);
             logActivity("HR", `Hired ${name} into ${ROOMS[room].name}!`, "text-emerald-400 font-bold");
@@ -887,13 +950,13 @@
         function restartGame() {
             score = 0;
             coreHp = 100;
-            credits = 500;
+            credits = 120;
             enemies = [];
             projectiles = [];
             particles = [];
             gameOver = false;
-            loadAgents();
-            selectAgent(selectedAgentId);
+            loadAgents(true);
+            selectAgent("a1");
             updateHud();
             startWave(1);
         }
@@ -916,7 +979,7 @@
         }
 
         window.onload = function () {
-            loadAgents();
+            loadAgents(false);
             resizeCanvas();
             selectAgent("a1");
             updateHud();
