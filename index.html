@@ -156,7 +156,7 @@
                 <div class="mb-3">
                     <div class="flex justify-between font-mono text-[10px] text-gray-400 mb-1">
                         <span>AUTO-XP PROGRESS</span>
-                        <span id="inspXpText" class="text-emerald-400">0 / 40 XP</span>
+                        <span id="inspXpText" class="text-emerald-400">0 / 49 XP</span>
                     </div>
                     <div class="w-full h-2 rounded-full bg-black/60 overflow-hidden border border-white/10">
                         <div id="inspXpBar" class="h-full bg-gradient-to-r from-emerald-400 to-phx-orange transition-all duration-150" style="width: 0%;"></div>
@@ -249,8 +249,6 @@
     <div id="toast" class="fixed bottom-4 right-4 z-50 hidden px-4 py-2.5 rounded-xl bg-phx-panel border border-phx-orange text-white text-xs font-bold shadow-2xl"></div>
 
     <script>
-        const STORAGE_HIRED_KEY = 'phx_game_hired_agents_v3';
-
         const ROOMS = [
             { id: 0, name: "1. Command HQ",   x: 20,  y: 20,  w: 225, h: 215, color: "#ff8c00" },
             { id: 1, name: "2. Web & UI",     x: 265, y: 20,  w: 225, h: 215, color: "#ff3b30" },
@@ -264,14 +262,13 @@
 
         const CORE = { x: 500, y: 320, radius: 34 };
 
-        // Start with ONLY 1 starter agent; hire more with Credits!
         const STARTER_AGENT = {
             id: "a1",
             room: 0,
             name: "Chief Orchestrator",
             role: "Starter Commander",
             avatar: "🧠",
-            specialty: "Solo starter defender — earns XP automatically on every kill."
+            specialty: "Starter defender — keeps its level & XP permanently across hires."
         };
 
         let agents = [];
@@ -291,6 +288,20 @@
 
         function getXpNeededForLevel(lvl) {
             return Math.round(35 + lvl * 14);
+        }
+
+        function createAgentInstance(cfg) {
+            return {
+                ...cfg,
+                level: 1,
+                xp: 0,
+                xpToNext: getXpNeededForLevel(1),
+                kills: 0,
+                shotsFired: 0,
+                cooldown: Math.random() * 20,
+                x: 0,
+                y: 0
+            };
         }
 
         function getAgentProfile(ag) {
@@ -392,23 +403,8 @@
             }
         }
 
-        function loadAgents(resetHired = false) {
-            if (resetHired) {
-                localStorage.removeItem(STORAGE_HIRED_KEY);
-            }
-            let hired = [];
-            try { hired = JSON.parse(localStorage.getItem(STORAGE_HIRED_KEY) || "[]"); } catch (e) {}
-            agents = [STARTER_AGENT, ...hired].map(cfg => ({
-                ...cfg,
-                level: 1,
-                xp: 0,
-                xpToNext: getXpNeededForLevel(1),
-                kills: 0,
-                shotsFired: 0,
-                cooldown: Math.random() * 20,
-                x: 0,
-                y: 0
-            }));
+        function initStarterRoster() {
+            agents = [createAgentInstance(STARTER_AGENT)];
             recomputePositions();
         }
 
@@ -548,10 +544,20 @@
         function onEnemyDestroyed(en, killerAgent, bonusNova = false) {
             score += en.creditReward * 10;
             credits += en.creditReward + (bonusNova ? 5 : 0);
+
             if (killerAgent) {
                 killerAgent.kills += 1;
                 grantXp(killerAgent, en.xpReward);
             }
+
+            // Assist XP for all active squad members so everyone progresses without losing levels
+            const assistXp = Math.max(4, Math.round(en.xpReward * 0.35));
+            agents.forEach(ag => {
+                if (!killerAgent || ag.id !== killerAgent.id) {
+                    grantXp(ag, assistXp);
+                }
+            });
+
             spawnBurst(en.x, en.y, "#ff8c00", 12);
             logActivity(
                 killerAgent ? killerAgent.name : "HQ",
@@ -930,21 +936,19 @@
             credits -= 60;
             updateHud();
 
-            const newCfg = {
+            // Append without resetting any existing agent's level, XP, kills, or cooldown
+            const newAgent = createAgentInstance({
                 id: "hired_" + Date.now(),
                 room, name, role,
                 avatar: selectedHireAvatar,
                 specialty: `Hired ${role} defending ${ROOMS[room].name}.`
-            };
-            let hired = [];
-            try { hired = JSON.parse(localStorage.getItem(STORAGE_HIRED_KEY) || "[]"); } catch (e) {}
-            hired.push(newCfg);
-            localStorage.setItem(STORAGE_HIRED_KEY, JSON.stringify(hired));
+            });
+            agents.push(newAgent);
+            recomputePositions();
 
-            loadAgents(false);
             closeHireModal();
-            selectAgent(newCfg.id);
-            logActivity("HR", `Hired ${name} into ${ROOMS[room].name}!`, "text-emerald-400 font-bold");
+            selectAgent(newAgent.id);
+            logActivity("HR", `Hired ${name} into ${ROOMS[room].name} — existing agents kept their levels!`, "text-emerald-400 font-bold");
         }
 
         function restartGame() {
@@ -955,7 +959,7 @@
             projectiles = [];
             particles = [];
             gameOver = false;
-            loadAgents(true);
+            initStarterRoster();
             selectAgent("a1");
             updateHud();
             startWave(1);
@@ -979,7 +983,7 @@
         }
 
         window.onload = function () {
-            loadAgents(false);
+            initStarterRoster();
             resizeCanvas();
             selectAgent("a1");
             updateHud();
